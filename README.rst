@@ -10,6 +10,7 @@ zork but different
 Features
 --------
 
+* Added SonarCloud and TravisCI testing
 * TODO
 
 Credits
