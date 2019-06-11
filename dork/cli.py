@@ -9,15 +9,14 @@ from io import StringIO
 import cursor
 
 
-
 __all__ = ["main"]
 
 
 def the_predork_cli(*args, version, help_msg):
     """non-game loop command line """
     parser = argparse.ArgumentParser(description="Dork command line " +
-                                     "interface. Run dork with no options to "+
-                                     "begin game")
+                                     "interface. Run dork with no options to" +
+                                     " begin game")
 
     parser.add_argument('-l', '--list', action='store_true',
                         help='list available mazes')
@@ -28,11 +27,11 @@ def the_predork_cli(*args, version, help_msg):
     parser.add_argument('-v', '--version', action='store_true',
                         help="prints version and exits")
     arglist = None
-    if "-h" in args or "--help" in args:
-        _hf = StringIO()
-        parser.print_usage(file=_hf)
-        help_msg.append(_hf.getvalue())
-        _hf.close()
+
+    _hf = StringIO()
+    parser.print_usage(file=_hf)
+    help_msg.append(_hf.getvalue())
+    _hf.close()
 
     try:
         arglist = parser.parse_args(args[1:])
