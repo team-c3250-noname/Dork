@@ -14,6 +14,23 @@ import re
 __all__ = ["main"]
 
 
+def is_filename_compliant(filename):
+    """checks if filename follows win and unix naming guidelines
+       https://docs.microsoft.com/en-us/windows/desktop/FileIO/naming-a-file
+       added in NULL character as well
+    """
+    if re.match(r'<|>|:|"|\/|\\|\||\?|\*|\0', filename):
+        print(r"filenames cannot contain <, >, :, /, \|, ?, *")
+        return False
+    match = r'^((CON)|(PRN)|(AUX)|(NUL)|(COM)\d{1}|(LPT)\d{1})\.*(\w{3})*$'
+    if re.match(match, filename):
+        print("Filename cannot be a OS reserved name")
+        return False
+    if re.match(r'^.*( |\.)$', filename):
+        print("Filenames should not end with space or period")
+        return False
+    return True
+
 def the_predork_cli(help_msg, *args):
     """non-game loop command line """
     version = dork.__version__
@@ -47,19 +64,8 @@ def the_predork_cli(help_msg, *args):
     if "-h" in args or "--help" in args or unkown_args:
         return True
 
-    #ntfs file naming guidlines
-    #https://docs.microsoft.com/en-us/windows/desktop/FileIO/naming-a-file
-    #added in NULL character
     if arglist.out:
-        if re.match(r'<|>|:|"|\/|\\|\||\?|\*|\0', arglist.out):
-            print(r"filenames cannot contain <, >, :, /, \|, ?, *")
-            return True
-        match = r'^((CON)|(PRN)|(AUX)|(NUL)|(COM)\d{1}|(LPT)\d{1})\.*(\w{3})*$'
-        if re.match(match, arglist.out):
-            print("Filename cannot be a OS reserved name")
-            return True
-        if re.match(r'^.*( |\.)$', arglist.out):
-            print("Filenames should not end with space or period")
+        if not is_filename_compliant(arglist.out):
             return True
 
         _f = open("mazes/"+arglist.out+".drk", "w")
