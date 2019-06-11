@@ -13,7 +13,7 @@ __all__ = ["main"]
 
 def the_predork_cli(*args, version):
     """non-game loop command line """
-    parser = argparse.ArgumentParser(description='Dork command line '+\
+    parser = argparse.ArgumentParser(description='Dork command line ' + \
         "interface. Run dork with no options to begin game")
 
     parser.add_argument('-l', '--list', action='store_true',
@@ -66,10 +66,9 @@ def the_predork_cli(*args, version):
 
     return run_flag
 
+
 def main(*args):
     """Main CLI runner for Dork
     """
-
-
     if not the_predork_cli(*args, version="0.0.1"):
         print("running dork")
