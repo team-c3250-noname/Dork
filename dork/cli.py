@@ -31,6 +31,7 @@ def is_filename_compliant(filename):
         return False
     return True
 
+
 def the_predork_cli(help_msg, *args):
     """non-game loop command line """
     version = dork.__version__
