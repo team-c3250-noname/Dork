@@ -7,13 +7,15 @@ import os
 import time
 from io import StringIO
 import cursor
+import dork
 
 
 __all__ = ["main"]
 
 
-def the_predork_cli(*args, version, help_msg):
+def the_predork_cli(help_msg, *args):
     """non-game loop command line """
+    version = dork.__version__
     parser = argparse.ArgumentParser(description="Dork command line " +
                                      "interface. Run dork with no options to" +
                                      " begin game")
@@ -84,8 +86,8 @@ def main(*args):
     help_msg = []
 
     arg_len = len(args)
-    if arg_len == 0:
+    if arg_len == 1:
         print("running dork")
 
-    if the_predork_cli(*args, version="0.0.1", help_msg=help_msg):
+    if the_predork_cli(help_msg, *args):
         print(help_msg[0])
