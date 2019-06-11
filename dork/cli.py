@@ -9,12 +9,8 @@ import cursor
 
 __all__ = ["in"]
 
-DORK_VERSION = "0.0.1"
-
-def the_predork_cli(*args):
-    """ command line interface supports -l -i -o -v """
-    global DORK_VERSION
-    version = DORK_VERSION
+def the_predork_cli(*args, version):
+    """non-game loop command line """
     parser = argparse.ArgumentParser(description='Dork command line interface')
 
     parser.add_argument('-l', '--list', action='store_true', help='list available mazes')
@@ -27,26 +23,27 @@ def the_predork_cli(*args):
     run_flag = False
 
     if arglist.out:
-        f = open("mazes/"+arglist.out+".drk", "w")
+        _f = open("mazes/"+arglist.out+".drk", "w")
         cursor.hide()
         time.sleep(0.5)
-        dots = ("Generating maze    ", "Generating maze .", "Generating maze ..", "Generating maze ...")
-        for t in range(20):
-            print("{}".format(dots[t%4]), end="\r")
+        dots = ("Generating maze    ", "Generating maze .", \
+                "Generating maze ..", "Generating maze ...")
+        for _t in range(20):
+            print("{}".format(dots[_t%4]), end="\r")
             time.sleep(1)
         print("{}".format(" "*len(dots[-1])))
         cursor.show()
         print("Done, maze \""+arglist.out+"\" saved")
-        f.close()
+        _f.close()
         run_flag = True
 
     if arglist.version:
         print("Dork version --> " + version)
         run_flag = True
-    
+
     if arglist.list or arglist.init:
         mazes = []
-        for (dirpath, dirnames, filenames) in os.walk("mazes/"):
+        for (_, _, filenames) in os.walk("mazes/"):
             mazes.extend(filenames)
         only_maze_files = [maze for maze in mazes if maze.find(".drk") > 0]
         if arglist.list:
@@ -61,12 +58,10 @@ def the_predork_cli(*args):
             run_flag = False
 
     return run_flag
-        
-
 
 def main(*args):
     """Main CLI runner for Dork
     """
-    
-    if not the_predork_cli(*args):
+
+    if not the_predork_cli(*args, version="0.0.1"):
         print("running dork")
