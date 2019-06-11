@@ -37,6 +37,9 @@ def the_predork_cli(*args, version, help_msg):
     except SystemExit:
         if "-h" in args or "--help" in args:
             return True
+        else:
+            print("Unrecognized commands")
+            return True
     
     if "-h" in args or "--help" in args:
             return True
