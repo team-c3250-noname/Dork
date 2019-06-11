@@ -6,12 +6,13 @@ import argparse
 import os
 import time
 import cursor
+from io import StringIO
 
 
 __all__ = ["main"]
 
 
-def the_predork_cli(*args, version):
+def the_predork_cli(*args, version, help_msg):
     """non-game loop command line """
     parser = argparse.ArgumentParser(description="Dork command line " + \
             "interface. Run dork with no options to begin game")
@@ -24,9 +25,21 @@ def the_predork_cli(*args, version):
                         help='-o <mazename> generates a maze and saves it')
     parser.add_argument('-v', '--version', action='store_true',
                         help="prints version and exits")
+    arglist = None
+    if "-h" in args or "--help" in args:
+        _hf = StringIO()
+        parser.print_usage(file=_hf)
+        help_msg.append(_hf.getvalue())
+        _hf.close()
 
-    arglist = parser.parse_args(args[1:])
-
+    try:
+        arglist = parser.parse_args(args[1:])
+    except SystemExit:
+        if "-h" in args or "--help" in args:
+            return True
+    
+    if "-h" in args or "--help" in args:
+            return True
     run_flag = False
 
     if arglist.out:
@@ -70,6 +83,8 @@ def the_predork_cli(*args, version):
 def main(*args):
     """Main CLI runner for Dork
     """
-
-    if not the_predork_cli(*args, version="0.0.1"):
+    help_msg = []
+    if not the_predork_cli(*args, version="0.0.1", help_msg=help_msg):
         print("running dork")
+    else:
+        print(help_msg[0])
