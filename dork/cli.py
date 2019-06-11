@@ -43,7 +43,6 @@ def the_predork_cli(*args, version, help_msg):
 
     if "-h" in args or "--help" in args:
         return True
-    run_flag = False
 
     if arglist.out:
         _f = open("mazes/"+arglist.out+".drk", "w")
@@ -58,11 +57,9 @@ def the_predork_cli(*args, version, help_msg):
         cursor.show()
         print("Done, maze \""+arglist.out+"\" saved")
         _f.close()
-        run_flag = True
 
     if arglist.version:
         print("Dork version --> " + version)
-        run_flag = True
 
     if arglist.list or arglist.init:
         mazes = []
@@ -71,23 +68,24 @@ def the_predork_cli(*args, version, help_msg):
         only_maze_files = [maze for maze in mazes if maze.find(".drk") > 0]
         if arglist.list:
             print(os.linesep.join(only_maze_files))
-            run_flag = True
         if arglist.init:
             arglist.init = arglist.init + ".drk"
             if arglist.init in only_maze_files:
                 print("loaded maze "+arglist.init)
             else:
                 print("maze "+arglist.init+" does not exist")
-            run_flag = False
 
-    return run_flag
+    return False
 
 
 def main(*args):
     """Main CLI runner for Dork
     """
     help_msg = []
-    if not the_predork_cli(*args, version="0.0.1", help_msg=help_msg):
+
+    arg_len = len(args)
+    if arg_len == 0:
         print("running dork")
-    else:
+
+    if the_predork_cli(*args, version="0.0.1", help_msg=help_msg):
         print(help_msg[0])
