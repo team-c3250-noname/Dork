@@ -12,15 +12,16 @@ __all__ = ["in"]
 def the_predork_cli(*args, version):
     """non-game loop command line """
 
+
     parser = argparse.ArgumentParser(description='Dork command line interface')
 
-    parser.add_argument('-l', '--list', action='store_true', \
+    parser.add_argument('-l', '--list', action='store_true',
                         help='list available mazes')
-    parser.add_argument('-i', '--init', \
+    parser.add_argument('-i', '--init',
                         help='-i <mazename> initializes dork with mazename')
-    parser.add_argument('-o', '--out', \
+    parser.add_argument('-o', '--out',
                         help='-o <mazename> generates a maze and saves it')
-    parser.add_argument('-v', '--version', action='store_true', \
+    parser.add_argument('-v', '--version', action='store_true',
                         help="prints version and exits")
 
     arglist = parser.parse_args(args[1:])
@@ -62,12 +63,12 @@ def the_predork_cli(*args, version):
                 print("maze "+arglist.init+" does not exist")
             run_flag = False
 
-
     return run_flag
 
 def main(*args):
     """Main CLI runner for Dork
     """
+
 
     if not the_predork_cli(*args, version="0.0.1"):
         print("running dork")
