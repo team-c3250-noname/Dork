@@ -8,6 +8,7 @@ import time
 from io import StringIO
 import cursor
 import dork
+import re
 
 
 __all__ = ["main"]
@@ -36,17 +37,31 @@ def the_predork_cli(help_msg, *args):
     _hf.close()
 
     try:
-        arglist = parser.parse_args(args[1:])
+        arglist, unkown_args = parser.parse_known_args(args[1:])
     except SystemExit:
         if "-h" in args or "--help" in args:
             return True
         print("Unrecognized commands")
         return True
 
-    if "-h" in args or "--help" in args:
+    if "-h" in args or "--help" in args or unkown_args:
         return True
 
+    #ntfs file naming guidlines
+    #https://docs.microsoft.com/en-us/windows/desktop/FileIO/naming-a-file
+    #added in NULL character
     if arglist.out:
+        if re.match(r'<|>|:|"|\/|\\|\||\?|\*|\0', arglist.out):
+            print(r"filenames cannot contain <, >, :, /, \|, ?, *")
+            return True
+        match = r'^((CON)|(PRN)|(AUX)|(NUL)|(COM)\d{1}|(LPT)\d{1})\.*(\w{3})*$'
+        if re.match(match, arglist.out):
+            print("Filename cannot be a OS reserved name")
+            return True
+        if re.match(r'^.*( |\.)$', arglist.out):
+            print("Filenames should not end with space or period")
+            return True
+
         _f = open("mazes/"+arglist.out+".drk", "w")
         cursor.hide()
         time.sleep(0.5)
@@ -61,7 +76,7 @@ def the_predork_cli(help_msg, *args):
         _f.close()
 
     if arglist.version:
-        print("Dork version --> " + version)
+        print(version)
 
     if arglist.list or arglist.init:
         mazes = []
