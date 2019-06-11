@@ -5,10 +5,11 @@
 import argparse
 import os
 import time
+import re
 from io import StringIO
 import cursor
 import dork
-import re
+
 
 
 __all__ = ["main"]
