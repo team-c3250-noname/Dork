@@ -11,7 +11,6 @@ import cursor
 import dork
 
 
-
 __all__ = ["main"]
 
 
