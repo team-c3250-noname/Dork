@@ -11,12 +11,17 @@ __all__ = ["in"]
 
 def the_predork_cli(*args, version):
     """non-game loop command line """
+
     parser = argparse.ArgumentParser(description='Dork command line interface')
 
-    parser.add_argument('-l', '--list', action='store_true', help='list available mazes')
-    parser.add_argument('-i', '--init', help='-i <mazename> initializes dork with mazename')
-    parser.add_argument('-o', '--out', help='-o <mazename> generates a maze and saves it')
-    parser.add_argument('-v', '--version', action='store_true', help="prints version and exits")
+    parser.add_argument('-l', '--list', action='store_true', \
+                        help='list available mazes')
+    parser.add_argument('-i', '--init', \
+                        help='-i <mazename> initializes dork with mazename')
+    parser.add_argument('-o', '--out', \
+                        help='-o <mazename> generates a maze and saves it')
+    parser.add_argument('-v', '--version', action='store_true', \
+                        help="prints version and exits")
 
     arglist = parser.parse_args(args[1:])
 
@@ -26,10 +31,10 @@ def the_predork_cli(*args, version):
         _f = open("mazes/"+arglist.out+".drk", "w")
         cursor.hide()
         time.sleep(0.5)
-        dots = ("Generating maze    ", "Generating maze .", \
+        dots = ("Generating maze    ", "Generating maze .",
                 "Generating maze ..", "Generating maze ...")
         for _t in range(20):
-            print("{}".format(dots[_t%4]), end="\r")
+            print("{}".format(dots[_t % 4]), end="\r")
             time.sleep(1)
         print("{}".format(" "*len(dots[-1])))
         cursor.show()
@@ -56,6 +61,7 @@ def the_predork_cli(*args, version):
             else:
                 print("maze "+arglist.init+" does not exist")
             run_flag = False
+
 
     return run_flag
 
