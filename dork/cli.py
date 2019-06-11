@@ -11,12 +11,12 @@ import cursor
 
 __all__ = ["in"]
 
-VERSION = "0.0.1"
+DORK_VERSION = "0.0.1"
 
 def the_predork_cli(*args):
     """ command line interface supports -l -i -o -v """
-    global VERSION
-    version = VERSION
+    global DORK_VERSION
+    version = DORK_VERSION
     parser = argparse.ArgumentParser(description='Dork command line interface')
 
     parser.add_argument('-l', '--list', action='store_true', help='list available mazes')
