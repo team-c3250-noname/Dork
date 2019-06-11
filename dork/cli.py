@@ -91,12 +91,10 @@ def the_predork_cli(help_msg, *args):
         only_maze_files = [maze for maze in mazes if maze.find(".drk") > 0]
         if arglist.list:
             print(os.linesep.join(only_maze_files))
-        if arglist.init:
-            arglist.init = arglist.init + ".drk"
-            if arglist.init in only_maze_files:
-                print("loaded maze "+arglist.init)
-            else:
-                print("maze "+arglist.init+" does not exist")
+        if arglist.init and arglist.init + ".drk" in only_maze_files:
+            print("loaded maze "+arglist.init)
+        elif arglist.init:
+            print("maze "+arglist.init+" does not exist")
 
     return False
 
