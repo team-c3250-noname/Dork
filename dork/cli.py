@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 """Basic CLI Dork.
 """
-import shlex
 
 import argparse
 import os
-import sys
 import time
 import cursor
 
