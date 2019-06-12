@@ -74,12 +74,10 @@ def the_predork_cli(help_msg, *args):
 
         _f = open("mazes/"+arglist.out+".drk", "w")
         cursor.hide()
-        time.sleep(0.5)
         dots = ("Generating maze    ", "Generating maze .",
                 "Generating maze ..", "Generating maze ...")
         for _t in range(20):
             print("{}".format(dots[_t % 4]), end="\r")
-            time.sleep(1)
         print(" "*len(dots[-1]))
         cursor.show()
         print("Done, maze \""+arglist.out+"\" saved")
