@@ -6,7 +6,6 @@ import argparse
 import os
 import time
 import re
-import sys
 from io import StringIO
 import cursor
 import dork
