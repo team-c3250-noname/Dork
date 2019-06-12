@@ -34,10 +34,9 @@ def is_filename_compliant(filename):
 
 def the_predork_cli(help_msg, *args):
     """non-game loop command line """
-    version = dork.__version__
-    print_help_then_exit = (True, True)
-    just_exit = (True, False)
-    run_dork = (False, False)
+    #print_help_then_exit = (True, True)
+    #exit_only = (True, False)
+    #run_dork = (False, False)
 
     parser = argparse.ArgumentParser(description="Dork command line " +
                                      "interface. Run dork with no options to" +
@@ -61,17 +60,13 @@ def the_predork_cli(help_msg, *args):
     try:
         arglist, unkown_args = parser.parse_known_args(args[1:])
     except SystemExit:
-        if "-h" in args or "--help" in args:
-            return print_help_then_exit
-        print("Unrecognized commands")
-        return print_help_then_exit
-
-    if "-h" in args or "--help" in args or unkown_args:
-        return print_help_then_exit
+        if "-h" not in args and "--help" not in args:
+            print("Unrecognized command")
+        return (True, True)
 
     if arglist.out:
         if not is_filename_compliant(arglist.out):
-            return just_exit
+            return (True, False)
 
         _f = open("mazes/"+arglist.out+".drk", "w")
         cursor.hide()
@@ -87,8 +82,8 @@ def the_predork_cli(help_msg, *args):
         _f.close()
 
     if arglist.version:
-        print(version)
-        return just_exit
+        print(dork.__version__)
+        return (True, False)
 
     if arglist.list or arglist.init:
         mazes = []
@@ -98,14 +93,14 @@ def the_predork_cli(help_msg, *args):
         only_maze_files = [maze for maze in mazes if maze.find(".drk") > 0]
         if arglist.list:
             print(os.linesep.join(only_maze_files))
-            return just_exit
+            return (True, False)
         if arglist.init and arglist.init + ".drk" in only_maze_files:
             print("loaded maze "+arglist.init)
         elif arglist.init:
             print("maze "+arglist.init+" does not exist")
-            return print_help_then_exit
+            return (True, True)
 
-    return run_dork
+    return (False, False)
 
 
 def main(*args):
