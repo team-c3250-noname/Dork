@@ -16,12 +16,16 @@ def main(*args):
     else:
         print(*args)
 
+
+
 class Player():
+
     """Creates the player
     """
     def __init__(self):
         self.game_over = False
 MY_PLAYER = Player()
+
 
 def title_screen_selections():
     """Will allow the user to choose what to do
@@ -51,6 +55,7 @@ def title_screen_selections():
             print("Thank you for playing the game.")
             sys.exit()
 
+
 def title_screen():
     """Will display the title screen
     """
@@ -61,6 +66,7 @@ def title_screen():
     print("help")
     print("quit")
     title_screen_selections()
+
 
 def help_menu():
     """Shows the help menu
@@ -73,11 +79,13 @@ def help_menu():
     print("to pick up the item use the command 'pick up' or 'loot'\n")
     title_screen_selections()
 
+
 def setup_game():
     """This will set up the game
     """
     print("This will set the game up " +
           "and exicute the main loop for the game")
+
 
 def load_game():
     """Will load a saved game
