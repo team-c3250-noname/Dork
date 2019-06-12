@@ -34,9 +34,9 @@ def is_filename_compliant(filename):
 
 def the_predork_cli(help_msg, *args):
     """non-game loop command line """
-    #print_help_then_exit = (True, True)
-    #exit_only = (True, False)
-    #run_dork = (False, False)
+    # print_help_then_exit = (True, True)
+    # exit_only = (True, False)
+    # run_dork = (False, False)
 
     parser = argparse.ArgumentParser(description="Dork command line " +
                                      "interface. Run dork with no options to" +
@@ -51,17 +51,18 @@ def the_predork_cli(help_msg, *args):
     parser.add_argument('-v', '--version', action='store_true',
                         help="prints version and exits")
     arglist = None
-
+    unknown_args = None
     _hf = StringIO()
     parser.print_usage(file=_hf)
     help_msg.append(_hf.getvalue())
     _hf.close()
 
     try:
-        arglist, unkown_args = parser.parse_known_args(args[1:])
+        arglist, unknown_args = parser.parse_known_args(args[1:])
+        if unknown_args:
+            print("Unrecognized command "+"".join(unknown_args))
+            raise SystemExit
     except SystemExit:
-        if "-h" not in args and "--help" not in args:
-            print("Unrecognized command")
         return (True, True)
 
     if arglist.out:
