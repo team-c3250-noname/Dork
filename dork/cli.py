@@ -6,6 +6,7 @@ import argparse
 import os
 import time
 import re
+import sys
 from io import StringIO
 import cursor
 import dork
@@ -37,7 +38,7 @@ def the_predork_cli(help_msg, *args):
     # print_help_then_exit = (True, True)
     # exit_only = (True, False)
     # run_dork = (False, False)
-
+    dork_flags = (False, False)
     parser = argparse.ArgumentParser(description="Dork command line " +
                                      "interface. Run dork with no options to" +
                                      " begin game")
@@ -53,9 +54,12 @@ def the_predork_cli(help_msg, *args):
     arglist = None
     unknown_args = None
     _hf = StringIO()
-    parser.print_usage(file=_hf)
+    parser.print_help(file=_hf)
     help_msg.append(_hf.getvalue())
     _hf.close()
+
+    if "-h" in args or "--help" in args:
+        return (True, True)
 
     try:
         arglist, unknown_args = parser.parse_known_args(args[1:])
@@ -84,7 +88,7 @@ def the_predork_cli(help_msg, *args):
 
     if arglist.version:
         print(dork.__version__)
-        return (True, False)
+        dork_flags = (True, False)
 
     if arglist.list or arglist.init:
         mazes = []
@@ -94,14 +98,14 @@ def the_predork_cli(help_msg, *args):
         only_maze_files = [maze for maze in mazes if maze.find(".drk") > 0]
         if arglist.list:
             print(os.linesep.join(only_maze_files))
-            return (True, False)
+            dork_flags = (True, False)
         if arglist.init and arglist.init + ".drk" in only_maze_files:
             print("loaded maze "+arglist.init)
         elif arglist.init:
             print("maze "+arglist.init+" does not exist")
             return (True, True)
 
-    return (False, False)
+    return dork_flags
 
 
 def main(*args):
