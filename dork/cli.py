@@ -1,8 +1,8 @@
-import sys
-
 # -*- coding: utf-8 -*-
 """Basic CLI Dork.
 """
+import sys
+
 
 __all__ = ["main"]
 
@@ -17,13 +17,14 @@ def main(*args):
         print(*args)
 
 
-
 class Player():
 
     """Creates the player
     """
     def __init__(self):
         self.game_over = False
+
+
 MY_PLAYER = Player()
 
 
@@ -93,7 +94,6 @@ def load_game():
     print("This function is not currently in use.")
     print("This will eventually allow you to load a saved game.\n")
     title_screen_selections()
-
 
 
 title_screen()
