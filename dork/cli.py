@@ -89,6 +89,7 @@ def the_predork_cli(help_msg, *args):
         mazes = []
         for (_, _, filenames) in os.walk("mazes/"):
             mazes.extend(filenames)
+            break
         only_maze_files = [maze for maze in mazes if maze.find(".drk") > 0]
         if arglist.list:
             print(os.linesep.join(only_maze_files))
