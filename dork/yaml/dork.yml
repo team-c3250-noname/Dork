@@ -1,4 +1,14 @@
 ---
+Items:
+  Torch:
+    room: "Entrance"
+  Key:
+    room: "Cave"
+  Sword:
+    room: "Armory"
+  Gold:
+    room: "Gold"
+
 Rooms:
   Entrance:
     north: "Boss"
@@ -20,15 +30,8 @@ Rooms:
     east: "Entrance"
     south: null
     west: null
-  Gold: 
+  Gold:
     north: null
     east: null
     south: "Boss"
     west: null
-
-Items:
-  Entrance: "Torch"
-  Boss: null
-  Cave: "Key to Armory"
-  Armory: "Sword"
-  Gold: "Gold"
