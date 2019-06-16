@@ -1,0 +1,34 @@
+---
+Rooms:
+  Entrance:
+    north: "Boss"
+    east: "Cave"
+    south: null
+    west: "Armory"
+  Boss:
+    north: "Gold"
+    east: "Cave"
+    south: "Entrance"
+    west: "Armory"
+  Cave:
+    north: "Boss"
+    east: null
+    south: null
+    west: "Entrance"
+  Armory:
+    north: "Boss"
+    east: "Entrance"
+    south: null
+    west: null
+  Gold: 
+    north: null
+    east: null
+    south: "Boss"
+    west: null
+
+Items:
+  Entrance: "Torch"
+  Boss: null
+  Cave: "Key to Armory"
+  Armory: "Sword"
+  Gold: "Gold"
