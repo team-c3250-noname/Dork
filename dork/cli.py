@@ -20,7 +20,8 @@ def main(*args):
 def title_screen_selections():
     """Will allow the user to choose what to do
     """
-    play_options = {'play': setup_game, 'load': load_game, 'help': help_menu, 'quit': end_game}
+    play_options = {'play': setup_game, 'load': load_game,
+                    'help': help_menu, 'quit': end_game}
     user_play = True
     while user_play is True:
         option = input("> ")

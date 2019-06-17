@@ -35,4 +35,3 @@ def run(mocker, capsys):
         return cap.out, cap.err
 
     return do_run
-    
