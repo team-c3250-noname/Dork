@@ -65,8 +65,7 @@ def help_menu():
     print("Examine: you can examine rooms using 'examine' or 'look'")
     print("Items: some rooms have items that you might need further in")
     print("to pick up the item use the command 'pick up' or 'loot'\n")
-    print("To return to title screen press enter.")
-    input("Press any key to return! ")
+    input("To return to title screen press enter.")
     return True
 
 
@@ -76,8 +75,7 @@ def load_game():
     os.system('cls')
     print("This function is not currently in use.")
     print("This will eventually allow you to load a saved game.\n")
-    print("To return to title screen press enter.")
-    input("Press any key to return! ")
+    input("To return to title screen press enter.")
     return True
 
 
