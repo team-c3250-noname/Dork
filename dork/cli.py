@@ -76,6 +76,8 @@ def help_menu():
     """Shows the help menu
     """
     os.system('cls')
+    player_options = ("")
+    option = "yes"
     print("Help Menu")
     print("Movement: use 'move' and a direction")
     print("for example, move north, will move the character north if possible")
@@ -83,21 +85,29 @@ def help_menu():
     print("Items: some rooms have items that you might need further in")
     print("to pick up the item use the command 'pick up' or 'loot'\n")
     print("To return to title screen press enter.")
-    option = input("> ").lower()
-    if option == option:
-        title_screen()
+    while option not in player_options:
+        option = input("> ").lower()
+        if option == "":
+            title_screen()
+        else:
+            print("Just press enter!")
 
 
 def load_game():
     """Will load a saved game
     """
     os.system('cls')
+    player_options = ("")
+    option = "yes"
     print("This function is not currently in use.")
     print("This will eventually allow you to load a saved game.\n")
     print("To return to title screen press enter.")
-    option = input("> ").lower()
-    if option == option:
-        title_screen()
+    while option not in player_options:
+        option = input("> ").lower()
+        if option == "":
+            title_screen()
+        else:
+            print("Just press enter!")
 
 
 def end_game():
