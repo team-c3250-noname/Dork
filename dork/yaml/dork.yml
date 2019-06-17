@@ -1,37 +1,39 @@
 ---
 Items:
-  Torch:
-    room: "Entrance"
-  Key:
-    room: "Cave"
-  Sword:
-    room: "Armory"
-  Gold:
-    room: "Gold"
+  Graveyard:
+    holds: "Key"
+  Shed:
+    holds: "Shovel"
+  Fields:
+    holds: "Rake"
+  Cliff:
+    holds: null
+  Farmhouse:
+    holds: "Note"
 
 Rooms:
-  Entrance:
-    north: "Boss"
-    east: "Cave"
-    south: null
-    west: "Armory"
-  Boss:
-    north: "Gold"
-    east: "Cave"
-    south: "Entrance"
-    west: "Armory"
-  Cave:
-    north: "Boss"
+  Graveyard:
+    north: "Fields"
     east: null
     south: null
-    west: "Entrance"
-  Armory:
-    north: "Boss"
-    east: "Entrance"
-    south: null
     west: null
-  Gold:
+  Shed:
     north: null
     east: null
-    south: "Boss"
+    south: "Farmhouse"
     west: null
+  Farmhouse:
+    north: "Shed"
+    east: null
+    south: null
+    west: null
+  Fields:
+    north: "Farmhouse"
+    east: "Cliff"
+    south: "Graveyard"
+    west: null
+  Cliff:
+    north: null
+    east: null
+    south: null
+    west: "Fields"

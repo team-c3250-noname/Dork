@@ -4,6 +4,7 @@
 from pprint import pprint
 import yaml
 
+ITEMDATA = ["holds"]
 DIRECTIONS = ["north", "south", "east", "west"]
 
 def _load(file_name = "./dork/yaml/dork.yml"):
@@ -16,6 +17,16 @@ def _save():
     # Decide how to format save data
     # For now we have a test dork.yml file
     return
+
+def _item(items, name, idata):
+    item = items[name]
+    if idata not in item:
+        print(f"{name} does not have {idata} as a key.")
+    elif item[idata] is None:
+        print(f"There are no items in {name}.")
+    else:
+        other = item[idata]
+        print(f"{other} is in {name}.")
 
 def _path(rooms, name, direction):
     room = rooms[name]
@@ -39,14 +50,27 @@ def main():
         print("No rooms found.")
         return
 
+    if "Items" not in data:
+        print("No items found.")
+        return
+
     if not isinstance(data["Rooms"], dict):
         print("Rooms in data were not proper data.")
+        return
+
+    if not isinstance(data["Items"], dict):
+        print("items in data were not proper data.")
         return
 
     rooms = data["Rooms"]
     for name in rooms:
         for direction in DIRECTIONS:
             _path(rooms, name, direction)
+
+    items = data["Items"]
+    for name2 in items:
+        for idata in ITEMDATA:
+            _item(items, name2, idata)
 
 if __name__ == "__main__":
     main()
