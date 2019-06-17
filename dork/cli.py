@@ -69,7 +69,7 @@ def setup_game():
     """
     os.system('cls')
     print("This will set the game up " +
-          "and exicute the main loop for the game")
+          "and execute the main loop for the game")
 
 
 def help_menu():
@@ -108,4 +108,5 @@ def end_game():
     sys.exit()
 
 
-title_screen()
+if __name__ == "__main__":
+    title_screen()
