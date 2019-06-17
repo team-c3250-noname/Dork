@@ -16,7 +16,9 @@ def main(*args):
 
 #interaction
 
-def prompt()
+def prompt():
+    """ Asks user what they would like to do
+    """
     print("\n" + "What would you like to do?")
     action = input("> ")
     acceptable_actions = ['move', 'go', 'walk', 'travel', 'quit', 'examine', 'inspect', 'look']
@@ -24,22 +26,27 @@ def prompt()
         print ("Unknown action, try again.\n")
         if action.lower == 'quit':
             sys.exit()
-        elif action.lower() in ['move', 'go', 'travel', 'walk']
+        elif action.lower() in ['move', 'go', 'travel', 'walk']:
             player_move(action.lower())
-        elif action.lower() in ['examine', 'inspect', 'interact', 'look', 'pick up']
+        elif action.lower() in ['examine', 'inspect', 'interact', 'look', 'pick up']:
             player_examine(action.lower())
 
-def player_move(action)
-    if action.lower() in ['up', 'north']
+
+def player_move(action):
+    if action.lower() in ['north']:
         print("This will take you north")
-    elif action.lower() in ['down', 'south']
+    elif action.lower() in ['south']:
         print('This will take you south')
-    elif action.lower() in ['left', 'west']
+    elif action.lower() in ['west']:
         print('This will take you west')
-    elif action.lower() in ['right', 'east']
+    elif action.lower() in ['east']:
         print('This will take you east')
 
-def player_examine(action)
-    if action.lower() in ['examine', 'inspect']
-    
-    print()
+
+def player_examine(action):
+    if action.lower() in ['examine', 'inspect']:
+        print("Item description")
+    elif action.lower() in ['interact']:
+        print()
+    elif action.lower() in ['pickup']:
+        print('The item is in your hand')
