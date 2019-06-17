@@ -1,4 +1,13 @@
 ---
+Player:
+  Items:
+    holding: "Sword"
+  Position:
+    location: "Shed"
+  HP:
+    current: 95
+    max: 100
+
 Items:
   Graveyard:
     holds: "Key"

@@ -4,6 +4,7 @@
 from pprint import pprint
 import yaml
 
+PLAYERDATA = ["holding", "location", "current", "max"]
 ITEMDATA = ["holds"]
 DIRECTIONS = ["north", "south", "east", "west"]
 
@@ -17,6 +18,21 @@ def _save():
     # Decide how to format save data
     # For now we have a test dork.yml file
     return
+
+def _player(players, name, pdata):
+    player = players[name]
+    if pdata not in player:
+        print(".")
+    elif player[pdata] is None:
+        print(f"There is no data in {name}.")
+    else:
+        other = player[pdata]
+        if name == "Position":
+            print(f"Player is currently at the {other}.")
+        elif name == "Items":
+            print(f"Player's inventory contains {other}.")
+        elif name == "HP":
+            print(f"Player has {other} {pdata} HP.")
 
 def _item(items, name, idata):
     item = items[name]
@@ -45,9 +61,13 @@ def main():
     print("Data that was loaded:")
     pprint(data)
 
-    print("Checking room and item list...")
+    print("Checking rooms, items, and player data...")
     if "Rooms" not in data:
         print("No rooms found.")
+        return
+
+    if "Player" not in data:
+        print("No player found.")
         return
 
     if "Items" not in data:
@@ -59,7 +79,11 @@ def main():
         return
 
     if not isinstance(data["Items"], dict):
-        print("items in data were not proper data.")
+        print("Items in data were not proper data.")
+        return
+
+    if not isinstance(data["Player"], dict):
+        print("Player in data was not proper data.")
         return
 
     rooms = data["Rooms"]
@@ -71,6 +95,11 @@ def main():
     for name2 in items:
         for idata in ITEMDATA:
             _item(items, name2, idata)
+
+    players = data["Player"]
+    for name3 in players:
+        for pdata in PLAYERDATA:
+            _player(players, name3, pdata)
 
 if __name__ == "__main__":
     main()
