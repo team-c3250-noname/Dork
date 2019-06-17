@@ -4,6 +4,7 @@ doc8
 flake8
 pylint
 pytest
+pytest-mocker
 pytest-runner
 Sphinx
 sphinxcontrib-napoleon

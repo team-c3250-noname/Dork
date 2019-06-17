@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Basic CLI Dork.
 """
-import sys
 import os
 
 
@@ -15,35 +14,18 @@ def main(*args):
     if "-h" in args or '--help' in args:
         print("usage:", script_name, "[-h]")
     else:
-        print(*args)
-
-
-class Player():
-
-    """Creates the player
-    """
-    def __init__(self):
-        self.game_over = False
-
-
-MY_PLAYER = Player()
+        title_screen()
 
 
 def title_screen_selections():
     """Will allow the user to choose what to do
     """
-    play_options = ('play', 'load', 'help', 'quit')
-    option = ''
-    while option not in play_options:
-        option = input("> ").lower()
-        if option == ("play"):
-            setup_game()
-        elif option == ("load"):
-            load_game()
-        elif option == ("help"):
-            help_menu()
-        elif option == ("quit"):
-            end_game()
+    play_options = {'play': setup_game, 'load': load_game, 'help': help_menu, 'quit': end_game}
+    user_play = True
+    while user_play is True:
+        option = input("> ")
+        if option in play_options:
+            user_play = play_options[option]()
         else:
             print("Please enter a valid command.\n")
 
@@ -70,14 +52,13 @@ def setup_game():
     os.system('cls')
     print("This will set the game up " +
           "and execute the main loop for the game")
+    return True
 
 
 def help_menu():
     """Shows the help menu
     """
     os.system('cls')
-    player_options = ("")
-    option = "yes"
     print("Help Menu")
     print("Movement: use 'move' and a direction")
     print("for example, move north, will move the character north if possible")
@@ -85,29 +66,19 @@ def help_menu():
     print("Items: some rooms have items that you might need further in")
     print("to pick up the item use the command 'pick up' or 'loot'\n")
     print("To return to title screen press enter.")
-    while option not in player_options:
-        option = input("> ").lower()
-        if option == "":
-            title_screen()
-        else:
-            print("Just press enter!")
+    input("Press any key to return! ")
+    return True
 
 
 def load_game():
     """Will load a saved game
     """
     os.system('cls')
-    player_options = ("")
-    option = "yes"
     print("This function is not currently in use.")
     print("This will eventually allow you to load a saved game.\n")
     print("To return to title screen press enter.")
-    while option not in player_options:
-        option = input("> ").lower()
-        if option == "":
-            title_screen()
-        else:
-            print("Just press enter!")
+    input("Press any key to return! ")
+    return True
 
 
 def end_game():
@@ -115,8 +86,4 @@ def end_game():
     """
     os.system('cls')
     print("Thank you for playing")
-    sys.exit()
-
-
-if __name__ == "__main__":
-    title_screen()
+    return False
