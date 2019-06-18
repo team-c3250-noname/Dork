@@ -33,6 +33,8 @@ def _player(players, name, pdata):
             print(f"Player's inventory contains {other}.")
         elif name == "HP":
             print(f"Player has {other} {pdata} HP.")
+        else:
+            print(f"Player's {name}: {other}.")
 
 def _item(items, name, idata):
     item = items[name]
