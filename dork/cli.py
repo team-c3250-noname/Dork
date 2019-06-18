@@ -17,34 +17,29 @@ def main(*args):
         title_screen()
 
 
-def title_screen_selections():
-    """Will allow the user to choose what to do
+def title_screen():
+    """Will display the title screen
     """
+    os.system('cls')
     play_options = {'play': setup_game, 'load': load_game,
                     'help': help_menu, 'quit': end_game}
     user_play = True
     while user_play is True:
+        os.system('cls')
+        print("##########################")
+        print("#   Welcome to the game  #")
+        print("# Created by Team NoName #")
+        print("##########################")
+        print("")
+        print("          play            ")
+        print("          load            ")
+        print("          help            ")
+        print("          quit            ")
         option = input("> ")
         if option in play_options:
             user_play = play_options[option]()
         else:
             print("Please enter a valid command.\n")
-
-
-def title_screen():
-    """Will display the title screen
-    """
-    os.system('cls')
-    print("##########################")
-    print("#   Welcome to the game  #")
-    print("# Created by Team NoName #")
-    print("##########################")
-    print("")
-    print("          play            ")
-    print("          load            ")
-    print("          help            ")
-    print("          quit            ")
-    title_screen_selections()
 
 
 def setup_game():
@@ -53,6 +48,7 @@ def setup_game():
     os.system('cls')
     print("This will set the game up " +
           "and execute the main loop for the game")
+    input("To return to title screen press enter.")
     return True
 
 
