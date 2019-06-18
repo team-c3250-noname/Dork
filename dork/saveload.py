@@ -17,6 +17,8 @@ def _load(file_name = "./dork/yaml/dork.yml"):
 def _save():
     # Decide how to format save data
     # For now we have a test dork.yml file
+    print("This function will save maze, player, and item data.")
+    print("For now it does nothing.")
     return
 
 def _player(players, name, pdata):
