@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
 """Basic CLI Dork.
 """
+
+import argparse
 import os
+import re
+from io import StringIO
+import cursor
+import dork
 
 
 __all__ = ["main"]
+
 
 def is_filename_compliant(filename):
     """checks if filename follows win and unix naming guidelines
