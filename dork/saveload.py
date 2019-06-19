@@ -10,6 +10,8 @@ DIRECTIONS = ["north", "south", "east", "west"]
 
 
 def load(file_name="./dork/yaml/dork.yml"):
+    """This will load a file into data.
+    """
     try:
         with open(file_name) as file:
             data = yaml.safe_load(file.read())
@@ -19,6 +21,8 @@ def load(file_name="./dork/yaml/dork.yml"):
 
 
 def save():
+    """This will save a file to data. Eventually.
+    """
     # Decide how to format save data
     # For now we have a test dork.yml file
     print("This function will save maze, player, and item data.")
@@ -27,6 +31,8 @@ def save():
 
 
 def player(players, name, pdata):
+    """Parses player data into useful info.
+    """
     player = players[name]
     if pdata not in player:
         print(".")
@@ -45,6 +51,8 @@ def player(players, name, pdata):
 
 
 def item(items, name, idata):
+    """Parses item data into useful info.
+    """
     item = items[name]
     if idata not in item:
         print(f"{name} does not have {idata} as a key.")
@@ -56,6 +64,8 @@ def item(items, name, idata):
 
 
 def path(rooms, name, direction):
+    """Parses room information into useful data.
+    """
     room = rooms[name]
     if direction not in room:
         print(f"{name} does not have {direction} as a key.")
@@ -69,6 +79,8 @@ def path(rooms, name, direction):
 
 
 def main():  # pragma: no cover
+    """Runs everything.
+    """
     data = load()
     print("Data that was loaded:")
     pprint(data)

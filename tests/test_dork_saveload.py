@@ -22,6 +22,8 @@ def testsave():
 
 
 def testplayer(run):
+    """Test player function.
+    """
     testvar1 = {'Items': {'holding': "Sword"}}
     testvar2 = 'Items'
     testvar3 = 'holding'
@@ -72,6 +74,8 @@ def testplayer(run):
 
 
 def testitem(run):
+    """Test item function.
+    """
     testvar1 = {'Cliff': {'holds': None}}
     testvar2 = 'Cliff'
     testvar3 = 'holds'
@@ -94,6 +98,8 @@ def testitem(run):
 
 
 def testpath(run):
+    """Test room info.
+    """
     out, err = run(dork.saveload.path, "Junk", 2, "Stuff")
     assert "does not have" in out, \
         "Failed to run the saveload.path method: {err}".format(err=err)
@@ -125,9 +131,3 @@ def testpath(run):
     out, err = run(dork.saveload.path, testvar1, testvar2, testvar3)
     assert "Cliff" in out, \
         "Failed to run the saveload.path method: {err}".format(err=err)
-
-
-def testmain(run):
-    out, err = run(dork.saveload.main)
-    assert "Checking" in out, \
-        "Failed to run the saveload.main method: {err}".format(err=err)
