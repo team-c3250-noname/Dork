@@ -1,3 +1,5 @@
+"""Save and load system for dork
+"""
 # Generously inspired by our LA,
 # https://github.com/LSmith-Zenoscave
 
@@ -30,7 +32,7 @@ def save():
     return "1"
 
 
-def player(players, name, pdata):
+def pplayer(players, name, pdata):
     """Parses player data into useful info.
     """
     player = players[name]
@@ -50,7 +52,7 @@ def player(players, name, pdata):
             print(f"Player's {name}: {other}.")
 
 
-def item(items, name, idata):
+def pitem(items, name, idata):
     """Parses item data into useful info.
     """
     item = items[name]
@@ -118,12 +120,12 @@ def main():  # pragma: no cover
     items = data["Items"]
     for name2 in items:
         for idata in ITEMDATA:
-            item(items, name2, idata)
+            pitem(items, name2, idata)
 
     players = data["Player"]
     for name3 in players:
         for pdata in PLAYERDATA:
-            player(players, name3, pdata)
+            pplayer(players, name3, pdata)
 
 
 if __name__ == "__main__":  # pragma: no cover

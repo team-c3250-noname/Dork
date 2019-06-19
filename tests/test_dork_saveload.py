@@ -1,3 +1,6 @@
+"""Tests saveload.
+"""
+
 import dork.saveload
 
 
@@ -28,49 +31,49 @@ def testplayer(run):
     testvar2 = 'Items'
     testvar3 = 'holding'
 
-    out, err = run(dork.saveload.player, testvar1, testvar2, testvar3)
+    out, err = run(dork.saveload.pplayer, testvar1, testvar2, testvar3)
     assert "Sword" in out, \
-        "Failed to run the saveload.player method: {err}".format(err=err)
+        "Failed to run the saveload.pplayer method: {err}".format(err=err)
 
     testvar1 = {'Position': {'location': "Cliff"}}
     testvar2 = 'Position'
     testvar3 = 'location'
 
-    out, err = run(dork.saveload.player, testvar1, testvar2, testvar3)
+    out, err = run(dork.saveload.pplayer, testvar1, testvar2, testvar3)
     assert "Cliff" in out, \
-        "Failed to run the saveload.player method: {err}".format(err=err)
+        "Failed to run the saveload.pplayer method: {err}".format(err=err)
 
     testvar1 = {'HP': {'current': 95}}
     testvar2 = 'HP'
     testvar3 = 'current'
 
-    out, err = run(dork.saveload.player, testvar1, testvar2, testvar3)
+    out, err = run(dork.saveload.pplayer, testvar1, testvar2, testvar3)
     assert "95" in out, \
-        "Failed to run the saveload.player method: {err}".format(err=err)
+        "Failed to run the saveload.pplayer method: {err}".format(err=err)
 
     testvar1 = {'HP': {'current': None}}
     testvar2 = 'HP'
     testvar3 = 'current'
 
-    out, err = run(dork.saveload.player, testvar1, testvar2, testvar3)
+    out, err = run(dork.saveload.pplayer, testvar1, testvar2, testvar3)
     assert "There is" in out, \
-        "Failed to run the saveload.player method: {err}".format(err=err)
+        "Failed to run the saveload.pplayer method: {err}".format(err=err)
 
     testvar1 = {'HP': {'current': 95}}
     testvar2 = 'HP'
     testvar3 = 'poop'
 
-    out, err = run(dork.saveload.player, testvar1, testvar2, testvar3)
+    out, err = run(dork.saveload.pplayer, testvar1, testvar2, testvar3)
     assert "." in out, \
-        "Failed to run the saveload.player method: {err}".format(err=err)
+        "Failed to run the saveload.pplayer method: {err}".format(err=err)
 
     testvar1 = {'Happiness': {'level': 12}}
     testvar2 = 'Happiness'
     testvar3 = 'level'
 
-    out, err = run(dork.saveload.player, testvar1, testvar2, testvar3)
+    out, err = run(dork.saveload.pplayer, testvar1, testvar2, testvar3)
     assert "Player's" in out, \
-        "Failed to run the saveload.player method: {err}".format(err=err)
+        "Failed to run the saveload.pplayer method: {err}".format(err=err)
 
 
 def testitem(run):
@@ -80,21 +83,21 @@ def testitem(run):
     testvar2 = 'Cliff'
     testvar3 = 'holds'
 
-    out, err = run(dork.saveload.item, testvar1, testvar2, testvar3)
+    out, err = run(dork.saveload.pitem, testvar1, testvar2, testvar3)
     assert "Cliff" in out, \
-        "Failed to run the saveload.item method: {err}".format(err=err)
+        "Failed to run the saveload.pitem method: {err}".format(err=err)
 
     testvar1 = {'Cliff': {'holds': "Sword"}}
 
-    out, err = run(dork.saveload.item, testvar1, testvar2, testvar3)
+    out, err = run(dork.saveload.pitem, testvar1, testvar2, testvar3)
     assert "Sword" in out, \
-        "Failed to run the saveload.item method: {err}".format(err=err)
+        "Failed to run the saveload.pitem method: {err}".format(err=err)
 
     testvar3 = 'poop'
 
-    out, err = run(dork.saveload.item, testvar1, testvar2, testvar3)
+    out, err = run(dork.saveload.pitem, testvar1, testvar2, testvar3)
     assert "poop" in out, \
-        "Failed to run the saveload.item method: {err}".format(err=err)
+        "Failed to run the saveload.pitem method: {err}".format(err=err)
 
 
 def testpath(run):
