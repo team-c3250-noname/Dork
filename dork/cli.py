@@ -202,10 +202,11 @@ def prompt():
         user_action = action.split()
         mycommand = [(x in acceptable_actions, x) for x in user_action]
         if mycommand:
-            args = commands[mycommand[0][1]][1](user_action)
-            check = commands[mycommand[0][1]][0](*args)
-            if not check:
-                break
+            if mycommand[0][0]:
+                args = commands[mycommand[0][1]][1](user_action)
+                check = commands[mycommand[0][1]][0](*args)
+                if not check:
+                    break
         check = any(x in acceptable_actions for x in user_action)
 
 

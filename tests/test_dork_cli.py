@@ -12,8 +12,8 @@ def test_cli_exists(run):
     assert isinstance(dork.cli.main, FunctionType)
     try:
         run(dork.cli.main)
-        run(dork.cli.main, input_values=['jump', 'quit'])
-        run(dork.cli.main, input_values=['play', 'quit'])
+        run(dork.cli.main, input_values=['jump', ' ', 'quit'])
+        run(dork.cli.main, input_values=['play', ' ', 'quit'])
         run(dork.cli.main, input_values=['play', 'jump high', 'quit'])
         run(dork.cli.main, input_values=['play', 'move north', 'quit'])
         run(dork.cli.main, input_values=['play', 'move south', 'quit'])
