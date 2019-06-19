@@ -11,6 +11,8 @@ import dork
 
 __all__ = ["main"]
 
+__EXTENSION__ = ".yml"
+
 
 def is_filename_compliant(filename):
     """checks if filename follows win and unix naming guidelines
@@ -70,7 +72,7 @@ def the_predork_cli(help_msg, *args):
         if not is_filename_compliant(arglist.out):
             return (True, False)
 
-        _f = open("mazes/"+arglist.out+".drk", "w")
+        _f = open(__EXTENSION__[1:]+"/"+arglist.out+__EXTENSION__, "w")
         cursor.hide()
         dots = ("Generating maze    ", "Generating maze .",
                 "Generating maze ..", "Generating maze ...")
@@ -87,13 +89,14 @@ def the_predork_cli(help_msg, *args):
 
     if arglist.list or arglist.init:
         mazes = []
-        for (_, _, filenames) in os.walk("mazes/"):
+        for (_, _, filenames) in os.walk(__EXTENSION__[1:]):
             mazes.extend(filenames)
-        only_maze_files = [maze for maze in mazes if maze.find(".drk") > 0]
+        only_maze_files = [maze for maze in mazes
+                           if maze.find(__EXTENSION__) > 0]
         if arglist.list:
             print(os.linesep.join(only_maze_files))
             dork_flags = (True, False)
-        if arglist.init and arglist.init + ".drk" in only_maze_files:
+        if arglist.init and arglist.init + __EXTENSION__ in only_maze_files:
             print("loaded maze "+arglist.init)
         elif arglist.init:
             print("maze "+arglist.init+" does not exist")
