@@ -148,8 +148,7 @@ def setup_game():
     os.system('cls')
     print("This will set the game up " +
           "and execute the main loop for the game")
-    input("To return to title screen press enter.")
-    return True
+    prompt()
 
 
 def help_menu():
@@ -188,39 +187,54 @@ def prompt():
     """ Asks user what they would like to do
     """
     print("\n" + "What would you like to do?")
-    action = input("> ")
+    
     acceptable_actions = ['move', 'go', 'walk', 'travel', 'quit',
                           'examine', 'inspect', 'look']
-    while action.lower() not in acceptable_actions:
-        print("Unknown action, try again.\n")
-        if action.lower == 'quit':
-            end_game()
-        elif action.lower() in ['move', 'go', 'travel', 'walk']:
-            player_move(action.lower())
-        elif action.lower() in ['examine', 'inspect',
-                                'interact', 'look', 'pick up']:
-            player_examine(action.lower())
+    d_action = list(zip(['examine', 'inspect','interact', 'look', 'pick up'], [(player_examine, lambda x: [x])] *5))
+    da_action = list(zip(['move', 'go', 'travel', 'walk'], [(player_move, lambda x: [x])]*4))
+    daq_action = ("quit", (end_game, lambda x: []))
+
+    d_action.extend(da_action)
+    d_action.append(daq_action)
+
+    commands = dict(d_action)
+    action = ""
+    check = True
+    while(check):
+        action = input("> ").lower()
+        user_action = action.split()
+        mycommand = [(x in acceptable_actions, x) for x in user_action]
+        if mycommand:
+            args = commands[mycommand[0][1]][1](user_action)
+            check = commands[mycommand[0][1]][0](*args)
+            if not check:
+                break
+        check = any(x in acceptable_actions for x in user_action)
 
 
-def player_move(action):
+def player_move(user_action):
     """ Allows player to move along maze
     """
-    if action.lower() in ['north']:
+    if 'north' in user_action:
         print("This will take you north")
-    elif action.lower() in ['south']:
+        prompt()
+    elif 'south' in user_action:
         print('This will take you south')
-    elif action.lower() in ['west']:
+        prompt()
+    elif 'west' in user_action:
         print('This will take you west')
-    elif action.lower() in ['east']:
+        prompt()
+    elif 'east' in user_action:
         print('This will take you east')
+        prompt()
 
 
-def player_examine(action):
+def player_examine(user_action):
     """ Allows player to interact with things in room
     """
-    if action.lower() in ['examine', 'inspect']:
+    if user_action in ['examine', 'inspect']:
         print("Item description")
-    elif action.lower() in ['interact']:
+    elif user_action in ['interact']:
         print('You interacted with item')
-    elif action.lower() in ['pickup']:
+    elif user_action in ['pickup']:
         print('The item is in your hand')
