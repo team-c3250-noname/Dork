@@ -123,12 +123,10 @@ def main(*args):
 def title_screen():
     """Will display the title screen
     """
-    os.system('cls')
     play_options = {'play': setup_game, 'load': load_game,
                     'help': help_menu, 'quit': end_game}
     user_play = True
     while user_play is True:
-        os.system('cls')
         print("##########################")
         print("#   Welcome to the game  #")
         print("# Created by Team NoName #")
@@ -148,7 +146,6 @@ def title_screen():
 def setup_game():
     """This will set up the game
     """
-    os.system('cls')
     print("This will set the game up " +
           "and execute the main loop for the game")
     prompt()
@@ -157,7 +154,6 @@ def setup_game():
 def help_menu():
     """Shows the help menu
     """
-    os.system('cls')
     print("Help Menu")
     print("Movement: use 'move' and a direction")
     print("for example, move north, will move the character north if possible")
@@ -171,7 +167,6 @@ def help_menu():
 def load_game():
     """Will load a saved game
     """
-    os.system('cls')
     print("This function is not currently in use.")
     print("This will eventually allow you to load a saved game.\n")
     input("To return to title screen press enter.")
@@ -181,7 +176,6 @@ def load_game():
 def end_game():
     """Will show a end game screen and thank the player
     """
-    os.system('cls')
     print("Thank you for playing")
     return False
 
@@ -192,12 +186,11 @@ def prompt():
     print("\n" + "What would you like to do?")
     acceptable_actions = ['move', 'go', 'walk', 'travel', 'quit',
                           'examine', 'inspect', 'look']
-    d_action = list(zip(['examine', 'inspect', 'interact', 'look', 'pick up'],
-                        [(player_examine, lambda x: [x])] * 5))
     da_action = list(zip(['move', 'go', 'travel', 'walk'],
                          [(player_move, lambda x: [x])]*4))
     daq_action = ("quit", (end_game, lambda x: []))
 
+    d_action = []
     d_action.extend(da_action)
     d_action.append(daq_action)
 
@@ -209,10 +202,14 @@ def prompt():
         user_action = action.split()
         mycommand = [(x in acceptable_actions, x) for x in user_action]
         if mycommand:
-            args = commands[mycommand[0][1]][1](user_action)
-            check = commands[mycommand[0][1]][0](*args)
-            if not check:
-                break
+            if mycommand[0][0]:
+                args = commands[mycommand[0][1]][1](user_action)
+                check = commands[mycommand[0][1]][0](*args)
+                if not check:
+                    break
+            else:
+                print('Invalid command, try again.')
+                continue
         check = any(x in acceptable_actions for x in user_action)
 
 
@@ -231,14 +228,6 @@ def player_move(user_action):
     elif 'east' in user_action:
         print('This will take you east')
         prompt()
-
-
-def player_examine(user_action):
-    """ Allows player to interact with things in room
-    """
-    if user_action in ['examine', 'inspect']:
-        print("Item description")
-    elif user_action in ['interact']:
-        print('You interacted with item')
-    elif user_action in ['pickup']:
-        print('The item is in your hand')
+    else:
+        print("Invalid direction")
+        prompt()
