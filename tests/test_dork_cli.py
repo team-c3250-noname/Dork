@@ -41,7 +41,7 @@ def test_pre_cli_list(run):
     """dork cli -l option should list test.drk file
     """
     out, err = run(dork.cli.the_predork_cli, [], *("", "-l"))
-    assert "test.drk" in out, \
+    assert "test.yml" in out, \
         "Failed run the dork.cli.the_predork_cli method: {err}"\
         .format(err=err)
 
@@ -50,7 +50,7 @@ def test_pre_cli_list_version(run):
     """tests both list and version
     """
     out, err = run(dork.cli.the_predork_cli, [], *("", "-l", "-v"))
-    assert "test.drk" in out and dork.__version__ in out, \
+    assert "test.yml" in out and dork.__version__ in out, \
         "Failed run the dork.cli.the_predork_cli method: {err}"\
         .format(err=err)
 
