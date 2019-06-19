@@ -201,7 +201,7 @@ def prompt():
     commands = dict(d_action)
     action = ""
     check = True
-    while(check):
+    while check:
         action = input("> ").lower()
         user_action = action.split()
         mycommand = [(x in acceptable_actions, x) for x in user_action]
