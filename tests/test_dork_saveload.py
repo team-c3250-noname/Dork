@@ -123,7 +123,7 @@ def testpath(run):
     assert "Cliff" in out, \
         "Failed to run the saveload.path method: {err}".format(err=err)
 
-def test_main(run):
+def testmain(run):
     out, err = run(dork.saveload.main)
     assert "Checking" in out, \
         "Failed to run the saveload.main method: {err}".format(err=err)
