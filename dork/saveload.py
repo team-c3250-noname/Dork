@@ -8,7 +8,8 @@ PLAYERDATA = ["holding", "location", "current", "max"]
 ITEMDATA = ["holds"]
 DIRECTIONS = ["north", "south", "east", "west"]
 
-def load(file_name = "./dork/yaml/dork.yml"):
+
+def load(file_name="./dork/yaml/dork.yml"):
     try:
         with open(file_name) as file:
             data = yaml.safe_load(file.read())
@@ -16,12 +17,14 @@ def load(file_name = "./dork/yaml/dork.yml"):
         return "Try again"
     return data
 
+
 def save():
     # Decide how to format save data
     # For now we have a test dork.yml file
     print("This function will save maze, player, and item data.")
     print("For now it does nothing.")
     return "1"
+
 
 def player(players, name, pdata):
     player = players[name]
@@ -40,6 +43,7 @@ def player(players, name, pdata):
         else:
             print(f"Player's {name}: {other}.")
 
+
 def item(items, name, idata):
     item = items[name]
     if idata not in item:
@@ -49,6 +53,7 @@ def item(items, name, idata):
     else:
         other = item[idata]
         print(f"{other} is in {name}.")
+
 
 def path(rooms, name, direction):
     room = rooms[name]
@@ -62,7 +67,8 @@ def path(rooms, name, direction):
         other = room[direction]
         print(f"{other} is {direction} of {name}.")
 
-def main(): # pragma: no cover
+
+def main():  # pragma: no cover
     data = load()
     print("Data that was loaded:")
     pprint(data)
@@ -107,5 +113,6 @@ def main(): # pragma: no cover
         for pdata in PLAYERDATA:
             player(players, name3, pdata)
 
-if __name__ == "__main__": # pragma: no cover
+
+if __name__ == "__main__":  # pragma: no cover
     main()
