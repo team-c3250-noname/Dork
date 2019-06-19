@@ -25,7 +25,7 @@ def prompt():
     while action.lower() not in acceptable_actions:
         print ("Unknown action, try again.\n")
         if action.lower == 'quit':
-            sys.exit()
+            end_game()
         elif action.lower() in ['move', 'go', 'travel', 'walk']:
             player_move(action.lower())
         elif action.lower() in ['examine', 'inspect', 'interact', 'look', 'pick up']:
@@ -33,6 +33,8 @@ def prompt():
 
 
 def player_move(action):
+    """ Allows player to move along maze
+    """
     if action.lower() in ['north']:
         print("This will take you north")
     elif action.lower() in ['south']:
@@ -44,6 +46,8 @@ def player_move(action):
 
 
 def player_examine(action):
+    """ Allows player to interact with things in room
+    """
     if action.lower() in ['examine', 'inspect']:
         print("Item description")
     elif action.lower() in ['interact']:
