@@ -8,7 +8,7 @@ PLAYERDATA = ["holding", "location", "current", "max"]
 ITEMDATA = ["holds"]
 DIRECTIONS = ["north", "south", "east", "west"]
 
-def _load(file_name = "./dork/yaml/dork.yml"):
+def load(file_name = "./dork/yaml/dork.yml"):
     try:
         with open(file_name) as file:
             data = yaml.safe_load(file.read())
@@ -16,14 +16,14 @@ def _load(file_name = "./dork/yaml/dork.yml"):
         return "Try again"
     return data
 
-def _save():
+def save():
     # Decide how to format save data
     # For now we have a test dork.yml file
     print("This function will save maze, player, and item data.")
     print("For now it does nothing.")
     return "1"
 
-def _player(players, name, pdata):
+def player(players, name, pdata):
     player = players[name]
     if pdata not in player:
         print(".")
@@ -40,7 +40,7 @@ def _player(players, name, pdata):
         else:
             print(f"Player's {name}: {other}.")
 
-def _item(items, name, idata):
+def item(items, name, idata):
     item = items[name]
     if idata not in item:
         print(f"{name} does not have {idata} as a key.")
@@ -50,7 +50,7 @@ def _item(items, name, idata):
         other = item[idata]
         print(f"{other} is in {name}.")
 
-def _path(rooms, name, direction):
+def path(rooms, name, direction):
     room = rooms[name]
     if direction not in room:
         print(f"{name} does not have {direction} as a key.")
@@ -63,7 +63,7 @@ def _path(rooms, name, direction):
         print(f"{other} is {direction} of {name}.")
 
 def main(): # pragma: no cover
-    data = _load()
+    data = load()
     print("Data that was loaded:")
     pprint(data)
 
@@ -95,17 +95,17 @@ def main(): # pragma: no cover
     rooms = data["Rooms"]
     for name in rooms:
         for direction in DIRECTIONS:
-            _path(rooms, name, direction)
+            path(rooms, name, direction)
 
     items = data["Items"]
     for name2 in items:
         for idata in ITEMDATA:
-            _item(items, name2, idata)
+            item(items, name2, idata)
 
     players = data["Player"]
     for name3 in players:
         for pdata in PLAYERDATA:
-            _player(players, name3, pdata)
+            player(players, name3, pdata)
 
 if __name__ == "__main__": # pragma: no cover
     main()
