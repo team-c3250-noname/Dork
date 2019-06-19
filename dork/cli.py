@@ -189,14 +189,16 @@ def prompt():
     """
     print("\n" + "What would you like to do?")
     action = input("> ")
-    acceptable_actions = ['move', 'go', 'walk', 'travel', 'quit', 'examine', 'inspect', 'look']
+    acceptable_actions = ['move', 'go', 'walk', 'travel', 'quit',
+                          'examine', 'inspect', 'look']
     while action.lower() not in acceptable_actions:
-        print ("Unknown action, try again.\n")
+        print("Unknown action, try again.\n")
         if action.lower == 'quit':
             end_game()
         elif action.lower() in ['move', 'go', 'travel', 'walk']:
             player_move(action.lower())
-        elif action.lower() in ['examine', 'inspect', 'interact', 'look', 'pick up']:
+        elif action.lower() in ['examine', 'inspect',
+                                'interact', 'look', 'pick up']:
             player_examine(action.lower())
 
 
