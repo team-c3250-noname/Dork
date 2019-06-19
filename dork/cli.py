@@ -228,14 +228,3 @@ def player_move(user_action):
     elif 'east' in user_action:
         print('This will take you east')
         prompt()
-
-
-def player_examine(user_action):
-    """ Allows player to interact with things in room
-    """
-    if user_action in ['examine', 'inspect']:
-        print("Item description")
-    elif user_action in ['interact']:
-        print('You interacted with item')
-    elif user_action in ['pickup']:
-        print('The item is in your hand')
