@@ -10,11 +10,17 @@ __all__ = ["main"]
 def main(*args):
     """Main CLI runner for Dork
     """
-    script_name = args[0] if args else '???'
-    if "-h" in args or '--help' in args:
-        print("usage:", script_name, "[-h]")
-    else:
-        title_screen()
+    help_msg = []
+
+    exit_dork, print_help = the_predork_cli(help_msg, *args)
+
+    if print_help:
+        print(help_msg[0])
+    if exit_dork:
+        return
+
+    print("running dork")
+    title_screen()
 
 
 def title_screen():
