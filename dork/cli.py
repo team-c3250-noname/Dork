@@ -123,12 +123,10 @@ def main(*args):
 def title_screen():
     """Will display the title screen
     """
-    os.system('cls')
     play_options = {'play': setup_game, 'load': load_game,
                     'help': help_menu, 'quit': end_game}
     user_play = True
     while user_play is True:
-        os.system('cls')
         print("##########################")
         print("#   Welcome to the game  #")
         print("# Created by Team NoName #")
@@ -148,7 +146,6 @@ def title_screen():
 def setup_game():
     """This will set up the game
     """
-    os.system('cls')
     print("This will set the game up " +
           "and execute the main loop for the game")
     prompt()
@@ -157,7 +154,6 @@ def setup_game():
 def help_menu():
     """Shows the help menu
     """
-    os.system('cls')
     print("Help Menu")
     print("Movement: use 'move' and a direction")
     print("for example, move north, will move the character north if possible")
@@ -171,7 +167,6 @@ def help_menu():
 def load_game():
     """Will load a saved game
     """
-    os.system('cls')
     print("This function is not currently in use.")
     print("This will eventually allow you to load a saved game.\n")
     input("To return to title screen press enter.")
@@ -181,7 +176,6 @@ def load_game():
 def end_game():
     """Will show a end game screen and thank the player
     """
-    os.system('cls')
     print("Thank you for playing")
     return False
 
