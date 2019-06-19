@@ -207,6 +207,9 @@ def prompt():
                 check = commands[mycommand[0][1]][0](*args)
                 if not check:
                     break
+            else:
+                print('Invalid command, try again.')
+                continue
         check = any(x in acceptable_actions for x in user_action)
 
 
@@ -224,4 +227,7 @@ def player_move(user_action):
         prompt()
     elif 'east' in user_action:
         print('This will take you east')
+        prompt()
+    else:
+        print("Invalid direction")
         prompt()
