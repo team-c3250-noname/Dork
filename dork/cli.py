@@ -187,11 +187,12 @@ def prompt():
     """ Asks user what they would like to do
     """
     print("\n" + "What would you like to do?")
-    
     acceptable_actions = ['move', 'go', 'walk', 'travel', 'quit',
                           'examine', 'inspect', 'look']
-    d_action = list(zip(['examine', 'inspect','interact', 'look', 'pick up'], [(player_examine, lambda x: [x])] *5))
-    da_action = list(zip(['move', 'go', 'travel', 'walk'], [(player_move, lambda x: [x])]*4))
+    d_action = list(zip(['examine', 'inspect', 'interact', 'look', 'pick up'],
+                        [(player_examine, lambda x: [x])] * 5))
+    da_action = list(zip(['move', 'go', 'travel', 'walk'],
+                         [(player_move, lambda x: [x])]*4))
     daq_action = ("quit", (end_game, lambda x: []))
 
     d_action.extend(da_action)
