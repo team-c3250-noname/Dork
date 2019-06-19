@@ -9,9 +9,11 @@ ITEMDATA = ["holds"]
 DIRECTIONS = ["north", "south", "east", "west"]
 
 def _load(file_name = "./dork/yaml/dork.yml"):
-    with open(file_name) as file:
-        data = yaml.safe_load(file.read())
-
+    try:
+        with open(file_name) as file:
+            data = yaml.safe_load(file.read())
+    except IOError:
+        return "Try again"
     return data
 
 def _save():
@@ -19,7 +21,7 @@ def _save():
     # For now we have a test dork.yml file
     print("This function will save maze, player, and item data.")
     print("For now it does nothing.")
-    return
+    return "1"
 
 def _player(players, name, pdata):
     player = players[name]
@@ -60,7 +62,7 @@ def _path(rooms, name, direction):
         other = room[direction]
         print(f"{other} is {direction} of {name}.")
 
-def main():
+def main(): # pragma: no cover
     data = _load()
     print("Data that was loaded:")
     pprint(data)
@@ -105,5 +107,5 @@ def main():
         for pdata in PLAYERDATA:
             _player(players, name3, pdata)
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     main()
