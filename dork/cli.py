@@ -7,6 +7,7 @@ import re
 from io import StringIO
 import cursor
 import dork
+import dork.saveload
 
 
 __all__ = ["main"]
@@ -126,16 +127,16 @@ def title_screen():
     play_options = {'play': setup_game, 'load': load_game,
                     'help': help_menu, 'quit': end_game}
     user_play = True
+    print("##########################")
+    print("#   Welcome to the game  #")
+    print("# Created by Team NoName #")
+    print("##########################")
+    print("")
+    print("          play            ")
+    print("          load            ")
+    print("          help            ")
+    print("          quit            ")
     while user_play is True:
-        print("##########################")
-        print("#   Welcome to the game  #")
-        print("# Created by Team NoName #")
-        print("##########################")
-        print("")
-        print("          play            ")
-        print("          load            ")
-        print("          help            ")
-        print("          quit            ")
         option = input("> ")
         if option in play_options:
             user_play = play_options[option]()
@@ -167,10 +168,7 @@ def help_menu():
 def load_game():
     """Will load a saved game
     """
-    print("This function is not currently in use.")
-    print("This will eventually allow you to load a saved game.\n")
-    input("To return to title screen press enter.")
-    return True
+    dork.saveload.main()
 
 
 def end_game():
@@ -183,34 +181,20 @@ def end_game():
 def prompt():
     """ Asks user what they would like to do
     """
-    print("\n" + "What would you like to do?")
-    acceptable_actions = ['move', 'go', 'walk', 'travel', 'quit',
-                          'examine', 'inspect', 'look']
-    da_action = list(zip(['move', 'go', 'travel', 'walk'],
-                         [(player_move, lambda x: [x])]*4))
-    daq_action = ("quit", (end_game, lambda x: []))
-
-    d_action = []
-    d_action.extend(da_action)
-    d_action.append(daq_action)
-
-    commands = dict(d_action)
-    action = ""
-    check = True
-    while check:
-        action = input("> ").lower()
-        user_action = action.split()
-        mycommand = [(x in acceptable_actions, x) for x in user_action]
-        if mycommand:
-            if mycommand[0][0]:
-                args = commands[mycommand[0][1]][1](user_action)
-                check = commands[mycommand[0][1]][0](*args)
-                if not check:
-                    break
-            else:
-                print('Invalid command, try again.')
-                continue
-        check = any(x in acceptable_actions for x in user_action)
+    keep_prompting = True
+    player_actions = {'move': player_move, 'go': player_move,
+                      'walk': player_move}
+    # item_actions = ['examine', 'go', 'look']
+    while keep_prompting is True:
+        user_action = input("\n" + "What would you like to do? ").split()
+        action = next((word for word in user_action if word in player_actions),
+                      '')
+        if action in player_actions:
+            keep_prompting = player_actions[action](user_action)
+        elif 'quit' in user_action:
+            keep_prompting = end_game()
+        else:
+            print("Enter another command. ")
 
 
 def player_move(user_action):
@@ -218,16 +202,12 @@ def player_move(user_action):
     """
     if 'north' in user_action:
         print("This will take you north")
-        prompt()
     elif 'south' in user_action:
         print('This will take you south')
-        prompt()
     elif 'west' in user_action:
         print('This will take you west')
-        prompt()
     elif 'east' in user_action:
         print('This will take you east')
-        prompt()
     else:
         print("Invalid direction")
-        prompt()
+    return True
