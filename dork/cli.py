@@ -241,20 +241,24 @@ def player_examine(user_action):
     """
     if 'room' in user_action:
         print(types.ZONE_MAP[types.MY_PLAYER.location][types.DESCRIPTION])
-        print("This room contains a " + types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM])
+        print("This room contains a " +
+              types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM])
     else:
         print("You are trying to examine an unknown thing. Please try again")
     return True
+
 
 def player_take(user_action):
     """Allows user to pick up items
     """
     if types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM] in user_action:
-        print("You have picked up the " + types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM])
+        print("You have picked up the " +
+              types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM])
         types.MY_PLAYER.inventory.append(types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM])
     else:
         print("There is no such item")
     return True
+
 
 def player_menu(user_action):
     """Allows users to view their menu
