@@ -8,6 +8,7 @@ from io import StringIO
 import cursor
 import dork
 import dork.saveload
+import dork.types as types
 
 
 __all__ = ["main"]
@@ -147,8 +148,7 @@ def title_screen():
 def setup_game():
     """This will set up the game
     """
-    print("This will set the game up " +
-          "and execute the main loop for the game")
+    print("You find yourself in the " + types.MY_PLAYER.location)
     prompt()
 
 
@@ -195,6 +195,8 @@ def prompt():
                       'walk': (player_move, one_arg),
                       'examine': (player_examine, one_arg),
                       'look': (player_examine, one_arg),
+                      'pick': (player_take, one_arg),
+                      'user': (player_menu, one_arg),
                       'quit': (end_game, no_arg)}
     while keep_prompting is True:
         user_action = input("\n" + "What would you like to do? ").split()
@@ -211,16 +213,27 @@ def player_move(user_action):
     """ Allows player to move along maze
     """
     if 'north' in user_action:
-        print("This will take you north")
+        destination = types.ZONE_MAP[types.MY_PLAYER.location][types.UP]
+        movement_handler(destination)
     elif 'south' in user_action:
-        print('This will take you south')
+        destination = types.ZONE_MAP[types.MY_PLAYER.location][types.DOWN]
+        movement_handler(destination)
     elif 'west' in user_action:
-        print('This will take you west')
+        destination = types.ZONE_MAP[types.MY_PLAYER.location][types.LEFT]
+        movement_handler(destination)
     elif 'east' in user_action:
-        print('This will take you east')
+        destination = types.ZONE_MAP[types.MY_PLAYER.location][types.RIGHT]
+        movement_handler(destination)
     else:
         print("Invalid direction")
     return True
+
+
+def movement_handler(destination):
+    """ This will handle movement to different rooms
+    """
+    print("You have moved to " + destination)
+    types.MY_PLAYER.location = destination
 
 
 def player_examine(user_action):
@@ -228,6 +241,26 @@ def player_examine(user_action):
     """
     if 'room' in user_action:
         print("This is a room")
+        print("This room contains a " + types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM])
     else:
         print("This will examine the item or room")
+    return True
+
+def player_take(user_action):
+    """Allows user to pick up items
+    """
+    if types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM] in user_action:
+        print("You have picked up the " + types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM])
+        types.MY_PLAYER.inventory.append(types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM])
+    else:
+        print("There is no such item")
+    return True
+
+def player_menu(user_action):
+    """Allows users to view their menu
+    """
+    if 'inventory' in user_action:
+        print(types.MY_PLAYER.inventory)
+    else:
+        print("No menu option found")
     return True
