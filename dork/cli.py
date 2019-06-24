@@ -232,18 +232,18 @@ def player_move(user_action):
 def movement_handler(destination):
     """ This will handle movement to different rooms
     """
-    print("You have moved to " + destination)
     types.MY_PLAYER.location = destination
+    print("You have moved to " + destination)
 
 
 def player_examine(user_action):
     """ Allows users to examine the room and items
     """
     if 'room' in user_action:
-        print("This is a room")
+        print(types.ZONE_MAP[types.MY_PLAYER.location][types.DESCRIPTION])
         print("This room contains a " + types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM])
     else:
-        print("This will examine the item or room")
+        print("You are trying to examine an unknown thing. Please try again")
     return True
 
 def player_take(user_action):
