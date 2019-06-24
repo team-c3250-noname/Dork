@@ -182,19 +182,29 @@ def prompt():
     """ Asks user what they would like to do
     """
     keep_prompting = True
-    player_actions = {'move': player_move, 'go': player_move,
-                      'walk': player_move}
-    # item_actions = ['examine', 'go', 'look']
+
+    def one_arg(x):
+        return [x]
+
+    def no_arg(x):
+        x = x
+        return []
+
+    player_actions = {'move': (player_move, one_arg),
+                      'go': (player_move, one_arg),
+                      'walk': (player_move, one_arg),
+                      'examine': (player_examine, one_arg),
+                      'look': (player_examine, one_arg),
+                      'quit': (end_game, no_arg)}
     while keep_prompting is True:
         user_action = input("\n" + "What would you like to do? ").split()
         action = next((word for word in user_action if word in player_actions),
                       '')
         if action in player_actions:
-            keep_prompting = player_actions[action](user_action)
-        elif 'quit' in user_action:
-            keep_prompting = end_game()
+            args = player_actions[action][1](user_action)
+            keep_prompting = player_actions[action][0](*args)
         else:
-            print("Enter another command. ")
+            print("Enter a valid command. ")
 
 
 def player_move(user_action):
@@ -210,4 +220,14 @@ def player_move(user_action):
         print('This will take you east')
     else:
         print("Invalid direction")
+    return True
+
+
+def player_examine(user_action):
+    """ Allows users to examine the room and items
+    """
+    if 'room' in user_action:
+        print("This is a room")
+    else:
+        print("This will examine the item or room")
     return True
