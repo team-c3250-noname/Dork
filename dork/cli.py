@@ -183,11 +183,11 @@ def prompt():
     """
     keep_prompting = True
 
-    def one_arg(x):
-        return [x]
+    def one_arg(args):
+        return [args]
 
-    def no_arg(x):
-        x = x
+    def no_arg(args):
+        args = args
         return []
 
     player_actions = {'move': (player_move, one_arg),
