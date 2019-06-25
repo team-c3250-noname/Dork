@@ -54,12 +54,14 @@ class Map:
         self.rooms = list()
 
 
-class Player():
+class Player(Holder):
     """ This is the player class
     """
     def __init__(self):
+        super(Player, self).__init__()
         self.location = 'cell'
         self.inventory = []
+        self.room = Room()
 
 
 MY_PLAYER = Player()
@@ -86,7 +88,8 @@ ZONE_MAP = {
     },
     'Hallway south': {
         ROOM_NAME: 'Hallway south',
-        DESCRIPTION: 'Outside your cell',
+        DESCRIPTION: 'You are outside your cell with two directions to go.' +
+                     'You can go left or right.',
         LOCKED: False,
         ITEM: '',
         UP: '',

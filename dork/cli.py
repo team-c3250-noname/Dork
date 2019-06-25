@@ -156,7 +156,7 @@ def help_menu():
     """Shows the help menu
     """
     print("Help Menu")
-    print("Movement: use 'move' and a direction")
+    print("Movement: use 'move' and a cardinal direction")
     print("for example, move north, will move the character north if possible")
     print("Examine: you can examine rooms using 'examine' or 'look'")
     print("Items: some rooms have items that you might need further in")
@@ -196,10 +196,11 @@ def prompt():
                       'examine': (player_examine, one_arg),
                       'look': (player_examine, one_arg),
                       'pick': (player_take, one_arg),
-                      'user': (player_menu, one_arg),
+                      'user': (user_menu, one_arg),
                       'quit': (end_game, no_arg)}
     while keep_prompting is True:
-        user_action = input("\n" + "What would you like to do? ").split()
+        user_action = input("\n" +
+                            "What would you like to do? ").lower().split()
         action = next((word for word in user_action if word in player_actions),
                       '')
         if action in player_actions:
@@ -213,20 +214,27 @@ def player_move(user_action):
     """ Allows player to move along maze
     """
     if 'north' in user_action:
-        destination = types.ZONE_MAP[types.MY_PLAYER.location][types.UP]
-        movement_handler(destination)
+        direction_handler(types.ZONE_MAP[types.MY_PLAYER.location][types.UP])
     elif 'south' in user_action:
-        destination = types.ZONE_MAP[types.MY_PLAYER.location][types.DOWN]
-        movement_handler(destination)
+        direction_handler(types.ZONE_MAP[types.MY_PLAYER.location][types.DOWN])
     elif 'west' in user_action:
-        destination = types.ZONE_MAP[types.MY_PLAYER.location][types.LEFT]
-        movement_handler(destination)
+        direction_handler(types.ZONE_MAP[types.MY_PLAYER.location][types.LEFT])
     elif 'east' in user_action:
-        destination = types.ZONE_MAP[types.MY_PLAYER.location][types.RIGHT]
-        movement_handler(destination)
+        direction_handler(types.ZONE_MAP[types.MY_PLAYER.location]
+                          [types.RIGHT])
     else:
         print("Invalid direction")
     return True
+
+
+def direction_handler(direction):
+    """Checks the direction to make sure its a valid direction
+    """
+    destination = direction
+    if destination == '':
+        print("You can not go that way.")
+    else:
+        movement_handler(destination)
 
 
 def movement_handler(destination):
@@ -254,17 +262,20 @@ def player_take(user_action):
     if types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM] in user_action:
         print("You have picked up the " +
               types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM])
-        types.MY_PLAYER.inventory.append(types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM])
+        types.MY_PLAYER.inventory.append(
+            types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM])
     else:
         print("There is no such item")
     return True
 
 
-def player_menu(user_action):
+def user_menu(user_action):
     """Allows users to view their menu
     """
     if 'inventory' in user_action:
         print(types.MY_PLAYER.inventory)
+    elif 'save' in user_action:
+        print("This will lead to saving the game.")
     else:
         print("No menu option found")
     return True
