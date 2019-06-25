@@ -75,7 +75,7 @@ DOWN = 'down', 'south'
 LEFT = 'left', 'west'
 RIGHT = 'right', 'east'
 
-ZONE_MAP = {
+ROOM_MAP = {
     'cell': {
         ROOM_NAME: 'cell',
         DESCRIPTION: 'This is the starting location',

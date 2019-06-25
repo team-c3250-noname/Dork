@@ -137,6 +137,7 @@ def title_screen():
     print("          load            ")
     print("          help            ")
     print("          quit            ")
+
     while user_play is True:
         option = input("> ")
         if option in play_options:
@@ -214,13 +215,13 @@ def player_move(user_action):
     """ Allows player to move along maze
     """
     if 'north' in user_action:
-        direction_handler(types.ZONE_MAP[types.MY_PLAYER.location][types.UP])
+        direction_handler(types.ROOM_MAP[types.MY_PLAYER.location][types.UP])
     elif 'south' in user_action:
-        direction_handler(types.ZONE_MAP[types.MY_PLAYER.location][types.DOWN])
+        direction_handler(types.ROOM_MAP[types.MY_PLAYER.location][types.DOWN])
     elif 'west' in user_action:
-        direction_handler(types.ZONE_MAP[types.MY_PLAYER.location][types.LEFT])
+        direction_handler(types.ROOM_MAP[types.MY_PLAYER.location][types.LEFT])
     elif 'east' in user_action:
-        direction_handler(types.ZONE_MAP[types.MY_PLAYER.location]
+        direction_handler(types.ROOM_MAP[types.MY_PLAYER.location]
                           [types.RIGHT])
     else:
         print("Invalid direction")
@@ -242,28 +243,29 @@ def movement_handler(destination):
     """
     types.MY_PLAYER.location = destination
     print("You have moved to " + destination)
+    print(types.ROOM_MAP[types.MY_PLAYER.location][types.DESCRIPTION])
 
 
 def player_examine(user_action):
     """ Allows users to examine the room and items
     """
     if 'room' in user_action:
-        print(types.ZONE_MAP[types.MY_PLAYER.location][types.DESCRIPTION])
+        print(types.ROOM_MAP[types.MY_PLAYER.location][types.DESCRIPTION])
         print("This room contains a " +
-              types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM])
+              types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM])
     else:
         print("You are trying to examine an unknown thing. Please try again")
     return True
 
 
 def player_take(user_action):
-    """Allows user to pick up items
+    """Allows user to pick up items and puts them in the players inventory
     """
-    if types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM] in user_action:
+    if types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM] in user_action:
         print("You have picked up the " +
-              types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM])
+              types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM])
         types.MY_PLAYER.inventory.append(
-            types.ZONE_MAP[types.MY_PLAYER.location][types.ITEM])
+            types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM])
     else:
         print("There is no such item")
     return True
