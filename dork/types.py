@@ -79,8 +79,8 @@ ROOM_MAP = {
     'cell': {
         ROOM_NAME: 'cell',
         DESCRIPTION: 'This is the starting location',
-        LOCKED: False,
-        ITEM: 'cellkey',
+        LOCKED: True,
+        ITEM: 'oldkey',
         UP: 'Hallway south',
         DOWN: '',
         LEFT: '',

@@ -161,8 +161,8 @@ def help_menu():
     print("for example, move north, will move the character north if possible")
     print("Examine: you can examine rooms using 'examine' or 'look'")
     print("Items: some rooms have items that you might need further in")
-    print("to pick up the item use the command 'pick up' or 'loot'\n")
-    input("To return to title screen press enter.")
+    print("to pick up the item use the command 'pick up'\n")
+    input("To return to the game press enter.")
     return True
 
 
@@ -198,6 +198,7 @@ def prompt():
                       'look': (player_examine, one_arg),
                       'pick': (player_take, one_arg),
                       'user': (user_menu, one_arg),
+                      'help': (help_menu, no_arg),
                       'quit': (end_game, no_arg)}
     while keep_prompting is True:
         user_action = input("\n" +
@@ -215,27 +216,33 @@ def player_move(user_action):
     """ Allows player to move along maze
     """
     if 'north' in user_action:
-        direction_handler(types.ROOM_MAP[types.MY_PLAYER.location][types.UP])
+        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.LOCKED],
+                   types.ROOM_MAP[types.MY_PLAYER.location][types.UP])
     elif 'south' in user_action:
-        direction_handler(types.ROOM_MAP[types.MY_PLAYER.location][types.DOWN])
+        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.LOCKED],
+                   types.ROOM_MAP[types.MY_PLAYER.location][types.DOWN])
     elif 'west' in user_action:
-        direction_handler(types.ROOM_MAP[types.MY_PLAYER.location][types.LEFT])
+        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.LOCKED],
+                   types.ROOM_MAP[types.MY_PLAYER.location][types.LEFT])
     elif 'east' in user_action:
-        direction_handler(types.ROOM_MAP[types.MY_PLAYER.location]
-                          [types.RIGHT])
+        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.LOCKED],
+                   types.ROOM_MAP[types.MY_PLAYER.location][types.RIGHT])
     else:
         print("Invalid direction")
     return True
 
 
-def direction_handler(direction):
-    """Checks the direction to make sure its a valid direction
+def lock_check(door_lock, direction):
+    """This will check if the door is locked
     """
-    destination = direction
-    if destination == '':
-        print("You can not go that way.")
+    if door_lock is True and direction == '':
+        print("That is a wall")
+    elif direction == '':
+        print("This is a wall")
+    elif door_lock is True:
+        print("The door is locked.")
     else:
-        movement_handler(destination)
+        movement_handler(direction)
 
 
 def movement_handler(destination):
