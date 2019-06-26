@@ -6,6 +6,7 @@
 from pprint import pprint
 import yaml
 
+PROPERTIES = ["Items", "Player", "Rooms"]
 PLAYERDATA = ["holding", "location", "current", "max"]
 ITEMDATA = ["holds"]
 DIRECTIONS = ["north", "south", "east", "west"]
@@ -42,14 +43,7 @@ def pplayer(players, name, pdata):
         print(f"There is no data in {name}.")
     else:
         other = player[pdata]
-        if name == "Position":
-            print(f"Player is currently at the {other}.")
-        elif name == "Items":
-            print(f"Player's inventory contains {other}.")
-        elif name == "HP":
-            print(f"Player has {other} {pdata} HP.")
-        else:
-            print(f"Player's {name}: {other}.")
+        print(f"Player data {name}: {other}.")
 
 
 def pitem(items, name, idata):
@@ -87,45 +81,44 @@ def main():  # pragma: no cover
     print("Data that was loaded:")
     pprint(data)
 
-    print("Checking rooms, items, and player data...")
-    if "Rooms" not in data:
-        print("No rooms found.")
-        return
+    print("Checking rooms, items, and player data for errors...")
+    for ppty in PROPERTIES:
+        if ppty not in data:
+            print(f"No {ppty} found.")
+        if not isinstance(data[ppty], dict):
+            print(f"{ppty} in data were not proper data.")
+            return
 
-    if "Player" not in data:
-        print("No player found.")
-        return
+    parseroom(data)
+    parseitem(data)
+    parseplayer(data)
 
-    if "Items" not in data:
-        print("No items found.")
-        return
 
-    if not isinstance(data["Rooms"], dict):
-        print("Rooms in data were not proper data.")
-        return
-
-    if not isinstance(data["Items"], dict):
-        print("Items in data were not proper data.")
-        return
-
-    if not isinstance(data["Player"], dict):
-        print("Player in data was not proper data.")
-        return
-
+def parseroom(data):
+    """Parses room data.
+    """
     rooms = data["Rooms"]
     for name in rooms:
         for direction in DIRECTIONS:
             path(rooms, name, direction)
 
-    items = data["Items"]
-    for name2 in items:
-        for idata in ITEMDATA:
-            pitem(items, name2, idata)
 
+def parseitem(data):
+    """Parses item data.
+    """
+    items = data["Items"]
+    for name in items:
+        for idata in ITEMDATA:
+            pitem(items, name, idata)
+
+
+def parseplayer(data):
+    """Parses player data.
+    """
     players = data["Player"]
-    for name3 in players:
+    for name in players:
         for pdata in PLAYERDATA:
-            pplayer(players, name3, pdata)
+            pplayer(players, name, pdata)
 
 
 if __name__ == "__main__":  # pragma: no cover

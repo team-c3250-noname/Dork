@@ -9,3 +9,4 @@ pytest-runner
 radon
 Sphinx
 sphinxcontrib-napoleon
+radon
