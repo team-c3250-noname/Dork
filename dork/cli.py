@@ -33,8 +33,20 @@ def is_filename_compliant(filename):
     return True
 
 
+def get_help_message(argparser):
+    """gets help message from argparser
+    """
+    help_msg_file = StringIO()
+    argparser.print_help(file=help_msg_file)
+    msg = help_msg_file.getvalue()
+    help_msg_file.close()
+    return msg
+
+
 def the_predork_cli(help_msg, *args):
     """non-game loop command line """
+    if len(args) < 2:
+        return (False, False)
 
     def _out(filename):
         if not is_filename_compliant(filename):
@@ -52,11 +64,11 @@ def the_predork_cli(help_msg, *args):
         _f.close()
         return (True, False)
 
-    def no_arg(arg):
+    def _no_arg(arg):
         arg = arg
         return []
 
-    def one_arg(arg):
+    def _one_arg(arg):
         return [arg]
 
     def _version():
@@ -95,14 +107,12 @@ def the_predork_cli(help_msg, *args):
     parser.add_argument('-v', '--version', action='store_true',
                         help="prints version and exits")
 
-    _hf = StringIO()
-    parser.print_help(file=_hf)
-    help_msg.append(_hf.getvalue())
-    _hf.close()
+    help_msg.append(get_help_message(parser))
+
     arglist, _ = parser.parse_known_args(args[1:])
 
-    options = {"out": one_arg, "init": one_arg,
-               "version": no_arg, "list": no_arg}
+    options = {"out": _one_arg, "init": _one_arg,
+               "version": _no_arg, "list": _no_arg}
     for option in options:
         if arglist and option in arglist.__dict__ and arglist.__dict__[option]:
             args = options[option](arglist.__dict__[option])
