@@ -67,14 +67,6 @@ def testplayer(run):
     assert "." in out, \
         "Failed to run the saveload.pplayer method: {err}".format(err=err)
 
-    testvar1 = {'Happiness': {'level': 12}}
-    testvar2 = 'Happiness'
-    testvar3 = 'level'
-
-    out, err = run(dork.saveload.pplayer, testvar1, testvar2, testvar3)
-    assert "Player's" in out, \
-        "Failed to run the saveload.pplayer method: {err}".format(err=err)
-
 
 def testitem(run):
     """Test item function.
