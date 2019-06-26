@@ -96,7 +96,7 @@ def test_pre_cli_generation(run):
     assert "OS reserved" in out, \
         "Failed run the dork.cli.the_predork_cli method: {err}"\
         .format(err=err)
-    out, err = run(dork.cli.the_predork_cli, [], *("", "noop"))
-    assert "Unrecognized command" in out, \
+    out, err = run(dork.cli.main, [], *("", "noop"))
+    assert "usage" in out, \
         "Failed run the dork.cli.the_predork_cli method: {err}"\
         .format(err=err)
