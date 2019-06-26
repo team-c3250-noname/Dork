@@ -32,8 +32,9 @@ def test_cli_exists(run):
 def test_cli_help(run):
     """CLI's help command should return helpful information
     """
-    out, err = run(dork.cli.main, "-h")
-    assert "usage: " in out, \
+    msg = []
+    _, err = run(dork.cli.the_predork_cli, msg, *("", "-h"))
+    assert "usage: " in msg[0], \
         "Failed to run the cli.main method: {err}".format(err=err)
 
 
