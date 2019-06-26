@@ -126,3 +126,18 @@ def testpath(run):
     out, err = run(dork.saveload.path, testvar1, testvar2, testvar3)
     assert "Cliff" in out, \
         "Failed to run the saveload.path method: {err}".format(err=err)
+
+
+def testparsers(run):
+    """Test parser functionality.
+    """
+    testvar1 = dork.saveload.load()
+    out, err = run(dork.saveload.parseitem, testvar1)
+    assert "is in" in out, \
+        "Failed to run the saveload.parseitem method: {err}".format(err=err)
+    out, err = run(dork.saveload.parseroom, testvar1)
+    assert "is" in out, \
+        "Failed to run the saveload.parseroom method: {err}".format(err=err)
+    out, err = run(dork.saveload.parseplayer, testvar1)
+    assert "Player" in out, \
+        "Failed to run the saveload.parseplayer method: {err}".format(err=err)
