@@ -291,7 +291,6 @@ def player_take(user_action):
         item = ''
     else:
         print("There is no such item")
-    print("Items left in the room " + item)
     return True
 
 
