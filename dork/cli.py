@@ -159,7 +159,7 @@ def help_menu():
     print("                            Help Menu")
     print("""
     Movement: To move use simple commands you can say walk or
-    move and a direction. i.e. 'move north' or 'move south'.
+    move and a direction. i.e. 'move north' or 'go south'.
 
     Examine: To examine the area around you use the keyword
     examine or inspect and what ever you want to inspect.
