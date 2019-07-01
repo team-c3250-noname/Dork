@@ -23,14 +23,19 @@ def load(file_name="./dork/yaml/dork.yml"):
     return data
 
 
-def save():
-    """This will save a file to data. Eventually.
+def save(data):
+    """This will save player and room data to a file.
+    Eventually this should also save maze data.
     """
-    # Decide how to format save data
-    # For now we have a test dork.yml file
-    print("This function will save maze, player, and item data.")
-    print("For now it does nothing.")
-    return "1"
+
+    print("Attempting to save data.")
+
+    file_name = "./dork/yaml/dorktest.yml"
+    with open(file_name, 'w') as yaml_file:
+        yaml_file.write(yaml.dump(data, default_flow_style=False))
+
+    print("Save was successful.")
+    return "0"
 
 
 def pplayer(players, name, pdata):
@@ -92,6 +97,7 @@ def main():  # pragma: no cover
     parseroom(data)
     parseitem(data)
     parseplayer(data)
+    save(data)
 
 
 def parseroom(data):

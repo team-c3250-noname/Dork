@@ -4,24 +4,27 @@
 import dork.saveload
 
 
+def testsave():
+    """Save data should actually work no matter what
+    type of data is used.
+    """
+    testdata = "poop lol"
+
+    out = dork.saveload.save(testdata)
+    assert "0" in out, \
+        "Saveload.save method failed to save data."
+
+
 def testload():
     """load should grab the data and parse it without further input
     """
-    test = dork.saveload.load("./dork/yaml/dork.yml")
-    assert "Items" in test, \
+    out = dork.saveload.load("./dork/yaml/dork.yml")
+    assert "Items" in out, \
         "Saveload.load method failed."
 
-    test = dork.saveload.load("Junk")
-    assert "Try again" in test, \
+    out = dork.saveload.load("Junk")
+    assert "Try again" in out, \
         "Saveload.load method could not find proper save data."
-
-
-def testsave():
-    """save will take the current data and save it to a yml file
-    """
-    test = dork.saveload.save()
-    assert "1" in test, \
-        "Saveload.save method failed. Why?"
 
 
 def testplayer(run):
