@@ -8,6 +8,7 @@ from io import StringIO
 import cursor
 import dork
 import dork.saveload
+import dork.types as types
 
 
 __all__ = ["main"]
@@ -151,6 +152,7 @@ def title_screen():
     print("          load            ")
     print("          help            ")
     print("          quit            ")
+
     while user_play is True:
         option = input("> ")
         if option in play_options:
@@ -162,21 +164,32 @@ def title_screen():
 def setup_game():
     """This will set up the game
     """
-    print("This will set the game up " +
-          "and execute the main loop for the game")
+    print(types.ROOM_MAP[types.MY_PLAYER.location][types.DESCRIPTION])
     prompt()
 
 
 def help_menu():
     """Shows the help menu
     """
-    print("Help Menu")
-    print("Movement: use 'move' and a direction")
-    print("for example, move north, will move the character north if possible")
-    print("Examine: you can examine rooms using 'examine' or 'look'")
-    print("Items: some rooms have items that you might need further in")
-    print("to pick up the item use the command 'pick up' or 'loot'\n")
-    input("To return to title screen press enter.")
+    print("                            Help Menu")
+    print("""
+    Movement: To move use simple commands you can say walk or
+    move and a direction. i.e. 'move north' or 'go south'.
+
+    Examine: To examine the area around you use the keyword
+    examine or inspect and what ever you want to inspect.
+    i.e. to look at the room use 'inspect room'.
+
+    Items: Some rooms will have items that you can pick up.
+    Use the keyword 'pick' to put an item into your inventory.
+    i.e. 'pick up excaliber'.
+
+    Help: If you need to be reminded of available actions
+    while playing the game use the keyword 'help' to access
+    the help menu.
+    """)
+    print("")
+    input("To return to the game press enter.")
     return True
 
 
@@ -209,10 +222,14 @@ def prompt():
                       'go': (player_move, one_arg),
                       'walk': (player_move, one_arg),
                       'examine': (player_examine, one_arg),
-                      'look': (player_examine, one_arg),
+                      'inspect': (player_examine, one_arg),
+                      'pick': (player_take, one_arg),
+                      'user': (user_menu, one_arg),
+                      'help': (help_menu, no_arg),
                       'quit': (end_game, no_arg)}
     while keep_prompting is True:
-        user_action = input("\n" + "What would you like to do? ").split()
+        user_action = input("\n" +
+                            "What would you like to do? ").lower().split()
         action = next((word for word in user_action if word in player_actions),
                       '')
         if action in player_actions:
@@ -225,24 +242,80 @@ def prompt():
 def player_move(user_action):
     """ Allows player to move along maze
     """
+    locked = types.ROOM_MAP[types.MY_PLAYER.location][types.LOCKED]
     if 'north' in user_action:
-        print("This will take you north")
+        lock_check(locked,
+                   types.ROOM_MAP[types.MY_PLAYER.location][types.UP])
     elif 'south' in user_action:
-        print('This will take you south')
+        lock_check(locked,
+                   types.ROOM_MAP[types.MY_PLAYER.location][types.DOWN])
     elif 'west' in user_action:
-        print('This will take you west')
+        lock_check(locked,
+                   types.ROOM_MAP[types.MY_PLAYER.location][types.LEFT])
     elif 'east' in user_action:
-        print('This will take you east')
+        lock_check(locked,
+                   types.ROOM_MAP[types.MY_PLAYER.location][types.RIGHT])
     else:
         print("Invalid direction")
     return True
 
 
+def lock_check(door_lock, direction):
+    """This will check if the door is locked
+    """
+    if direction != '':
+        types.MY_PLAYER.next_location = direction
+        next_lock = types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED]
+    if direction == '':
+        print("That is a wall")
+    elif door_lock is True or next_lock is True:
+        print("The door doesn't open.")
+    else:
+        movement_handler(direction)
+
+
+def movement_handler(destination):
+    """ This will handle movement to different rooms
+    """
+    types.MY_PLAYER.location = destination
+    print("You have moved to " + destination)
+    print("")
+    print(types.ROOM_MAP[types.MY_PLAYER.location][types.DESCRIPTION])
+
+
 def player_examine(user_action):
     """ Allows users to examine the room and items
     """
+    item = types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM]
     if 'room' in user_action:
-        print("This is a room")
+        print(types.ROOM_MAP[types.MY_PLAYER.location][types.INSPECT])
+        print("This room contains a " + item)
     else:
-        print("This will examine the item or room")
+        print("You are trying to examine an unknown thing. Please try again")
+    return True
+
+
+def player_take(user_action):
+    """Allows user to pick up items and puts them in the players inventory
+    """
+    item = types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM]
+    key_word = next((word for word in user_action if word in item), 'item')
+    if key_word in item:
+        print("You have picked up the " + item)
+        types.MY_PLAYER.inventory.append(item)
+        item = ''
+    else:
+        print("There is no such item")
+    return True
+
+
+def user_menu(user_action):
+    """Allows users to view their menu
+    """
+    if 'inventory' in user_action:
+        print(types.MY_PLAYER.inventory)
+    elif 'save' in user_action:
+        print("This will lead to saving the game.")
+    else:
+        print("No menu option found")
     return True
