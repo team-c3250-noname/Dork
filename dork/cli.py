@@ -281,3 +281,21 @@ def user_menu(user_action):
     else:
         print("No menu option found")
     return True
+
+
+def player_use(user_action):
+    """Allows player to use items
+    """
+    user_item = types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM]
+    if user_item in user_action:
+        if user_item in types.MY_PLAYER.inventory:
+            types.ROOM_MAP[types.MY_PLAYER.location][types.LOCKED] = False
+            remove_item(user_item)
+    else:
+        print('You do not have the key for this room.')
+
+
+def remove_item(user_item):
+    """Removes item after being used from inventory
+    """
+    types.MY_PLAYER.inventory.remove(user_item)
