@@ -69,6 +69,7 @@ MY_PLAYER = Player()
 ROOM_NAME = ''
 DESCRIPTION = 'description'
 LOCKED = False
+UNLOCKED = ''
 ITEM = ''
 UP = 'up', 'north'
 DOWN = 'down', 'south'
@@ -80,6 +81,7 @@ ROOM_MAP = {
         ROOM_NAME: 'cell',
         DESCRIPTION: 'This is the starting location',
         LOCKED: False,
+        UNLOCKED: '',
         ITEM: 'cellkey',
         UP: 'Hallway south',
         DOWN: '',
@@ -91,6 +93,7 @@ ROOM_MAP = {
         DESCRIPTION: 'You are outside your cell with two directions to go.' +
                      'You can go left or right.',
         LOCKED: False,
+        UNLOCKED: '',
         ITEM: '',
         UP: '',
         DOWN: 'cell',
