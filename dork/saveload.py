@@ -97,8 +97,6 @@ def main():  # pragma: no cover
     parseroom(data)
     parseitem(data)
     parseplayer(data)
-
-    print("Attempting test save.")
     save(data)
 
 
