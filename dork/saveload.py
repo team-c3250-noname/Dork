@@ -35,6 +35,7 @@ def save(data):
         yaml_file.write(yaml.dump(data, default_flow_style=False))
 
     print("Save was successful.")
+    return "0"
 
 
 def pplayer(players, name, pdata):
