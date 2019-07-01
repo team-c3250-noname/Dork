@@ -292,6 +292,9 @@ def player_use(user_action):
         if lock is True:
             unlock_room(user_item)
             remove_item(user_item)
+            print('You unlocked the door.')
+        else
+            print('The room is not locked.')
 
 
 def unlock_room(user_item):
