@@ -24,7 +24,8 @@ def load(file_name="./dork/yaml/dork.yml"):
 
 
 def save(data):
-    """This will save a file to data. Eventually.
+    """This will save player and room data to a file.
+    Eventually this should also save maze data.
     """
 
     print("Attempting to save data.")
