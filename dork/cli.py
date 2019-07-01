@@ -324,7 +324,8 @@ def player_use(user_action):
     else:
         user_item = types.MY_PLAYER.inventory
         lock = types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED]
-        key_word = next((word for word in user_action if _in_word(word)), 'item')
+        key_word = next((word for word in user_action if _in_word(word)),
+                        'item')
         if lock is True:
             unlock_room(key_word)
         else:
