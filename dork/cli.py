@@ -197,6 +197,7 @@ def prompt():
                       'examine': (player_examine, one_arg),
                       'look': (player_examine, one_arg),
                       'pick': (player_take, one_arg),
+                      'use': (player_use, one_arg),
                       'user': (user_menu, one_arg),
                       'quit': (end_game, no_arg)}
     while keep_prompting is True:
@@ -261,11 +262,12 @@ def player_examine(user_action):
 def player_take(user_action):
     """Allows user to pick up items and puts them in the players inventory
     """
-    if types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM] in user_action:
-        print("You have picked up the " +
-              types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM])
-        types.MY_PLAYER.inventory.append(
-            types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM])
+    item = types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM]
+    key_word = next((word for word in user_action if word in item), 'item')
+    if key_word in item:
+        print("You have picked up the " + item)
+        types.MY_PLAYER.inventory.append(item)
+        item = ''
     else:
         print("There is no such item")
     return True
@@ -288,12 +290,12 @@ def player_use(user_action):
     """
     user_item = types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM]
     lock = types.ROOM_MAP[types.MY_PLAYER.location][types.LOCKED]
-    if user_item in user_action:
+    if user_item == types.ROOM_MAP[types.MY_PLAYER.location][types.UNLOCKED]:
         if lock is True:
             unlock_room(user_item)
             remove_item(user_item)
             print('You unlocked the door.')
-        else
+    else:
             print('The room is not locked.')
 
 
