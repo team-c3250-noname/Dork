@@ -59,7 +59,7 @@ class Player(Holder):
     def __init__(self):
         super(Player, self).__init__()
         self.location = 'cell'
-        self.next_location = 'cell name'
+        self.next_location = ''
         self.inventory = []
         self.room = Room()
 
@@ -89,8 +89,8 @@ ROOM_MAP = {
         nothing more.""",
         INSPECT: """Upon checking under the bed, you find a key. How convenient
         for you, prisoner!""",
-        LOCKED: True,
-        UNLOCK: 'cell key',
+        LOCKED: False,
+        UNLOCK: '',
         ITEM: 'cell key',
         UP: 'Jail hallway',
         DOWN: '',
@@ -111,8 +111,8 @@ ROOM_MAP = {
         source of light. You should be able to reach up and remove one of the
         torches from the wall.""",
         INSPECT: 'You inspect the room',
-        LOCKED: False,
-        UNLOCK: '',
+        LOCKED: True,
+        UNLOCK: 'cell key',
         ITEM: 'torch',
         UP: '',
         DOWN: 'cell',
@@ -120,7 +120,7 @@ ROOM_MAP = {
         RIGHT: 'Stairwell',
     },
     'Stairwell': {
-        ROOM_NAME: 'cell',
+        ROOM_NAME: 'Stairwell',
         DESCRIPTION: """
         Using the torch, you are able to see that the stairwell
         is decrepit and many steps have chunks missing, with others having
