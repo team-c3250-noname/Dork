@@ -287,10 +287,20 @@ def player_use(user_action):
     """Allows player to use items
     """
     user_item = types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM]
+    lock = types.ROOM_MAP[types.MY_PLAYER.location][types.LOCKED]
     if user_item in user_action:
-        if user_item in types.MY_PLAYER.inventory:
-            types.ROOM_MAP[types.MY_PLAYER.location][types.LOCKED] = False
+        if lock is True:
+            unlock_room(user_item)
             remove_item(user_item)
+
+
+def unlock_room(user_item):
+    """unlocks room
+    """
+    unlock = types.ROOM_MAP[types.MY_PLAYER.location][types.UNLOCKED]
+    if user_item in types.MY_PLAYER.inventory:
+        if user_item == unlock:
+            types.ROOM_MAP[types.MY_PLAYER.location][types.LOCKED] = False
     else:
         print('You do not have the key for this room.')
 
