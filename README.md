@@ -27,8 +27,8 @@ Features
 * Save and load using YAML format
     * Can save rooms
 
-*How do I:*
-------
+## *How do I:*
+
 
     * Install
         1. Install python 3+, and git
