@@ -243,7 +243,6 @@ def prompt():
 def player_move(user_action):
     """ Allows player to move along maze
     """
-    locked = types.ROOM_MAP[types.MY_PLAYER.location][types.LOCKED]
     if 'north' in user_action:
         lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.UP])
     elif 'south' in user_action:
@@ -280,7 +279,7 @@ def direction_handler(direction):
         next_lock = types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED]
     if direction == '':
         print("That is a wall")
-    elif door_lock is True or next_lock is True:
+    elif next_lock is True:
         print("The door doesn't open.")
     else:
         movement_handler(direction)
@@ -298,7 +297,6 @@ def movement_handler(destination):
 def player_examine(user_action):
     """ Allows users to examine the room and items
     """
-    item = types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM]
     if 'room' in user_action:
         print("This room contains a " +
               types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM])
