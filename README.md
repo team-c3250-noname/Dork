@@ -50,8 +50,8 @@ Features
                 * Some indicate what keywords to use
                 * Most follow <verb> <noun> structure
             * when done type in quit
-    3. Developers
-        * Currently the game consists of a single map with rooms, there are no development tools or tests.
+* Developers
+    * Currently the game consists of a single map with rooms, there are no development tools or tests.
         
 
 TODO
