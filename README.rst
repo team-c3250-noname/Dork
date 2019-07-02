@@ -1,7 +1,5 @@
 Dork - 
-    <object type="image/svg+xml" data="https://travis-ci.com/team-c3250-noname/Dork.svg?branch=master" class="travis">
-  TravisCI test result
-</object>
+<object type="image/svg+xml" data="https://travis-ci.com/team-c3250-noname/Dork.svg?branch=master" class="travis">TravisCI test result</object>
 =======
 
     Dork is a game based on zork. A player can navigate through various rooms,
