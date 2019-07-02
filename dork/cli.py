@@ -75,19 +75,11 @@ def the_predork_cli(help_msg, *args):
     def _version():
         print(dork.__version__)
         return (True, False)
-<<<<<<< HEAD
 
     def _list():
         print(os.linesep.join(get_maze_files()))
         return (True, False)
 
-=======
-
-    def _list():
-        print(os.linesep.join(get_maze_files()))
-        return (True, False)
-
->>>>>>> e3811eabb48040779b1f42570dd8e736e85b262c
     def get_maze_files():
         mazes = []
         for (_, _, filenames) in os.walk(__EXTENSION__[1:]):
@@ -253,7 +245,6 @@ def player_move(user_action):
     """
     locked = types.ROOM_MAP[types.MY_PLAYER.location][types.LOCKED]
     if 'north' in user_action:
-<<<<<<< HEAD
         lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.UP])
     elif 'south' in user_action:
         lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.DOWN])
@@ -261,25 +252,11 @@ def player_move(user_action):
         lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.LEFT])
     elif 'east' in user_action:
         lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.RIGHT])
-=======
-        lock_check(locked,
-                   types.ROOM_MAP[types.MY_PLAYER.location][types.UP])
-    elif 'south' in user_action:
-        lock_check(locked,
-                   types.ROOM_MAP[types.MY_PLAYER.location][types.DOWN])
-    elif 'west' in user_action:
-        lock_check(locked,
-                   types.ROOM_MAP[types.MY_PLAYER.location][types.LEFT])
-    elif 'east' in user_action:
-        lock_check(locked,
-                   types.ROOM_MAP[types.MY_PLAYER.location][types.RIGHT])
->>>>>>> e3811eabb48040779b1f42570dd8e736e85b262c
     else:
         print("Invalid direction")
     return True
 
 
-<<<<<<< HEAD
 def lock_check(direction):
     """This will check if the door is locked
     """
@@ -297,10 +274,6 @@ def lock_check(direction):
 
 def direction_handler(direction):
     """Checks the direction to make sure its a valid direction
-=======
-def lock_check(door_lock, direction):
-    """This will check if the door is locked
->>>>>>> e3811eabb48040779b1f42570dd8e736e85b262c
     """
     if direction != '':
         types.MY_PLAYER.next_location = direction
@@ -327,13 +300,8 @@ def player_examine(user_action):
     """
     item = types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM]
     if 'room' in user_action:
-<<<<<<< HEAD
         print("This room contains a " +
               types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM])
-=======
-        print(types.ROOM_MAP[types.MY_PLAYER.location][types.INSPECT])
-        print("This room contains a " + item)
->>>>>>> e3811eabb48040779b1f42570dd8e736e85b262c
     else:
         print("You are trying to examine an unknown thing. Please try again")
     return True
