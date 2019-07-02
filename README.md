@@ -1,4 +1,4 @@
-    [![Build Status](https://travis-ci.com/team-c3250-noname/Dork.svg?branch=master)](https://travis-ci.com/team-c3250-noname/Dork)
+[![Build Status](https://travis-ci.com/team-c3250-noname/Dork.svg?branch=master)](https://travis-ci.com/team-c3250-noname/Dork)
 
 
     Dork is a game based on zork. A player can navigate through various rooms,
