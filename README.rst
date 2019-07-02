@@ -1,4 +1,7 @@
-Dork - [Test result tag](https://travis-ci.com/team-c3250-noname/Dork.svg?branch=master)
+Dork - 
+    <object type="image/svg+xml" data="https://travis-ci.com/team-c3250-noname/Dork.svg?branch=master" class="travis">
+  TravisCI test result
+</object>
 =======
 
     Dork is a game based on zork. A player can navigate through various rooms,
@@ -15,12 +18,12 @@ Features
 
 * Added SonarCloud and TravisCI testing
 * Command line interface with -h, -v, and -l options working
-..*to-do: -o and -i for saving a map and initializing dork before start
+    * to-do: -o and -i for saving a map and initializing dork before start
 * Dork start up menu
 * REPL
-..*Accepts [verb] [nown] sentences and navigates between rooms
+    * Accepts [verb] [nown] sentences and navigates between rooms
 * Save and load using YAML format
-..*Can save rooms
+    * Can save rooms
 
 TODO
 * Map rooms onto maze generator
