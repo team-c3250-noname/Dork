@@ -30,7 +30,7 @@ Features
 ## *How do I:*
 
 
-    * Install
+* Install
         1. Install python 3+, and git
         2. git clone https://github.com/team-c3250-noname/Dork.git
         3. pip install requirements-dev.txt and pip install requirements.txt
