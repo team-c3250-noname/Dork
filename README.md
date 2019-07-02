@@ -27,8 +27,8 @@ Features
 * Save and load using YAML format
     * Can save rooms
 
-*How do I:*
---------
+<h2>*How do I:*</h2>
+
     * Install
         1. Install python 3+, and git
         2. git clone https://github.com/team-c3250-noname/Dork.git
