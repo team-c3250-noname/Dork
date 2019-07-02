@@ -66,7 +66,7 @@ def the_predork_cli(help_msg, *args):
         return (True, False)
 
     def _no_arg(arg):
-        _arg = arg
+        arg = arg
         return []
 
     def _one_arg(arg):
