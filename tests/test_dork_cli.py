@@ -31,7 +31,7 @@ def test_cli_exists(run):
                                          'go north', 'quit'])
         run(dork.cli.main, input_values=['play', 'pick key',
                                          'move north', 'use torch',
-                                         'go north', 'quit'])
+                                         'quit'])
         run(dork.cli.main, input_values=['play', 'user inventory', 'quit'])
         run(dork.cli.main, input_values=['play', 'user save', 'quit'])
         run(dork.cli.main, input_values=['play', 'user id', 'quit'])
