@@ -1,48 +1,45 @@
----
-Player:
-  Items:
-    holding: "Sword"
-  Position:
-    location: "Shed"
-  HP:
-    current: 95
-    max: 100
-
 Items:
-  Graveyard:
-    holds: "Key"
-  Shed:
-    holds: "Shovel"
-  Fields:
-    holds: "Rake"
   Cliff:
     holds: null
   Farmhouse:
-    holds: "Note"
-
-Rooms:
+    holds: Note
+  Fields:
+    holds: Rake
   Graveyard:
-    north: "Fields"
-    east: null
-    south: null
-    west: null
+    holds: Key
   Shed:
+    holds: Shovel
+Player:
+  HP:
+    current: 95
+    max: 100
+  Items:
+    holding: Sword
+  Position:
+    location: Shed
+Rooms:
+  Cliff:
+    east: null
     north: null
-    east: null
-    south: "Farmhouse"
-    west: null
+    south: null
+    west: Fields
   Farmhouse:
-    north: "Shed"
     east: null
+    north: Shed
     south: null
     west: null
   Fields:
-    north: "Farmhouse"
-    east: "Cliff"
-    south: "Graveyard"
+    east: Cliff
+    north: Farmhouse
+    south: Graveyard
     west: null
-  Cliff:
-    north: null
+  Graveyard:
     east: null
+    north: Fields
     south: null
-    west: "Fields"
+    west: null
+  Shed:
+    east: null
+    north: null
+    south: Farmhouse
+    west: null

@@ -75,11 +75,19 @@ def the_predork_cli(help_msg, *args):
     def _version():
         print(dork.__version__)
         return (True, False)
+<<<<<<< HEAD
 
     def _list():
         print(os.linesep.join(get_maze_files()))
         return (True, False)
 
+=======
+
+    def _list():
+        print(os.linesep.join(get_maze_files()))
+        return (True, False)
+
+>>>>>>> e3811eabb48040779b1f42570dd8e736e85b262c
     def get_maze_files():
         mazes = []
         for (_, _, filenames) in os.walk(__EXTENSION__[1:]):
@@ -164,20 +172,32 @@ def title_screen():
 def setup_game():
     """This will set up the game
     """
-    print("You find yourself in the " + types.MY_PLAYER.location)
+    print(types.ROOM_MAP[types.MY_PLAYER.location][types.DESCRIPTION])
     prompt()
 
 
 def help_menu():
     """Shows the help menu
     """
-    print("Help Menu")
-    print("Movement: use 'move' and a cardinal direction")
-    print("for example, move north, will move the character north if possible")
-    print("Examine: you can examine rooms using 'examine' or 'look'")
-    print("Items: some rooms have items that you might need further in")
-    print("to pick up the item use the command 'pick up' or 'loot'\n")
-    input("To return to title screen press enter.")
+    print("                            Help Menu")
+    print("""
+    Movement: To move use simple commands you can say walk or
+    move and a direction. i.e. 'move north' or 'go south'.
+
+    Examine: To examine the area around you use the keyword
+    examine or inspect and what ever you want to inspect.
+    i.e. to look at the room use 'inspect room'.
+
+    Items: Some rooms will have items that you can pick up.
+    Use the keyword 'pick' to put an item into your inventory.
+    i.e. 'pick up excaliber'.
+
+    Help: If you need to be reminded of available actions
+    while playing the game use the keyword 'help' to access
+    the help menu.
+    """)
+    print("")
+    input("To return to the game press enter.")
     return True
 
 
@@ -210,10 +230,11 @@ def prompt():
                       'go': (player_move, one_arg),
                       'walk': (player_move, one_arg),
                       'examine': (player_examine, one_arg),
-                      'look': (player_examine, one_arg),
+                      'inspect': (player_examine, one_arg),
                       'pick': (player_take, one_arg),
                       'use': (player_use, one_arg),
                       'user': (user_menu, one_arg),
+                      'help': (help_menu, no_arg),
                       'quit': (end_game, no_arg)}
     while keep_prompting is True:
         user_action = input("\n" +
@@ -230,7 +251,9 @@ def prompt():
 def player_move(user_action):
     """ Allows player to move along maze
     """
+    locked = types.ROOM_MAP[types.MY_PLAYER.location][types.LOCKED]
     if 'north' in user_action:
+<<<<<<< HEAD
         lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.UP])
     elif 'south' in user_action:
         lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.DOWN])
@@ -238,11 +261,25 @@ def player_move(user_action):
         lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.LEFT])
     elif 'east' in user_action:
         lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.RIGHT])
+=======
+        lock_check(locked,
+                   types.ROOM_MAP[types.MY_PLAYER.location][types.UP])
+    elif 'south' in user_action:
+        lock_check(locked,
+                   types.ROOM_MAP[types.MY_PLAYER.location][types.DOWN])
+    elif 'west' in user_action:
+        lock_check(locked,
+                   types.ROOM_MAP[types.MY_PLAYER.location][types.LEFT])
+    elif 'east' in user_action:
+        lock_check(locked,
+                   types.ROOM_MAP[types.MY_PLAYER.location][types.RIGHT])
+>>>>>>> e3811eabb48040779b1f42570dd8e736e85b262c
     else:
         print("Invalid direction")
     return True
 
 
+<<<<<<< HEAD
 def lock_check(direction):
     """This will check if the door is locked
     """
@@ -260,12 +297,20 @@ def lock_check(direction):
 
 def direction_handler(direction):
     """Checks the direction to make sure its a valid direction
+=======
+def lock_check(door_lock, direction):
+    """This will check if the door is locked
+>>>>>>> e3811eabb48040779b1f42570dd8e736e85b262c
     """
-    destination = direction
-    if destination == '':
-        print("You can not go that way.")
+    if direction != '':
+        types.MY_PLAYER.next_location = direction
+        next_lock = types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED]
+    if direction == '':
+        print("That is a wall")
+    elif door_lock is True or next_lock is True:
+        print("The door doesn't open.")
     else:
-        movement_handler(destination)
+        movement_handler(direction)
 
 
 def movement_handler(destination):
@@ -273,15 +318,22 @@ def movement_handler(destination):
     """
     types.MY_PLAYER.location = destination
     print("You have moved to " + destination)
+    print("")
     print(types.ROOM_MAP[types.MY_PLAYER.location][types.DESCRIPTION])
 
 
 def player_examine(user_action):
     """ Allows users to examine the room and items
     """
+    item = types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM]
     if 'room' in user_action:
+<<<<<<< HEAD
         print("This room contains a " +
               types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM])
+=======
+        print(types.ROOM_MAP[types.MY_PLAYER.location][types.INSPECT])
+        print("This room contains a " + item)
+>>>>>>> e3811eabb48040779b1f42570dd8e736e85b262c
     else:
         print("You are trying to examine an unknown thing. Please try again")
     return True
