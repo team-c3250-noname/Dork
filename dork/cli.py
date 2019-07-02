@@ -224,6 +224,7 @@ def prompt():
                       'examine': (player_examine, one_arg),
                       'inspect': (player_examine, one_arg),
                       'pick': (player_take, one_arg),
+                      'use': (player_use, one_arg),
                       'user': (user_menu, one_arg),
                       'help': (help_menu, no_arg),
                       'quit': (end_game, no_arg)}
@@ -242,25 +243,20 @@ def prompt():
 def player_move(user_action):
     """ Allows player to move along maze
     """
-    locked = types.ROOM_MAP[types.MY_PLAYER.location][types.LOCKED]
     if 'north' in user_action:
-        lock_check(locked,
-                   types.ROOM_MAP[types.MY_PLAYER.location][types.UP])
+        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.UP])
     elif 'south' in user_action:
-        lock_check(locked,
-                   types.ROOM_MAP[types.MY_PLAYER.location][types.DOWN])
+        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.DOWN])
     elif 'west' in user_action:
-        lock_check(locked,
-                   types.ROOM_MAP[types.MY_PLAYER.location][types.LEFT])
+        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.LEFT])
     elif 'east' in user_action:
-        lock_check(locked,
-                   types.ROOM_MAP[types.MY_PLAYER.location][types.RIGHT])
+        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.RIGHT])
     else:
         print("Invalid direction")
     return True
 
 
-def lock_check(door_lock, direction):
+def lock_check(direction):
     """This will check if the door is locked
     """
     if direction != '':
@@ -268,7 +264,22 @@ def lock_check(door_lock, direction):
         next_lock = types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED]
     if direction == '':
         print("That is a wall")
-    elif door_lock is True or next_lock is True:
+    elif next_lock is True:
+        print("The door doesn't open.")
+        print('Would you like to use an item?')
+    else:
+        movement_handler(direction)
+
+
+def direction_handler(direction):
+    """Checks the direction to make sure its a valid direction
+    """
+    if direction != '':
+        types.MY_PLAYER.next_location = direction
+        next_lock = types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED]
+    if direction == '':
+        print("That is a wall")
+    elif next_lock is True:
         print("The door doesn't open.")
     else:
         movement_handler(direction)
@@ -286,10 +297,9 @@ def movement_handler(destination):
 def player_examine(user_action):
     """ Allows users to examine the room and items
     """
-    item = types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM]
     if 'room' in user_action:
-        print(types.ROOM_MAP[types.MY_PLAYER.location][types.INSPECT])
-        print("This room contains a " + item)
+        print("This room contains a " +
+              types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM])
     else:
         print("You are trying to examine an unknown thing. Please try again")
     return True
@@ -319,3 +329,41 @@ def user_menu(user_action):
     else:
         print("No menu option found")
     return True
+
+
+def player_use(user_action):
+    """Allows player to use items
+    """
+    def _in_word(word):
+        return any(word in item for item in user_item)
+
+    if types.MY_PLAYER.next_location == '':
+        print('You are not near a door')
+    else:
+        user_item = types.MY_PLAYER.inventory
+        lock = types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED]
+        key_word = next((word for word in user_action if _in_word(word)),
+                        'item')
+        if lock is True:
+            unlock_room(key_word)
+        else:
+            print('The room is not locked.')
+    return True
+
+
+def unlock_room(user_action):
+    """unlocks room
+    """
+    unlock = types.ROOM_MAP[types.MY_PLAYER.location][types.UNLOCK].split()
+    if user_action in unlock:
+        types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED] = False
+        remove_item()
+    else:
+        print('You do not have the key for this room.')
+
+
+def remove_item():
+    """Removes item after being used from inventory
+    """
+    item = types.ROOM_MAP[types.MY_PLAYER.location][types.UNLOCK]
+    types.MY_PLAYER.inventory.remove(item)

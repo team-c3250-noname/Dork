@@ -23,7 +23,6 @@ class Holder:
 
 class Room(Holder):
     """A room on the map
-
     Note: can only be entered through entraces
         or exited through exits.
     """
@@ -60,7 +59,7 @@ class Player(Holder):
     def __init__(self):
         super(Player, self).__init__()
         self.location = 'cell'
-        self.next_location = 'cell name'
+        self.next_location = ''
         self.inventory = []
         self.room = Room()
 
@@ -71,6 +70,7 @@ ROOM_NAME = ''
 DESCRIPTION = 'description'
 INSPECT = 'Inspection'
 LOCKED = False
+UNLOCK = ''
 ITEM = ''
 UP = 'up', 'north'
 DOWN = 'down', 'south'
@@ -90,6 +90,7 @@ ROOM_MAP = {
         INSPECT: """Upon checking under the bed, you find a key. How convenient
         for you, prisoner!""",
         LOCKED: False,
+        UNLOCK: '',
         ITEM: 'cell key',
         UP: 'Jail hallway',
         DOWN: '',
@@ -110,7 +111,8 @@ ROOM_MAP = {
         source of light. You should be able to reach up and remove one of the
         torches from the wall.""",
         INSPECT: 'You inspect the room',
-        LOCKED: False,
+        LOCKED: True,
+        UNLOCK: 'cell key',
         ITEM: 'torch',
         UP: '',
         DOWN: 'cell',
@@ -118,14 +120,15 @@ ROOM_MAP = {
         RIGHT: 'Stairwell',
     },
     'Stairwell': {
-        ROOM_NAME: 'cell',
+        ROOM_NAME: 'Stairwell',
         DESCRIPTION: """
         Using the torch, you are able to see that the stairwell
         is decrepit and many steps have chunks missing, with others having
         pieces of rubble on them. You make your way carefully up the stairs and
         emerge at the top.""",
         INSPECT: 'You inspect the room',
-        LOCKED: False,
+        LOCKED: True,
+        UNLOCK: 'torch',
         ITEM: '',
         UP: 'Jail Tower',
         DOWN: '',
@@ -146,6 +149,7 @@ ROOM_MAP = {
         emerged from. You take the iron bar. It is cold in your hands and
         wet from the rain, but otherwise sturdy.""",
         LOCKED: False,
+        UNLOCK: '',
         ITEM: 'iron bar',
         UP: '',
         DOWN: 'Stairwell',
@@ -162,6 +166,7 @@ ROOM_MAP = {
         One of the dummies has a sword embedded in it. You are able
         to pull the sword from the dummy with a little effort.""",
         LOCKED: True,
+        UNLOCK: 'iron bar',
         ITEM: 'sword',
         UP: '',
         DOWN: '',
