@@ -213,8 +213,7 @@ def prompt():
     def one_arg(args):
         return [args]
 
-    def no_arg(args):
-        args = args
+    def no_arg(_args):
         return []
 
     player_actions = {'move': (player_move, one_arg),
