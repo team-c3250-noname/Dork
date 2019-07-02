@@ -1,4 +1,4 @@
-#Dork
+<h1>Dork</h1>
 
 [![Build Status](https://travis-ci.com/team-c3250-noname/Dork.svg?branch=master)](https://travis-ci.com/team-c3250-noname/Dork)
 
