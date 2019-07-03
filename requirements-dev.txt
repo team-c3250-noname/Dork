@@ -6,5 +6,7 @@ pylint
 pytest
 pytest-mock
 pytest-runner
+radon
 Sphinx
 sphinxcontrib-napoleon
+radon

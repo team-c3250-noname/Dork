@@ -4,24 +4,27 @@
 import dork.saveload
 
 
+def testsave():
+    """Save data should actually work no matter what
+    type of data is used.
+    """
+    testdata = "data test"
+
+    out = dork.saveload.save(testdata)
+    assert "0" in out, \
+        "Saveload.save method failed to save data."
+
+
 def testload():
     """load should grab the data and parse it without further input
     """
-    test = dork.saveload.load("./dork/yaml/dork.yml")
-    assert "Items" in test, \
+    out = dork.saveload.load("./dork/yaml/dork.yml")
+    assert "Items" in out, \
         "Saveload.load method failed."
 
-    test = dork.saveload.load("Junk")
-    assert "Try again" in test, \
+    out = dork.saveload.load("Junk")
+    assert "Try again" in out, \
         "Saveload.load method could not find proper save data."
-
-
-def testsave():
-    """save will take the current data and save it to a yml file
-    """
-    test = dork.saveload.save()
-    assert "1" in test, \
-        "Saveload.save method failed. Why?"
 
 
 def testplayer(run):
@@ -65,14 +68,6 @@ def testplayer(run):
 
     out, err = run(dork.saveload.pplayer, testvar1, testvar2, testvar3)
     assert "." in out, \
-        "Failed to run the saveload.pplayer method: {err}".format(err=err)
-
-    testvar1 = {'Happiness': {'level': 12}}
-    testvar2 = 'Happiness'
-    testvar3 = 'level'
-
-    out, err = run(dork.saveload.pplayer, testvar1, testvar2, testvar3)
-    assert "Player's" in out, \
         "Failed to run the saveload.pplayer method: {err}".format(err=err)
 
 
@@ -134,3 +129,18 @@ def testpath(run):
     out, err = run(dork.saveload.path, testvar1, testvar2, testvar3)
     assert "Cliff" in out, \
         "Failed to run the saveload.path method: {err}".format(err=err)
+
+
+def testparsers(run):
+    """Test parser functionality.
+    """
+    testvar1 = dork.saveload.load()
+    out, err = run(dork.saveload.parseitem, testvar1)
+    assert "is in" in out, \
+        "Failed to run the saveload.parseitem method: {err}".format(err=err)
+    out, err = run(dork.saveload.parseroom, testvar1)
+    assert "is" in out, \
+        "Failed to run the saveload.parseroom method: {err}".format(err=err)
+    out, err = run(dork.saveload.parseplayer, testvar1)
+    assert "Player" in out, \
+        "Failed to run the saveload.parseplayer method: {err}".format(err=err)

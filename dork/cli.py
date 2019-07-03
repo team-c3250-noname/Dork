@@ -7,6 +7,8 @@ import re
 from io import StringIO
 import cursor
 import dork
+import dork.saveload
+import dork.types as types
 
 
 __all__ = ["main"]
@@ -32,15 +34,69 @@ def is_filename_compliant(filename):
     return True
 
 
+def get_help_message(argparser):
+    """gets help message from argparser
+    """
+    help_msg_file = StringIO()
+    argparser.print_help(file=help_msg_file)
+    msg = help_msg_file.getvalue()
+    help_msg_file.close()
+    return msg
+
+
 def the_predork_cli(help_msg, *args):
     """non-game loop command line """
-    # print_help_then_exit = (True, True)
-    # exit_only = (True, False)
-    # run_dork = (False, False)
-    dork_flags = (False, False)
+    if len(args) < 2:
+        return (False, False)
+
+    def _out(filename):
+        if not is_filename_compliant(filename):
+            return (True, False)
+
+        _f = open(__EXTENSION__[1:] + "/" + filename + __EXTENSION__, "w")
+        cursor.hide()
+        dots = ("Generating maze    ", "Generating maze .",
+                "Generating maze ..", "Generating maze ...")
+        for _t in range(20):
+            print("{}".format(dots[_t % 4]), end="\r")
+        print(" "*len(dots[-1]))
+        cursor.show()
+        print("Done, maze \"" + filename + "\" saved")
+        _f.close()
+        return (True, False)
+
+    def _no_arg(_args):
+        return []
+
+    def _one_arg(arg):
+        return [arg]
+
+    def _version():
+        print(dork.__version__)
+        return (True, False)
+
+    def _list():
+        print(os.linesep.join(get_maze_files()))
+        return (True, False)
+
+    def get_maze_files():
+        mazes = []
+        for (_, _, filenames) in os.walk(__EXTENSION__[1:]):
+            mazes.extend(filenames)
+        return [maze for maze in mazes
+                if maze.find(__EXTENSION__) > 0]
+
+    def _init(filename):
+        if filename and filename + __EXTENSION__ in get_maze_files():
+            print("loaded maze " + filename)
+            return (False, False)
+        print("maze " + filename + " does not exist")
+        return (True, False)
+
+    dork_flags = (True, True)
     parser = argparse.ArgumentParser(description="Dork command line " +
                                      "interface. Run dork with no options to" +
-                                     " begin game")
+                                     " begin game", add_help=False)
 
     parser.add_argument('-l', '--list', action='store_true',
                         help='list available mazes')
@@ -50,57 +106,17 @@ def the_predork_cli(help_msg, *args):
                         help='-o <mazename> generates a maze and saves it')
     parser.add_argument('-v', '--version', action='store_true',
                         help="prints version and exits")
-    arglist = None
-    unknown_args = None
-    _hf = StringIO()
-    parser.print_help(file=_hf)
-    help_msg.append(_hf.getvalue())
-    _hf.close()
 
-    if "-h" in args or "--help" in args:
-        return (True, True)
+    help_msg.append(get_help_message(parser))
 
-    try:
-        arglist, unknown_args = parser.parse_known_args(args[1:])
-        if unknown_args:
-            print("Unrecognized command "+"".join(unknown_args))
-            raise SystemExit
-    except SystemExit:
-        return (True, True)
+    arglist, _ = parser.parse_known_args(args[1:])
 
-    if arglist.out:
-        if not is_filename_compliant(arglist.out):
-            return (True, False)
-
-        _f = open(__EXTENSION__[1:]+"/"+arglist.out+__EXTENSION__, "w")
-        cursor.hide()
-        dots = ("Generating maze    ", "Generating maze .",
-                "Generating maze ..", "Generating maze ...")
-        for _t in range(20):
-            print("{}".format(dots[_t % 4]), end="\r")
-        print(" "*len(dots[-1]))
-        cursor.show()
-        print("Done, maze \""+arglist.out+"\" saved")
-        _f.close()
-
-    if arglist.version:
-        print(dork.__version__)
-        dork_flags = (True, False)
-
-    if arglist.list or arglist.init:
-        mazes = []
-        for (_, _, filenames) in os.walk(__EXTENSION__[1:]):
-            mazes.extend(filenames)
-        only_maze_files = [maze for maze in mazes
-                           if maze.find(__EXTENSION__) > 0]
-        if arglist.list:
-            print(os.linesep.join(only_maze_files))
-            dork_flags = (True, False)
-        if arglist.init and arglist.init + __EXTENSION__ in only_maze_files:
-            print("loaded maze "+arglist.init)
-        elif arglist.init:
-            print("maze "+arglist.init+" does not exist")
-            return (True, True)
+    options = {"out": _one_arg, "init": _one_arg,
+               "version": _no_arg, "list": _no_arg}
+    for option in options:
+        if arglist and option in arglist.__dict__ and arglist.__dict__[option]:
+            args = options[option](arglist.__dict__[option])
+            dork_flags = locals()["_"+option](*args)
 
     return dork_flags
 
@@ -126,16 +142,17 @@ def title_screen():
     play_options = {'play': setup_game, 'load': load_game,
                     'help': help_menu, 'quit': end_game}
     user_play = True
+    print("##########################")
+    print("#   Welcome to the game  #")
+    print("# Created by Team NoName #")
+    print("##########################")
+    print("")
+    print("          play            ")
+    print("          load            ")
+    print("          help            ")
+    print("          quit            ")
+
     while user_play is True:
-        print("##########################")
-        print("#   Welcome to the game  #")
-        print("# Created by Team NoName #")
-        print("##########################")
-        print("")
-        print("          play            ")
-        print("          load            ")
-        print("          help            ")
-        print("          quit            ")
         option = input("> ")
         if option in play_options:
             user_play = play_options[option]()
@@ -146,31 +163,39 @@ def title_screen():
 def setup_game():
     """This will set up the game
     """
-    print("This will set the game up " +
-          "and execute the main loop for the game")
+    print(types.ROOM_MAP[types.MY_PLAYER.location][types.DESCRIPTION])
     prompt()
 
 
 def help_menu():
     """Shows the help menu
     """
-    print("Help Menu")
-    print("Movement: use 'move' and a direction")
-    print("for example, move north, will move the character north if possible")
-    print("Examine: you can examine rooms using 'examine' or 'look'")
-    print("Items: some rooms have items that you might need further in")
-    print("to pick up the item use the command 'pick up' or 'loot'\n")
-    input("To return to title screen press enter.")
+    print("                            Help Menu")
+    print("""
+    Movement: To move use simple commands you can say walk or
+    move and a direction. i.e. 'move north' or 'go south'.
+
+    Examine: To examine the area around you use the keyword
+    examine or inspect and what ever you want to inspect.
+    i.e. to look at the room use 'inspect room'.
+
+    Items: Some rooms will have items that you can pick up.
+    Use the keyword 'pick' to put an item into your inventory.
+    i.e. 'pick up excaliber'.
+
+    Help: If you need to be reminded of available actions
+    while playing the game use the keyword 'help' to access
+    the help menu.
+    """)
+    print("")
+    input("To return to the game press enter.")
     return True
 
 
 def load_game():
     """Will load a saved game
     """
-    print("This function is not currently in use.")
-    print("This will eventually allow you to load a saved game.\n")
-    input("To return to title screen press enter.")
-    return True
+    dork.saveload.main()
 
 
 def end_game():
@@ -183,51 +208,160 @@ def end_game():
 def prompt():
     """ Asks user what they would like to do
     """
-    print("\n" + "What would you like to do?")
-    acceptable_actions = ['move', 'go', 'walk', 'travel', 'quit',
-                          'examine', 'inspect', 'look']
-    da_action = list(zip(['move', 'go', 'travel', 'walk'],
-                         [(player_move, lambda x: [x])]*4))
-    daq_action = ("quit", (end_game, lambda x: []))
+    keep_prompting = True
 
-    d_action = []
-    d_action.extend(da_action)
-    d_action.append(daq_action)
+    def one_arg(args):
+        return [args]
 
-    commands = dict(d_action)
-    action = ""
-    check = True
-    while check:
-        action = input("> ").lower()
-        user_action = action.split()
-        mycommand = [(x in acceptable_actions, x) for x in user_action]
-        if mycommand:
-            if mycommand[0][0]:
-                args = commands[mycommand[0][1]][1](user_action)
-                check = commands[mycommand[0][1]][0](*args)
-                if not check:
-                    break
-            else:
-                print('Invalid command, try again.')
-                continue
-        check = any(x in acceptable_actions for x in user_action)
+    def no_arg(_args):
+        return []
+
+    player_actions = {'move': (player_move, one_arg),
+                      'go': (player_move, one_arg),
+                      'walk': (player_move, one_arg),
+                      'examine': (player_examine, one_arg),
+                      'inspect': (player_examine, one_arg),
+                      'pick': (player_take, one_arg),
+                      'use': (player_use, one_arg),
+                      'user': (user_menu, one_arg),
+                      'help': (help_menu, no_arg),
+                      'quit': (end_game, no_arg)}
+    while keep_prompting is True:
+        user_action = input("\n" +
+                            "What would you like to do? ").lower().split()
+        action = next((word for word in user_action if word in player_actions),
+                      '')
+        if action in player_actions:
+            args = player_actions[action][1](user_action)
+            keep_prompting = player_actions[action][0](*args)
+        else:
+            print("Enter a valid command. ")
 
 
 def player_move(user_action):
     """ Allows player to move along maze
     """
     if 'north' in user_action:
-        print("This will take you north")
-        prompt()
+        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.UP])
     elif 'south' in user_action:
-        print('This will take you south')
-        prompt()
+        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.DOWN])
     elif 'west' in user_action:
-        print('This will take you west')
-        prompt()
+        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.LEFT])
     elif 'east' in user_action:
-        print('This will take you east')
-        prompt()
+        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.RIGHT])
     else:
         print("Invalid direction")
-        prompt()
+    return True
+
+
+def lock_check(direction):
+    """This will check if the door is locked
+    """
+    if direction != '':
+        types.MY_PLAYER.next_location = direction
+        next_lock = types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED]
+    if direction == '':
+        print("That is a wall")
+    elif next_lock is True:
+        print("The door doesn't open.")
+        print('Would you like to use an item?')
+    else:
+        movement_handler(direction)
+
+
+def direction_handler(direction):
+    """Checks the direction to make sure its a valid direction
+    """
+    if direction != '':
+        types.MY_PLAYER.next_location = direction
+        next_lock = types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED]
+    if direction == '':
+        print("That is a wall")
+    elif next_lock is True:
+        print("The door doesn't open.")
+    else:
+        movement_handler(direction)
+
+
+def movement_handler(destination):
+    """ This will handle movement to different rooms
+    """
+    types.MY_PLAYER.location = destination
+    print("You have moved to " + destination)
+    print("")
+    print(types.ROOM_MAP[types.MY_PLAYER.location][types.DESCRIPTION])
+
+
+def player_examine(user_action):
+    """ Allows users to examine the room and items
+    """
+    if 'room' in user_action:
+        print("This room contains a " +
+              types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM])
+    else:
+        print("You are trying to examine an unknown thing. Please try again")
+    return True
+
+
+def player_take(user_action):
+    """Allows user to pick up items and puts them in the players inventory
+    """
+    item = types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM]
+    key_word = next((word for word in user_action if word in item), 'item')
+    if key_word in item:
+        print("You have picked up the " + item)
+        types.MY_PLAYER.inventory.append(item)
+        item = ''
+    else:
+        print("There is no such item")
+    return True
+
+
+def user_menu(user_action):
+    """Allows users to view their menu
+    """
+    if 'inventory' in user_action:
+        print(types.MY_PLAYER.inventory)
+    elif 'save' in user_action:
+        print("This will lead to saving the game.")
+    else:
+        print("No menu option found")
+    return True
+
+
+def player_use(user_action):
+    """Allows player to use items
+    """
+    def _in_word(word):
+        return any(word in item for item in user_item)
+
+    if types.MY_PLAYER.next_location == '':
+        print('You are not near a door')
+    else:
+        user_item = types.MY_PLAYER.inventory
+        lock = types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED]
+        key_word = next((word for word in user_action if _in_word(word)),
+                        'item')
+        if lock is True:
+            unlock_room(key_word)
+        else:
+            print('The room is not locked.')
+    return True
+
+
+def unlock_room(user_action):
+    """unlocks room
+    """
+    unlock = types.ROOM_MAP[types.MY_PLAYER.location][types.UNLOCK].split()
+    if user_action in unlock:
+        types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED] = False
+        remove_item()
+    else:
+        print('You do not have the key for this room.')
+
+
+def remove_item():
+    """Removes item after being used from inventory
+    """
+    item = types.ROOM_MAP[types.MY_PLAYER.location][types.UNLOCK]
+    types.MY_PLAYER.inventory.remove(item)

@@ -19,6 +19,24 @@ def test_cli_exists(run):
         run(dork.cli.main, input_values=['play', 'move south', 'quit'])
         run(dork.cli.main, input_values=['play', 'move west', 'quit'])
         run(dork.cli.main, input_values=['play', 'move east', 'quit'])
+        run(dork.cli.main, input_values=['play', 'move went', 'quit'])
+        run(dork.cli.main, input_values=['play', 'examine room', 'quit'])
+        run(dork.cli.main, input_values=['play', 'examine nothing', 'quit'])
+        run(dork.cli.main, input_values=['play', 'pick cellkey', 'quit'])
+        run(dork.cli.main, input_values=['play', 'pick key', 'quit'])
+        run(dork.cli.main, input_values=['play', 'pick key',
+                                         'move north', 'use key', 'quit'])
+        run(dork.cli.main, input_values=['play', 'pick key',
+                                         'move north', 'use key',
+                                         'go north', 'quit'])
+        run(dork.cli.main, input_values=['play', 'pick key',
+                                         'move north', 'use torch',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'pick key', 'use key',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'user inventory', 'quit'])
+        run(dork.cli.main, input_values=['play', 'user save', 'quit'])
+        run(dork.cli.main, input_values=['play', 'user id', 'quit'])
         run(dork.cli.main, input_values=['load', ' ', 'quit'])
         run(dork.cli.main, input_values=['help', ' ', 'quit'])
         run(dork.cli.main, input_values=['quit'])
@@ -29,8 +47,9 @@ def test_cli_exists(run):
 def test_cli_help(run):
     """CLI's help command should return helpful information
     """
-    out, err = run(dork.cli.main, "-h")
-    assert "usage: " in out, \
+    msg = []
+    _, err = run(dork.cli.the_predork_cli, msg, *("", "-h"))
+    assert "usage: " in msg[0], \
         "Failed to run the cli.main method: {err}".format(err=err)
 
 
@@ -93,7 +112,7 @@ def test_pre_cli_generation(run):
     assert "OS reserved" in out, \
         "Failed run the dork.cli.the_predork_cli method: {err}"\
         .format(err=err)
-    out, err = run(dork.cli.the_predork_cli, [], *("", "noop"))
-    assert "Unrecognized command" in out, \
+    out, err = run(dork.cli.main, [], *("", "noop"))
+    assert "usage" in out, \
         "Failed run the dork.cli.the_predork_cli method: {err}"\
         .format(err=err)

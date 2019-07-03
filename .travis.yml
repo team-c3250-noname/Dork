@@ -21,6 +21,7 @@ script:
   - coverage erase
   - coverage run --branch --source=dork --omit=dork/__main__.py -m pytest
   - coverage report -m
+  - "radon cc -a dork | grep 'Average complexity: A'"
   
 after_success:
   - coverage xml -i
