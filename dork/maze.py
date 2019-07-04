@@ -229,8 +229,10 @@ class Maze:
             self.in_nodes = {"up": None, "down": None, "left": None, "right": None}
             self.out_nodes = {"up": None, "down": None, "left": None, "right": None}
             self.paths = {"up": None, "down": None, "left": None, "right": None}
-        
+
         def set_neighbor_nodes(self, neighbors, width):
+            """sets the cells edges
+            """
             x, y = self.node % width, int(self.node / width)
             for neighbor in neighbors:
                 neighbor_x, neighbor_y = neighbor % width, int(neighbor / width)
@@ -246,8 +248,6 @@ class Maze:
                 else:
                     self.out_nodes["down"] = neighbor
                     self.in_nodes["down"] = neighbor
-
-
 
     def __init__(self, maze_generator=Ellers, width=10, height=10):
         self.width = max(width, 10)
@@ -267,6 +267,8 @@ class Maze:
         return self.graph.copy()
 
     def claim_cell(self, name, x, y):
+        """tags a cell as an owned area
+        """
         if name in self.areas:
             raise KeyError(f"{name} area already used for cell {self.areas[name]}")
         node_id = x + y * self.width
@@ -300,13 +302,14 @@ class Maze:
             return False
         return True
 
-    def walk_path(self, from_area, to_area):
-        pass
-
-    def go_to(self, from_area, to_area):
-        pass
+    def get_path(self, area_name, direction):
+        """ returns a list of nodes as a path
+        """
+        return self.areas[area_name][direction]
 
     def make_path(self, from_area, from_way, to_area, to_way):
+        """connects two areas, breaks walls if needed
+        """
         from_area = self.areas[from_area]
         to_area = self.areas[to_area]
 
@@ -361,21 +364,4 @@ class Maze:
         self.graph.add_edges_from(edges)
 
 if __name__ == "__main__": # pragma: no cover
-    maze = Maze()
-    maze.claim_cell("test", 0, 0)
-    maze.claim_cell("test2", 3, 3)
-    maze.make_path("test", "down", "test2", "left")
-
-    color_map = ["blue" for _ in enumerate(maze.graph.nodes())]
-
-
-    path = maze.areas["test"].paths["down"]
-    for node in path:
-        color_map[node] = "green"
-    color_map[maze.areas["test"].node] = "red"
-    color_map[maze.areas["test2"].node] = "purple"
-    nx.draw(maze.graph, node_color=color_map, with_labels=True)
-    plt.show()
-
-
-
+    pass
