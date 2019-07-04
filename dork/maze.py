@@ -7,6 +7,7 @@ from random import sample, choice, randint
 from os import linesep
 
 import networkx as nx
+import pylab as plt
 
 DIRECTIONS = {"up": 0, "down": 1, "left": 2, "right": 3}
 
@@ -210,6 +211,7 @@ class Ellers(MazeGenerator):
         nodes = self._get_nx_nodes()
         edges = self._get_nx_edges()
 
+
         self.lines.clear()
         self.lines.append(previous_line)
         self.lines.append(line)
@@ -220,6 +222,33 @@ class Ellers(MazeGenerator):
 class Maze:
     """Uses a maze generator to generate a maze
     """
+    class Area:
+        def __init__(self, node_id, name):
+            self.node = node_id
+            self.name = name
+            self.in_nodes = {"up": None, "down": None, "left": None, "right": None}
+            self.out_nodes = {"up": None, "down": None, "left": None, "right": None}
+            self.paths = {"up": None, "down": None, "left": None, "right": None}
+        
+        def set_neighbor_nodes(self, neighbors, width):
+            x, y = self.node % width, int(self.node / width)
+            for neighbor in neighbors:
+                neighbor_x, neighbor_y = neighbor % width, int(neighbor / width)
+                if neighbor_x < x:
+                    self.out_nodes["left"] = neighbor
+                    self.in_nodes["left"] = neighbor
+                elif neighbor_x > x:
+                    self.out_nodes["right"] = neighbor
+                    self.in_nodes["right"] = neighbor
+                elif neighbor_y < y:
+                    self.out_nodes["up"] = neighbor
+                    self.in_nodes["up"] = neighbor
+                else:
+                    self.out_nodes["down"] = neighbor
+                    self.in_nodes["down"] = neighbor
+
+
+
     def __init__(self, maze_generator=Ellers, width=10, height=10):
         self.width = max(width, 10)
         self.height = 0
@@ -237,6 +266,85 @@ class Maze:
         """
         return self.graph.copy()
 
+    def claim_cell(self, name, x, y):
+        if name in self.areas:
+            raise KeyError(f"{name} area already used for cell {self.areas[name]}")
+        node_id = x + y * self.width
+        if node_id not in self.graph.nodes():
+            raise IndexError(f"Cell at ({x}, {y}) as id {node_id} out of bounds")
+
+        area = self.Area(node_id, name)
+        area.set_neighbor_nodes(list(self.graph.neighbors(node_id)), self.width)
+        self.areas[name] = area
+
+    def _get_coordinates(self, node):
+        return (node % self.width, int(node / self.width))
+
+    def _get_node_way(self, node, way):
+        x, y = self._get_coordinates(node)
+        if way == "up":
+            y -= 1
+        elif way == "down":
+            y += 1
+        elif way == "left":
+            x -= 1
+        else:
+            x += 1
+        return x, y
+
+    def _is_way_possible(self, node_id, way):
+        x, y = self._get_node_way(node_id, way)
+        if x < 0 or x >= self.width:
+            return False
+        if y < 0 or y >= self.height:
+            return False
+        return True
+
+    def walk_path(self, from_area, to_area):
+        pass
+
+    def go_to(self, from_area, to_area):
+        pass
+
+    def make_path(self, from_area, from_way, to_area, to_way):
+        from_area = self.areas[from_area]
+        to_area = self.areas[to_area]
+
+        from_node = from_area.out_nodes[from_way]
+        to_node = to_area.in_nodes[to_way]
+
+        if from_node and to_node:
+            if nx.has_path(self.graph, from_node, to_node):
+                path = nx.shortest_path(self.graph, from_node, to_node)
+                from_area.paths[from_way] = path
+                to_area.paths[to_way] = path[::-1]
+                return
+
+        if not from_node:
+            if not self._is_way_possible(from_area.node, from_way):
+                print(f"Room {from_area.node} cannot go {from_way}")
+                raise ValueError(f"Room {from_area.name} cannot go {from_way}")
+            x, y = self._get_node_way(from_area.node, from_way)
+            node_way = x + y * self.width
+            self.graph.add_edge(from_area.node, node_way)
+            self.graph.add_edge(node_way, from_area.node)
+            from_node = node_way
+        if not to_node:
+            if not self._is_way_possible(to_area.node, to_way):
+                raise ValueError(f"Room {to_area.name} cannot go {to_way}")
+            x, y = self._get_node_way(to_area.node, to_way)
+            node_way = x + y * self.width
+            self.graph.add_edge(to_area.node, node_way)
+            self.graph.add_edge(node_way, to_area.node)
+            to_node = node_way
+        if from_node and to_node:
+            if nx.has_path(self.graph, from_node, to_node):
+                path = nx.shortest_path(self.graph, from_node, to_node)
+                from_area.paths[from_way] = path
+                to_area.paths[to_way] = path[::-1]
+        else:
+            raise RuntimeError(f"path from {from_area.name} to {to_area.name} could not be made")
+
     def grow(self, line_count=10):
         """grows the maze
         """
@@ -251,3 +359,23 @@ class Maze:
         nodes, edges = self.maze_generator.get_nodes_and_edges()
         self.graph.add_nodes_from(nodes)
         self.graph.add_edges_from(edges)
+
+if __name__ == "__main__": # pragma: no cover
+    maze = Maze()
+    maze.claim_cell("test", 0, 0)
+    maze.claim_cell("test2", 3, 3)
+    maze.make_path("test", "down", "test2", "left")
+
+    color_map = ["blue" for _ in enumerate(maze.graph.nodes())]
+
+
+    path = maze.areas["test"].paths["down"]
+    for node in path:
+        color_map[node] = "green"
+    color_map[maze.areas["test"].node] = "red"
+    color_map[maze.areas["test2"].node] = "purple"
+    nx.draw(maze.graph, node_color=color_map, with_labels=True)
+    plt.show()
+
+
+
