@@ -54,3 +54,39 @@ def test_dork_maze():
 
     node.set_left_right(node_left, node_left.id)
     assert node.left is node_left.id, f"edge case, node.left failed"
+
+
+def test_dork_maze_areas():
+    """tests the area/room-map for maze
+    """
+    maze = Maze()
+    maze.claim_cell("c1", 0, 0)
+    try:
+        maze.claim_cell("c1", 0, 0)
+    except KeyError as err:
+        assert "already used" in str(err), f"claim_cell key duplication"
+
+    try:
+        maze.claim_cell("c2", -1, 0)
+    except IndexError as err:
+        assert "out of bounds" in str(err),\
+                f"claim_cell does not allow negative indices"
+
+    try:
+        maze.claim_cell("c2", 0, 0)
+    except ValueError as err:
+        assert "already claimed" in str(err),\
+                f"cell was already claimed"
+    maze.claim_cell("c2", 4, 4)
+    maze.make_path("c1", "down", "c2", "up")
+    try:
+        maze.make_path("c1", "left", "c2", "right")
+    except ValueError as err:
+        assert "cannot go" in str(err), f"tried to go left at 0,0"
+
+    maze.make_path("c1", "right", "c2", "down")
+
+    try:
+        maze.make_path("c1", "up", "c2", "down")
+    except ValueError as err:
+        assert "cannot go" in str(err), f"tried to up at 0"

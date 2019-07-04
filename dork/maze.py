@@ -7,7 +7,6 @@ from random import sample, choice, randint
 from os import linesep
 
 import networkx as nx
-import pylab as plt
 
 DIRECTIONS = {"up": 0, "down": 1, "left": 2, "right": 3}
 
@@ -211,7 +210,6 @@ class Ellers(MazeGenerator):
         nodes = self._get_nx_nodes()
         edges = self._get_nx_edges()
 
-
         self.lines.clear()
         self.lines.append(previous_line)
         self.lines.append(line)
@@ -223,19 +221,25 @@ class Maze:
     """Uses a maze generator to generate a maze
     """
     class Area:
+        """Named area to relate rooms to maze...
+        """
         def __init__(self, node_id, name):
             self.node = node_id
             self.name = name
-            self.in_nodes = {"up": None, "down": None, "left": None, "right": None}
-            self.out_nodes = {"up": None, "down": None, "left": None, "right": None}
-            self.paths = {"up": None, "down": None, "left": None, "right": None}
+            self.in_nodes = {"up": None, "down": None,
+                             "left": None, "right": None}
+            self.out_nodes = {"up": None, "down": None,
+                              "left": None, "right": None}
+            self.paths = {"up": None, "down": None,
+                          "left": None, "right": None}
 
         def set_neighbor_nodes(self, neighbors, width):
             """sets the cells edges
             """
             x, y = self.node % width, int(self.node / width)
             for neighbor in neighbors:
-                neighbor_x, neighbor_y = neighbor % width, int(neighbor / width)
+                neighbor_x, neighbor_y = neighbor % width,\
+                                         int(neighbor / width)
                 if neighbor_x < x:
                     self.out_nodes["left"] = neighbor
                     self.in_nodes["left"] = neighbor
@@ -258,7 +262,7 @@ class Maze:
         self.maze_line = self.maze_generator.generate()
         self.graph = nx.DiGraph()
         self.areas = {}
-        self.views = []
+        self.claimed = []
         self.grow(max(height, 10))
 
     def get_graph(self):
@@ -270,13 +274,19 @@ class Maze:
         """tags a cell as an owned area
         """
         if name in self.areas:
-            raise KeyError(f"{name} area already used for cell {self.areas[name]}")
+            raise KeyError(
+                f"{name} area already used for cell {self.areas[name]}")
         node_id = x + y * self.width
         if node_id not in self.graph.nodes():
-            raise IndexError(f"Cell at ({x}, {y}) as id {node_id} out of bounds")
+            raise IndexError(
+                f"Cell at ({x}, {y}) as id {node_id} out of bounds")
+        if node_id in self.claimed:
+            raise ValueError(f"node {node_id} already claimed")
 
         area = self.Area(node_id, name)
-        area.set_neighbor_nodes(list(self.graph.neighbors(node_id)), self.width)
+        self.claimed.append(node_id)
+        area.set_neighbor_nodes(list(self.graph.neighbors(node_id)),
+                                self.width)
         self.areas[name] = area
 
     def _get_coordinates(self, node):
@@ -307,6 +317,13 @@ class Maze:
         """
         return self.areas[area_name][direction]
 
+    def _break_wall(self, node, way):
+        x, y = self._get_node_way(node, way)
+        node_way = x + y * self.width
+        self.graph.add_edge(node, node_way)
+        self.graph.add_edge(node_way, node)
+        return node_way
+
     def make_path(self, from_area, from_way, to_area, to_way):
         """connects two areas, breaks walls if needed
         """
@@ -325,28 +342,21 @@ class Maze:
 
         if not from_node:
             if not self._is_way_possible(from_area.node, from_way):
-                print(f"Room {from_area.node} cannot go {from_way}")
                 raise ValueError(f"Room {from_area.name} cannot go {from_way}")
-            x, y = self._get_node_way(from_area.node, from_way)
-            node_way = x + y * self.width
-            self.graph.add_edge(from_area.node, node_way)
-            self.graph.add_edge(node_way, from_area.node)
-            from_node = node_way
+            from_node = self._break_wall(from_area.node, from_way)
         if not to_node:
             if not self._is_way_possible(to_area.node, to_way):
                 raise ValueError(f"Room {to_area.name} cannot go {to_way}")
-            x, y = self._get_node_way(to_area.node, to_way)
-            node_way = x + y * self.width
-            self.graph.add_edge(to_area.node, node_way)
-            self.graph.add_edge(node_way, to_area.node)
-            to_node = node_way
-        if from_node and to_node:
-            if nx.has_path(self.graph, from_node, to_node):
-                path = nx.shortest_path(self.graph, from_node, to_node)
-                from_area.paths[from_way] = path
-                to_area.paths[to_way] = path[::-1]
-        else:
-            raise RuntimeError(f"path from {from_area.name} to {to_area.name} could not be made")
+            to_node = self._break_wall(to_area.node, to_way)
+
+        if nx.has_path(self.graph, from_node, to_node):
+            path = nx.shortest_path(self.graph, from_node, to_node)
+            from_area.paths[from_way] = path
+            to_area.paths[to_way] = path[::-1]
+            return
+
+        raise RuntimeError(f"path from {from_area.name}\
+                            to {to_area.name} could not be made")
 
     def grow(self, line_count=10):
         """grows the maze
@@ -362,6 +372,3 @@ class Maze:
         nodes, edges = self.maze_generator.get_nodes_and_edges()
         self.graph.add_nodes_from(nodes)
         self.graph.add_edges_from(edges)
-
-if __name__ == "__main__": # pragma: no cover
-    pass
