@@ -4,11 +4,12 @@ from os import linesep
 import networkx as nx
 from dork.maze import MazeGenerator, Ellers, Maze
 
+MAZE = Maze()
 
-def test_dork_maze():
+
+def test_dork_maze(maze=MAZE):
     """Tests the dork.Maze class
     """
-    maze = Maze()
     graph = maze.get_graph()
     assert len(graph.nodes) == 110, f"Default node size was incorrect"
     assert nx.is_strongly_connected(graph),\
@@ -56,10 +57,9 @@ def test_dork_maze():
     assert node.left is node_left.id, f"edge case, node.left failed"
 
 
-def test_dork_maze_areas():
+def test_dork_maze_areas(maze=MAZE):
     """tests the area/room-map for maze
     """
-    maze = Maze()
     maze.claim_cell("c1", 0, 0)
     try:
         maze.claim_cell("c1", 0, 0)
