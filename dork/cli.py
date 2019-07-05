@@ -370,4 +370,4 @@ def next_room():
             direction = player_directions[direction_check]
             reprompt = False
             return types.ROOM_MAP[types.MY_PLAYER.location][direction]
-    direction_check = input("Please input cardinal direction. ").lower()
+        direction_check = input("Please input cardinal direction. ").lower()
