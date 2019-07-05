@@ -19,21 +19,26 @@ def test_cli_exists(run):
         run(dork.cli.main, input_values=['play', 'move south', 'quit'])
         run(dork.cli.main, input_values=['play', 'move west', 'quit'])
         run(dork.cli.main, input_values=['play', 'move east', 'quit'])
-        run(dork.cli.main, input_values=['play', 'move went', 'quit'])
+        run(dork.cli.main, input_values=['play', 'move qest', 'quit'])
         run(dork.cli.main, input_values=['play', 'examine room', 'quit'])
         run(dork.cli.main, input_values=['play', 'examine nothing', 'quit'])
         run(dork.cli.main, input_values=['play', 'pick cellkey', 'quit'])
         run(dork.cli.main, input_values=['play', 'pick key', 'quit'])
-        run(dork.cli.main, input_values=['play', 'pick key',
-                                         'move north', 'use key', 'quit'])
+        run(dork.cli.main, input_values=['play', 'pick key', 'move north',
+                                         'use key', 'south', 'quit'])
+        run(dork.cli.main, input_values=['play', 'pick key', 'use key',
+                                         'qest', 'south', 'quit'])
         run(dork.cli.main, input_values=['play', 'pick key',
                                          'move north', 'use key',
-                                         'go north', 'quit'])
+                                         'north', 'quit'])
         run(dork.cli.main, input_values=['play', 'pick key',
-                                         'move north', 'use torch',
-                                         'quit'])
+                                         'move north', 'quit'])
         run(dork.cli.main, input_values=['play', 'pick key', 'use key',
-                                         'quit'])
+                                         'north', 'quit'])
+        run(dork.cli.main, input_values=['play', 'pick key', 'use key',
+                                         'north', 'move north',
+                                         'pick torch', 'use torch',
+                                         'west', 'quit'])
         run(dork.cli.main, input_values=['play', 'user inventory', 'quit'])
         run(dork.cli.main, input_values=['play', 'user save', 'quit'])
         run(dork.cli.main, input_values=['play', 'user id', 'quit'])

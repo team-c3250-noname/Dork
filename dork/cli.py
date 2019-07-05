@@ -188,7 +188,7 @@ def help_menu():
     the help menu.
     """)
     print("")
-    input("To return to the game press enter.")
+    input("To return press enter.")
     return True
 
 
@@ -260,27 +260,13 @@ def lock_check(direction):
     if direction != '':
         types.MY_PLAYER.next_location = direction
         next_lock = types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED]
+        if next_lock is True:
+            print("The door doesn't open.")
+            print('Would you like to use an item?')
+        else:
+            movement_handler(direction)
     if direction == '':
         print("That is a wall")
-    elif next_lock is True:
-        print("The door doesn't open.")
-        print('Would you like to use an item?')
-    else:
-        movement_handler(direction)
-
-
-def direction_handler(direction):
-    """Checks the direction to make sure its a valid direction
-    """
-    if direction != '':
-        types.MY_PLAYER.next_location = direction
-        next_lock = types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED]
-    if direction == '':
-        print("That is a wall")
-    elif next_lock is True:
-        print("The door doesn't open.")
-    else:
-        movement_handler(direction)
 
 
 def movement_handler(destination):
@@ -332,36 +318,56 @@ def user_menu(user_action):
 def player_use(user_action):
     """Allows player to use items
     """
-    def _in_word(word):
-        return any(word in item for item in user_item)
-
-    if types.MY_PLAYER.next_location == '':
-        print('You are not near a door')
-    else:
-        user_item = types.MY_PLAYER.inventory
-        lock = types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED]
-        key_word = next((word for word in user_action if _in_word(word)),
-                        'item')
-        if lock is True:
-            unlock_room(key_word)
-        else:
-            print('The room is not locked.')
+    direction = next_room()
+    unlock_room(user_action, direction)
     return True
 
 
-def unlock_room(user_action):
+def unlock_room(user_action, direction):
     """unlocks room
     """
-    unlock = types.ROOM_MAP[types.MY_PLAYER.location][types.UNLOCK].split()
-    if user_action in unlock:
-        types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED] = False
-        remove_item()
+    types.MY_PLAYER.next_location = direction
+    unlock = room_check(direction)
+    if unlock == '':
+        print("That is not a room")
     else:
-        print('You do not have the key for this room.')
+        unlock = unlock.split()
+        key_word = next((word for word in user_action if word in unlock),
+                        'item')
+        if key_word in unlock:
+            types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED] = False
+            print("You have unlocked the room.")
+            remove_item()
+        else:
+            print('You do not have the key for this room.')
 
 
 def remove_item():
     """Removes item after being used from inventory
     """
-    item = types.ROOM_MAP[types.MY_PLAYER.location][types.UNLOCK]
+    item = types.ROOM_MAP[types.MY_PLAYER.next_location][types.UNLOCK]
     types.MY_PLAYER.inventory.remove(item)
+    print("you have removed " + item)
+
+
+def room_check(direction):
+    """This will check if the room exists
+    """
+    if direction != '':
+        return types.ROOM_MAP[types.MY_PLAYER.next_location][types.UNLOCK]
+    return ''
+
+
+def next_room():
+    """Will find the rooms next to the player
+    """
+    player_directions = {'north': types.UP, 'south': types.DOWN,
+                         'east': types.RIGHT, 'west': types.LEFT, }
+    direction_check = input("Which direction would you like to try ").lower()
+    reprompt = True
+    while reprompt is True:
+        if direction_check in player_directions:
+            direction = player_directions[direction_check]
+            reprompt = False
+            return types.ROOM_MAP[types.MY_PLAYER.location][direction]
+    direction_check = input("Please input cardinal direction. ").lower()
