@@ -153,7 +153,7 @@ def title_screen():
     print("          quit            ")
 
     while user_play is True:
-        option = input("> ")
+        option = input("> ").strip()
         if option in play_options:
             user_play = play_options[option]()
         else:
@@ -222,6 +222,7 @@ def prompt():
                       'examine': (player_examine, one_arg),
                       'inspect': (player_examine, one_arg),
                       'pick': (player_take, one_arg),
+                      'take': (player_take, one_arg),
                       'use': (player_use, one_arg),
                       'user': (user_menu, one_arg),
                       'help': (help_menu, no_arg),
@@ -241,14 +242,16 @@ def prompt():
 def player_move(user_action):
     """ Allows player to move along maze
     """
-    if 'north' in user_action:
-        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.UP])
-    elif 'south' in user_action:
-        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.DOWN])
-    elif 'west' in user_action:
-        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.LEFT])
-    elif 'east' in user_action:
-        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.RIGHT])
+    directions = ['north', 'up', 'south', 'down', 'east',
+                  'left', 'west', 'right', ]
+    action = next((word for word in user_action if word in directions), '')
+    player_direction = {'north': types.UP, 'up': types.UP, 'south': types.DOWN,
+                        'down': types.DOWN, 'east': types.RIGHT,
+                        'right': types.RIGHT, 'west': types.LEFT,
+                        'left': types.LEFT, }
+    if action in player_direction:
+        cardinal = player_direction[action]
+        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][cardinal])
     else:
         print("Invalid direction")
     return True
@@ -262,7 +265,7 @@ def lock_check(direction):
         next_lock = types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED]
         if next_lock is True:
             print("The door doesn't open.")
-            print('Would you like to use an item?')
+            print('You might be able to use an item.')
         else:
             movement_handler(direction)
     if direction == '':

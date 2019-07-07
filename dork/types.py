@@ -101,15 +101,12 @@ ROOM_MAP = {
         ROOM_NAME: 'Jail Hallway',
         DESCRIPTION: """
         A long, narrow hallway lined with cells and torches for light on
-        either side. To your immediate left, there is a locked door. Upon
-        further inspection of this door, you notice that the lock is
-        rusted and falling apart. You attempt to pull it open with your
-        bare hands, but it does not budge. Perhaps if you had something that
-        would give you some leverage... To your right, down the corridor,
-        there is a stairwell. The stairs lead up, but it is completely
-        pitch black inside. You'll probably trip and hurt yourself without a
-        source of light. You should be able to reach up and remove one of the
-        torches from the wall.""",
+        either side. To your immediate left, there is a crumbling wall.
+        Perhaps if you had something that could help destroy it...
+        To your right, down the corridor, there is a stairwell. The stairs
+        lead up, but it is completely pitch black inside. You'll probably
+        trip and hurt yourself without a source of light. You should be
+        able to reach up and remove one of the torches from the wall.""",
         INSPECT: 'You inspect the room',
         LOCKED: True,
         UNLOCK: 'cell key',
@@ -172,5 +169,50 @@ ROOM_MAP = {
         DOWN: '',
         LEFT: '',
         RIGHT: 'Jail hallway',
+    },
+    'Boss room': {
+        ROOM_NAME: 'Boss room',
+        DESCRIPTION: """
+        You have entered the boss room
+        """,
+        INSPECT: """
+        """,
+        LOCKED: True,
+        UNLOCK: 'sword',
+        ITEM: '',
+        UP: '',
+        DOWN: 'Jail Armory',
+        LEFT: 'Treasury',
+        RIGHT: '',
+    },
+    'Treasury': {
+        ROOM_NAME: 'Treasury',
+        DESCRIPTION: """
+        This is the treasury
+        """,
+        INSPECT: """
+        """,
+        LOCKED: False,
+        UNLOCK: '',
+        ITEM: '',
+        UP: '',
+        DOWN: '',
+        LEFT: '',
+        RIGHT: 'Boss Room',
+    },
+    'Entrance': {
+        ROOM_NAME: 'Entrance',
+        DESCRIPTION: """
+        This is the entrance to the jail
+        """,
+        INSPECT: """
+        """,
+        LOCKED: False,
+        UNLOCK: '',
+        ITEM: '',
+        UP: '',
+        DOWN: 'Boss Room',
+        LEFT: '',
+        RIGHT: '',
     },
 }
