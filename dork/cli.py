@@ -224,6 +224,7 @@ def prompt():
                       'pick': (player_take, one_arg),
                       'take': (player_take, one_arg),
                       'use': (player_use, one_arg),
+                      'drop': (player_drop, one_arg),
                       'user': (user_menu, one_arg),
                       'help': (help_menu, no_arg),
                       'quit': (end_game, no_arg)}
@@ -374,3 +375,9 @@ def next_room():
             reprompt = False
             return types.ROOM_MAP[types.MY_PLAYER.location][direction]
         direction_check = input("Please input cardinal direction. ").lower()
+
+def player_drop(user_action):
+    """
+    """
+    room_items = types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM]
+    
