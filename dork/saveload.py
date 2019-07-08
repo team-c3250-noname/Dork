@@ -12,19 +12,29 @@ ITEMDATA = ["holds"]
 DIRECTIONS = ["north", "south", "east", "west"]
 
 
+def get_input():
+    """Grabs user input to define a save/load name
+    """
+    input_name = input("Enter a file name: ")
+    file_name = "./dork/yaml/" + input_name + ".yml"
+    return file_name
+
+
 def load():
     """This will load a file into data.
     """
+    print("Attempting to load data.")
 
-    file_input = input("Enter a save file to load: ")
-
-    file_name = "./dork/yaml/" + file_input + ".yml"
+    file_name = get_input()
 
     try:
         with open(file_name) as file:
             data = yaml.safe_load(file.read())
     except IOError:
         return "Invalid file name. Try again."
+
+    print("Load was successful.")
+
     return data
 
 
@@ -32,11 +42,9 @@ def save(data):
     """This will save player and room data to a file.
     Eventually this should also save maze data.
     """
-
     print("Attempting to save data.")
 
-    input_name = input("Name your save file: ")
-    file_name = "./dork/yaml/" + input_name + ".yml"
+    file_name = get_input()
 
     with open(file_name, 'w') as yaml_file:
         yaml_file.write(yaml.dump(data, default_flow_style=False))
