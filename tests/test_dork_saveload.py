@@ -8,7 +8,7 @@ def testsave():
     """Save data should actually work no matter what
     type of data is used.
     """
-    testdata = "poop lol"
+    testdata = "data test"
 
     out = dork.saveload.save(testdata)
     assert "0" in out, \

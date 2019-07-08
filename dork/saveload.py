@@ -36,7 +36,6 @@ def save(data):
     print("Attempting to save data.")
 
     input_name = input("Name your save file: ")
-    
     file_name = "./dork/yaml/" + input_name + ".yml"
 
     with open(file_name, 'w') as yaml_file:
