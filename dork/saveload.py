@@ -12,14 +12,19 @@ ITEMDATA = ["holds"]
 DIRECTIONS = ["north", "south", "east", "west"]
 
 
-def load(file_name="./dork/yaml/dork.yml"):
+def load():
     """This will load a file into data.
     """
+
+    file_input = input("Enter a save file to load: ")
+
+    file_name = "./dork/yaml/" + file_input + ".yml"
+
     try:
         with open(file_name) as file:
             data = yaml.safe_load(file.read())
     except IOError:
-        return "Try again"
+        return "Invalid file name. Try again."
     return data
 
 
@@ -30,7 +35,10 @@ def save(data):
 
     print("Attempting to save data.")
 
-    file_name = "./dork/yaml/dorktest.yml"
+    input_name = input("Name your save file: ")
+    
+    file_name = "./dork/yaml/" + input_name + ".yml"
+
     with open(file_name, 'w') as yaml_file:
         yaml_file.write(yaml.dump(data, default_flow_style=False))
 
