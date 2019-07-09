@@ -21,20 +21,6 @@ class Holder:
         self.items = list()
 
 
-class Room(Holder):
-    """A room on the map
-    Note: can only be entered through entraces
-        or exited through exits.
-    """
-
-    def __init__(self):
-        super(Room, self).__init__()
-        self.map = Map()
-        self.entrances = list()
-        self.exits = list()
-        self.players = list()
-
-
 class Path:
     """A path between two rooms (i.e. a door or hallway)
     """
@@ -64,7 +50,40 @@ class Player(Holder):
         self.room = Room()
 
 
+class Room(Holder):
+    """A room on the map
+    Note: can only be entered through entraces
+        or exited through exits.
+    """
+
+    def __init__(self, room_name, description, inspect, item):
+        super(Room, self).__init__()
+        self.room_name = room_name
+        self.description = description
+        self.inspect = inspect
+        self.item = item
+
+class Connect(Room):
+    """subclass to room to include the way to check the locked state of rooms
+    """
+
+    def __init__(self, locked, unlock, connection):
+        super(Connect, self).__init__()
+        self.locked = locked
+        self.unlock = unlock
+        self.connection = connection
+
 MY_PLAYER = Player()
+
+CELL = Room('cell', 'This is a jail cell', 'You find a key', 'cell key')
+JAIL_HALLWAY = Room('jail hallway', 'This is a jail cell', 'You find a torch', 'torch')
+STAIRWELL = Room('stairwell', 'This is the stairwell', '', '')
+JAIL_TOWER = Room('jail tower', 'This is the jail tower', 'You find a iron bar', 'iron bar')
+JAIL_ARMORY = Room('jail armory', 'This is the jail armory', 'You find a sword', 'sword')
+BOSS_ROOM = Room('boss room', 'This is the boss room', '', '')
+VAULT = Room('vault', 'This is the vault', 'You find gold', 'gold')
+ENTRANCE = Room('entrance', 'This is entrance', '', '')
+
 
 ROOM_NAME = ''
 DESCRIPTION = 'description'
