@@ -18,13 +18,9 @@ def testsave():
 def testload():
     """load should grab the data and parse it without further input
     """
-    out = dork.saveload.load("./dork/yaml/dork.yml")
+    out = dork.saveload.load()
     assert "Items" in out, \
         "Saveload.load method failed."
-
-    out = dork.saveload.load("Junk")
-    assert "Try again" in out, \
-        "Saveload.load method could not find proper save data."
 
 
 def testplayer(run):

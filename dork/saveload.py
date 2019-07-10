@@ -5,6 +5,7 @@
 
 from pprint import pprint
 import yaml
+import sys
 
 PROPERTIES = ["Items", "Player", "Rooms"]
 PLAYERDATA = ["holding", "location", "current", "max"]
@@ -12,14 +13,30 @@ ITEMDATA = ["holds"]
 DIRECTIONS = ["north", "south", "east", "west"]
 
 
-def load(file_name="./dork/yaml/dork.yml"):
+def get_input():
+    """Grabs user input to define a save/load name
+    """
+    input_name = input("Enter a file name: ")
+    file_name = "./dork/yaml/" + input_name + ".yml"
+
+    return file_name
+
+
+def load():
     """This will load a file into data.
     """
+    print("Attempting to load data.")
+
+    file_name = get_input()
+
     try:
         with open(file_name) as file:
             data = yaml.safe_load(file.read())
     except IOError:
-        return "Try again"
+        sys.exit("ERROR: Invalid file name: " + file_name + ". Exiting program.")
+
+    print("Load successful.")
+
     return data
 
 
@@ -27,15 +44,22 @@ def save(data):
     """This will save player and room data to a file.
     Eventually this should also save maze data.
     """
-
     print("Attempting to save data.")
 
-    file_name = "./dork/yaml/dorktest.yml"
-    with open(file_name, 'w') as yaml_file:
-        yaml_file.write(yaml.dump(data, default_flow_style=False))
+    file_name = get_input()
+    saved = False
 
-    print("Save was successful.")
-    return "0"
+    while(saved is False):
+        try:
+            with open(file_name, 'w') as yaml_file:
+                yaml_file.write(yaml.dump(data, default_flow_style=False))
+                saved = True
+        except IOError:
+            print("ERROR: Invalid file name: " + file_name)
+            print("Please try a different file name.")
+            file_name = get_input()
+
+    print("Save successful.")
 
 
 def pplayer(players, name, pdata):
@@ -43,12 +67,12 @@ def pplayer(players, name, pdata):
     """
     player = players[name]
     if pdata not in player:
-        print(".")
+        pass
     elif player[pdata] is None:
         print(f"There is no data in {name}.")
     else:
         other = player[pdata]
-        print(f"Player data {name}: {other}.")
+        print(f"Player {pdata} {name}: {other}.")
 
 
 def pitem(items, name, idata):
@@ -82,22 +106,24 @@ def path(rooms, name, direction):
 def main():  # pragma: no cover
     """Runs everything.
     """
-    data = load()
-    print("Data that was loaded:")
-    pprint(data)
+    #data = load()
+    #print("Data that was loaded:")
+    #pprint(data)
 
-    print("Checking rooms, items, and player data for errors...")
-    for ppty in PROPERTIES:
-        if ppty not in data:
-            print(f"No {ppty} found.")
-        if not isinstance(data[ppty], dict):
-            print(f"{ppty} in data were not proper data.")
-            return
+    #print("Checking rooms, items, and player data for errors...")
+    #for ppty in PROPERTIES:
+    #    if ppty not in data:
+    #        print(f"No {ppty} found.")
+    #    if not isinstance(data[ppty], dict):
+    #        print(f"{ppty} in data were not proper data.")
+    #        return
 
-    parseroom(data)
-    parseitem(data)
-    parseplayer(data)
-    save(data)
+    #parseroom(data)
+    #parseitem(data)
+    #parseplayer(data)
+    #save(data)
+    roomdata = load()
+    roomtest(roomdata)
 
 
 def parseroom(data):
@@ -125,6 +151,14 @@ def parseplayer(data):
     for name in players:
         for pdata in PLAYERDATA:
             pplayer(players, name, pdata)
+
+
+def roomtest(roomdata):
+    for name, room in roomdata.items():
+        name = room.get("ROOM_NAME")
+        direct = room.get("RIGHT")
+        if direct is not '':
+            print(name + " has " + direct + " right of it.")
 
 
 if __name__ == "__main__":  # pragma: no cover
