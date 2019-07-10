@@ -67,12 +67,12 @@ def pplayer(players, name, pdata):
     """
     player = players[name]
     if pdata not in player:
-        print("This should do nothing.")
+        pass
     elif player[pdata] is None:
         print(f"There is no data in {name}.")
     else:
         other = player[pdata]
-        print(f"Player data {name}: {other}.")
+        print(f"Player {pdata} {name}: {other}.")
 
 
 def pitem(items, name, idata):
@@ -106,22 +106,24 @@ def path(rooms, name, direction):
 def main():  # pragma: no cover
     """Runs everything.
     """
-    data = load()
-    print("Data that was loaded:")
-    pprint(data)
+    #data = load()
+    #print("Data that was loaded:")
+    #pprint(data)
 
-    print("Checking rooms, items, and player data for errors...")
-    for ppty in PROPERTIES:
-        if ppty not in data:
-            print(f"No {ppty} found.")
-        if not isinstance(data[ppty], dict):
-            print(f"{ppty} in data were not proper data.")
-            return
+    #print("Checking rooms, items, and player data for errors...")
+    #for ppty in PROPERTIES:
+    #    if ppty not in data:
+    #        print(f"No {ppty} found.")
+    #    if not isinstance(data[ppty], dict):
+    #        print(f"{ppty} in data were not proper data.")
+    #        return
 
-    parseroom(data)
-    parseitem(data)
-    parseplayer(data)
-    save(data)
+    #parseroom(data)
+    #parseitem(data)
+    #parseplayer(data)
+    #save(data)
+    roomdata = load()
+    roomtest(roomdata)
 
 
 def parseroom(data):
@@ -149,6 +151,14 @@ def parseplayer(data):
     for name in players:
         for pdata in PLAYERDATA:
             pplayer(players, name, pdata)
+
+
+def roomtest(roomdata):
+    for name, room in roomdata.items():
+        name = room.get("ROOM_NAME")
+        direct = room.get("RIGHT")
+        if direct is not '':
+            print(name + " has " + direct + " right of it.")
 
 
 if __name__ == "__main__":  # pragma: no cover
