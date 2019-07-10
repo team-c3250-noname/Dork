@@ -163,7 +163,7 @@ def title_screen():
 def setup_game():
     """This will set up the game
     """
-    print(types.ROOM_MAP[types.MY_PLAYER.location][types.DESCRIPTION])
+    print(types.MY_PLAYER.location.description)
     prompt()
 
 

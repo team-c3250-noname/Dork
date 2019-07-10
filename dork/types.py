@@ -21,15 +21,6 @@ class Holder:
         self.items = list()
 
 
-class Path:
-    """A path between two rooms (i.e. a door or hallway)
-    """
-
-    def __init__(self):
-        self.entrance = Room()
-        self.exit = Room()
-
-
 class Map:
     """A map relating the rooms connectivity
         as well as the players/items within
@@ -42,12 +33,11 @@ class Map:
 class Player(Holder):
     """ This is the player class
     """
-    def __init__(self):
+    def __init__(self, location, next_location, inventory):
         super(Player, self).__init__()
-        self.location = 'cell'
-        self.next_location = ''
-        self.inventory = []
-        self.room = Room()
+        self.location = location
+        self.next_location = next_location
+        self.inventory = inventory
 
 
 class Room(Holder):
@@ -57,7 +47,7 @@ class Room(Holder):
     """
 
     def __init__(self, room_name, description, inspect, item):
-        super(Room, self).__init__()
+        super(Room).__init__()
         self.room_name = room_name
         self.description = description
         self.inspect = inspect
@@ -68,12 +58,10 @@ class Connect(Room):
     """
 
     def __init__(self, locked, unlock, connection):
-        super(Connect, self).__init__()
+        super(Connect).__init__()
         self.locked = locked
         self.unlock = unlock
         self.connection = connection
-
-MY_PLAYER = Player()
 
 CELL = Room('cell', 'This is a jail cell', 'You find a key', 'cell key')
 JAIL_HALLWAY = Room('jail hallway', 'This is a jail cell', 'You find a torch', 'torch')
@@ -84,6 +72,9 @@ BOSS_ROOM = Room('boss room', 'This is the boss room', '', '')
 VAULT = Room('vault', 'This is the vault', 'You find gold', 'gold')
 ENTRANCE = Room('entrance', 'This is entrance', '', '')
 
+
+
+MY_PLAYER = Player(CELL, '', [''])
 
 ROOM_NAME = ''
 DESCRIPTION = 'description'
@@ -201,11 +192,11 @@ ROOM_MAP = {
         ITEM: '',
         UP: '',
         DOWN: 'Jail Armory',
-        LEFT: 'Treasury',
+        LEFT: 'Vault',
         RIGHT: '',
     },
-    'Treasury': {
-        ROOM_NAME: 'Treasury',
+    'Vault': {
+        ROOM_NAME: 'Vault',
         DESCRIPTION: """
         This is the treasury
         """,
