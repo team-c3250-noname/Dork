@@ -33,25 +33,29 @@ class Map:
 class Player(Holder):
     """ This is the player class
     """
-    def __init__(self, location, next_location, inventory):
+    def __init__(self, location, next_location):
         super(Player, self).__init__()
         self.location = location
         self.next_location = next_location
-        self.inventory = inventory
+        self.inventory = []
 
 
-class Room(Holder):
+class Room():
     """A room on the map
     Note: can only be entered through entraces
         or exited through exits.
     """
 
-    def __init__(self, room_name, description, inspect, item):
+    def __init__(self, room_name, description, inspect, item, locked, unlock, connections):
         super(Room).__init__()
         self.room_name = room_name
         self.description = description
         self.inspect = inspect
         self.item = item
+        self.locked = locked
+        self.unlock = unlock
+        self.connections = connections
+
 
 class Connect(Room):
     """subclass to room to include the way to check the locked state of rooms
@@ -72,6 +76,14 @@ BOSS_ROOM = Room('boss room', 'This is the boss room', '', '')
 VAULT = Room('vault', 'This is the vault', 'You find gold', 'gold')
 ENTRANCE = Room('entrance', 'This is entrance', '', '')
 
+CELL_CONNECTION = Connect(False, '', {'north': JAIL_HALLWAY})
+JAIL_HALLWAY_CONNECTION = Connect(True, '', {'south': CELL, 'west': JAIL_ARMORY, 'east': STAIRWELL})
+STAIRWELL_CONNECTION = Connect(True, '', {'north': JAIL_TOWER, 'west': JAIL_HALLWAY})
+JAIL_TOWER_CONNECTION = Connect(False, '', {'south': STAIRWELL})
+JAIL_ARMORY_CONNECTION = Connect(True, '', {'north': BOSS_ROOM, 'east': JAIL_HALLWAY})
+BOSS_ROOM_CONNECTION = Connect(True, '', {'north': ENTRANCE, 'south': JAIL_ARMORY, 'west': VAULT})
+VAULT_CONNECTION = Connect(False, '', {'east': BOSS_ROOM})
+ENTRANCE_CONNECTION = Connect(False, '', {'south': BOSS_ROOM})
 
 
 MY_PLAYER = Player(CELL, '', [''])

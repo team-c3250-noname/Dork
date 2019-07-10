@@ -1,0 +1,60 @@
+Items:
+  Cell:
+    holds: cell key
+  Jail Hallway:
+    holds: torch
+  Stairwell:
+    holds: null
+  Jail Tower:
+    holds: iron bar
+  Jail Armory:
+    holds: sword
+  Boss Room:
+    holds: null
+  Vault:
+    holds: gold
+  Entrance:
+    holds: null
+Player:
+  Position: Cell
+Rooms:
+  Cell:
+    north: Jail Hallway
+    south:
+    east:
+    west:
+  Jail Hallway:
+    north:
+    south: Cell
+    east: Jail Armory
+    west: Stairwell
+  Stairwell:
+    north: Jail Tower
+    south:
+    east:
+    west: Jail Hallway
+  Jail Tower:
+    north:
+    south: Stairwell
+    east:
+    west:
+  Jail Armory:
+    north: Boss Room
+    south:
+    east: Jail Hallway
+    west:
+  Boss Room:
+    north: Entrance
+    south: Jail Armory
+    east:
+    west: Vault
+  Vault:
+    north:
+    south:
+    east: Boss Room
+    west:
+  Entrance:
+    north:
+    south: Boss Room
+    east:
+    west:
