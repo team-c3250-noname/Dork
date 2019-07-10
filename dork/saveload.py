@@ -5,6 +5,7 @@
 
 from pprint import pprint
 import yaml
+import sys
 
 PROPERTIES = ["Items", "Player", "Rooms"]
 PLAYERDATA = ["holding", "location", "current", "max"]
@@ -17,6 +18,7 @@ def get_input():
     """
     input_name = input("Enter a file name: ")
     file_name = "./dork/yaml/" + input_name + ".yml"
+
     return file_name
 
 
@@ -31,9 +33,9 @@ def load():
         with open(file_name) as file:
             data = yaml.safe_load(file.read())
     except IOError:
-        return "Invalid file name. Try again."
+        sys.exit("ERROR: Invalid file name: " + file_name + ". Exiting program.")
 
-    print("Load was successful.")
+    print("Load successful.")
 
     return data
 
@@ -45,12 +47,19 @@ def save(data):
     print("Attempting to save data.")
 
     file_name = get_input()
+    saved = False
 
-    with open(file_name, 'w') as yaml_file:
-        yaml_file.write(yaml.dump(data, default_flow_style=False))
+    while(saved is False):
+        try:
+            with open(file_name, 'w') as yaml_file:
+                yaml_file.write(yaml.dump(data, default_flow_style=False))
+                saved = True
+        except IOError:
+            print("ERROR: Invalid file name: " + file_name)
+            print("Please try a different file name.")
+            file_name = get_input()
 
-    print("Save was successful.")
-    return "0"
+    print("Save successful.")
 
 
 def pplayer(players, name, pdata):
@@ -58,7 +67,7 @@ def pplayer(players, name, pdata):
     """
     player = players[name]
     if pdata not in player:
-        print(".")
+        print("This should do nothing.")
     elif player[pdata] is None:
         print(f"There is no data in {name}.")
     else:
