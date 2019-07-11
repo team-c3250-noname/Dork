@@ -7,6 +7,9 @@ from random import sample, choice, randint
 from os import linesep
 
 import networkx as nx
+import pylab as plt
+
+import sys
 
 DIRECTIONS = {"up": 0, "down": 1, "left": 2, "right": 3}
 
@@ -31,27 +34,22 @@ class MazeGenerator(ABC):
             if node.id % line_width == 0:
                 if self.id-1 == node.id:
                     self.left = node.id
-                    node.right = self
+                    node.right = self.id
                 return
             if node.id % line_width == 1:
                 if self.id+1 == node.id:
                     self.right = node.id
-                    node.left = self
+                    node.left = self.id
                 return
             if self.id+1 == node.id:
                 self.right = node.id
-                node.left = self
+                node.left = self.id
             if self.id-1 == node.id:
                 self.left = node.id
-                node.right = self
+                node.right = self.id
 
         def __hash__(self):
             return self.id
-
-        def __str__(self):
-            directions = [self.up, self.down, self.left, self.right]
-            return str(self.id) + ":->" + "->".\
-                join([str(hash(way)) if way else " " for way in directions])
 
     @abstractmethod
     def generate(self):
@@ -89,10 +87,6 @@ class Ellers(MazeGenerator):
             self.nodes = tuple([Ellers.Node() for _ in range(0, width)])
             self.sets = dict(zip([node for node in self.nodes],
                                  [set([node]) for node in self.nodes]))
-
-        def __str__(self):
-            groups = [str(group) for group in self.sets]
-            return linesep.join(groups)
 
     def __init__(self, width=10):
         self.width = width
@@ -253,17 +247,19 @@ class Maze:
                     self.out_nodes["down"] = neighbor
                     self.in_nodes["down"] = neighbor
 
-    def __init__(self, maze_generator=Ellers, width=10, height=10):
-        self.width = max(width, 10)
+    def __init__(self, maze_generator=Ellers, width=5, height=5):
+        self.width = max(width, 5)
         self.height = 0
         if not issubclass(maze_generator, MazeGenerator):
             raise TypeError("Maze requires derived type of MazeGenerator")
         self.maze_generator = maze_generator(width)
+        self.maze_generator.close()
         self.maze_line = self.maze_generator.generate()
+        self.maze_generator.open()
         self.graph = nx.DiGraph()
         self.areas = {}
         self.claimed = []
-        self.grow(max(height, 10))
+        self.grow(max(height, 5))
 
     def get_graph(self):
         """returns a copy of the graph
@@ -315,7 +311,7 @@ class Maze:
     def get_path(self, area_name, direction):
         """ returns a list of nodes as a path
         """
-        return self.areas[area_name][direction]
+        return self.areas[area_name].paths[direction]
 
     def _break_wall(self, node, way):
         x, y = self._get_node_way(node, way)
@@ -336,6 +332,10 @@ class Maze:
         if from_node and to_node:
             if nx.has_path(self.graph, from_node, to_node):
                 path = nx.shortest_path(self.graph, from_node, to_node)
+                if from_area.node not in path:
+                    path.insert(0, from_area.node)
+                if to_area.node not in path:
+                    path.append(to_area.node)
                 from_area.paths[from_way] = path
                 to_area.paths[to_way] = path[::-1]
                 return
@@ -344,13 +344,19 @@ class Maze:
             if not self._is_way_possible(from_area.node, from_way):
                 raise ValueError(f"Room {from_area.name} cannot go {from_way}")
             from_node = self._break_wall(from_area.node, from_way)
+            from_area.out_nodes[to_way] = from_node
         if not to_node:
             if not self._is_way_possible(to_area.node, to_way):
                 raise ValueError(f"Room {to_area.name} cannot go {to_way}")
             to_node = self._break_wall(to_area.node, to_way)
+            to_area.in_nodes[to_way] = to_node
 
         if nx.has_path(self.graph, from_node, to_node):
             path = nx.shortest_path(self.graph, from_node, to_node)
+            if from_area.node not in path:
+                path.insert(0, from_area.node)
+            if to_area.node not in path:
+                path.append(to_area.node)
             from_area.paths[from_way] = path
             to_area.paths[to_way] = path[::-1]
             return
@@ -358,12 +364,12 @@ class Maze:
         raise RuntimeError(f"path from {from_area.name}\
                             to {to_area.name} could not be made")
 
-    def grow(self, line_count=10):
+    def grow(self, line_count=5):
         """grows the maze
         """
-        self.height += line_count
         line_count = max(line_count, 2)
-        for i in range(0, line_count):
+        self.height += line_count
+        for i in range(0, line_count-1):
             next(self.maze_line)
             if not i % 2 and i > 2:
                 nodes, edges = self.maze_generator.get_nodes_and_edges()
@@ -372,3 +378,58 @@ class Maze:
         nodes, edges = self.maze_generator.get_nodes_and_edges()
         self.graph.add_nodes_from(nodes)
         self.graph.add_edges_from(edges)
+
+if __name__ == "__main__": # pragma: no cover
+    def get_maze():
+        def _new_join():
+            join_list = [0, 0, 0, 0, 0]
+            n = len(join_list)
+            i = 0
+            while True:
+                yield join_list[i % n]
+                i += 1
+        
+        def _new_down_nodes(line):
+            seen = {}
+            down_indices = []
+            for group in line.sets:
+                if id(line.sets[group]) not in seen:
+                    population = line.sets[group]
+                    current_line_set = set(line.nodes)
+                    population = population.intersection(current_line_set)
+                    node_sample = [list(population)[0]]
+                    down_indices.append(node_sample)
+                    seen[id(line.sets[group])] = None
+            return down_indices
+
+        MazeGenerator.Node.ID = 0
+        Ellers._should_join = _new_join
+        Ellers._get_down_nodes = _new_down_nodes
+        maze = Maze(Ellers, 5, 5)
+
+        while True:
+            yield maze
+        
+    maze = next(get_maze())
+
+    maze.claim_cell("t0", 0, 0)
+    maze.claim_cell("t1", 1, 0)
+    maze.claim_cell("t2", 0, 1)
+    maze.claim_cell("t3", 1, 1)
+    maze.claim_cell("t4", 4, 2)
+    maze.claim_cell("t5", 4, 0)
+    maze.claim_cell("t6", 4, 3)
+    maze.claim_cell("t7", 4, 4)
+    maze.claim_cell("t8", 2, 1)
+    maze.claim_cell("t9", 3, 1)
+    
+    maze.make_path("t0", "right", "t1", "left")
+    maze.make_path("t1", "down", "t3", "up")
+    maze.make_path("t5", "down", "t4", "up")
+    maze.make_path("t6", "down", "t7", "up")
+    maze.make_path("t8", "right", "t9", "left")
+
+    maze.grow(10)
+
+    nx.draw_spring(maze.get_graph(), with_labels=True)
+    plt.show()
