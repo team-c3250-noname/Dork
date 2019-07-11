@@ -4,8 +4,8 @@
 # https://github.com/LSmith-Zenoscave
 
 from pprint import pprint
-import yaml
 import sys
+import yaml
 
 PROPERTIES = ["Items", "Player", "Rooms"]
 PLAYERDATA = ["holding", "location", "current", "max"]
@@ -49,7 +49,7 @@ def save(data):
     file_name = get_input()
     saved = False
 
-    while(saved is False):
+    while saved is False:
         try:
             with open(file_name, 'w') as yaml_file:
                 yaml_file.write(yaml.dump(data, default_flow_style=False))
@@ -154,12 +154,22 @@ def parseplayer(data):
 
 
 def roomtest(roomdata):
+    """Tests the creation and parsing of room data.
+    """
     for name, room in roomdata.items():
         name = room.get("ROOM_NAME")
-        direct = room.get("RIGHT")
-        if direct is not '':
-            print(name + " has " + direct + " right of it.")
+        print(f"{name} data:")
+        left = room.get("LEFT")
+        down = room.get("DOWN")
+        up = room.get("UP")
+        right = room.get("RIGHT")
+        DIRS = [up, down, left, right]
+        desc = room.get("DESCRIPTION")
+        print("Description: " + desc)
 
+        for dirs in DIRS:
+            if dirs is not '':
+                print(name + " has " + dirs + " next to it.")
 
 if __name__ == "__main__":  # pragma: no cover
     main()
