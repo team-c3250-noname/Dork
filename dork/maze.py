@@ -4,12 +4,8 @@ from abc import ABC
 from abc import abstractmethod
 from collections import deque
 from random import sample, choice, randint
-from os import linesep
 
 import networkx as nx
-import pylab as plt
-
-import sys
 
 DIRECTIONS = {"up": 0, "down": 1, "left": 2, "right": 3}
 
@@ -288,7 +284,8 @@ class Maze:
     def _get_coordinates(self, node):
         return (node % self.width, int(node / self.width))
 
-    def _get_node_way(self, node, way):
+    def get_node_way(self, node, way):
+        "returns coordinate offset from node using way"
         x, y = self._get_coordinates(node)
         if way == "up":
             y -= 1
@@ -301,7 +298,7 @@ class Maze:
         return x, y
 
     def _is_way_possible(self, node_id, way):
-        x, y = self._get_node_way(node_id, way)
+        x, y = self.get_node_way(node_id, way)
         if x < 0 or x >= self.width:
             return False
         if y < 0 or y >= self.height:
@@ -314,7 +311,7 @@ class Maze:
         return self.areas[area_name].paths[direction]
 
     def _break_wall(self, node, way):
-        x, y = self._get_node_way(node, way)
+        x, y = self.get_node_way(node, way)
         node_way = x + y * self.width
         self.graph.add_edge(node, node_way)
         self.graph.add_edge(node_way, node)
@@ -378,58 +375,3 @@ class Maze:
         nodes, edges = self.maze_generator.get_nodes_and_edges()
         self.graph.add_nodes_from(nodes)
         self.graph.add_edges_from(edges)
-
-if __name__ == "__main__": # pragma: no cover
-    def get_maze():
-        def _new_join():
-            join_list = [0, 0, 0, 0, 0]
-            n = len(join_list)
-            i = 0
-            while True:
-                yield join_list[i % n]
-                i += 1
-        
-        def _new_down_nodes(line):
-            seen = {}
-            down_indices = []
-            for group in line.sets:
-                if id(line.sets[group]) not in seen:
-                    population = line.sets[group]
-                    current_line_set = set(line.nodes)
-                    population = population.intersection(current_line_set)
-                    node_sample = [list(population)[0]]
-                    down_indices.append(node_sample)
-                    seen[id(line.sets[group])] = None
-            return down_indices
-
-        MazeGenerator.Node.ID = 0
-        Ellers._should_join = _new_join
-        Ellers._get_down_nodes = _new_down_nodes
-        maze = Maze(Ellers, 5, 5)
-
-        while True:
-            yield maze
-        
-    maze = next(get_maze())
-
-    maze.claim_cell("t0", 0, 0)
-    maze.claim_cell("t1", 1, 0)
-    maze.claim_cell("t2", 0, 1)
-    maze.claim_cell("t3", 1, 1)
-    maze.claim_cell("t4", 4, 2)
-    maze.claim_cell("t5", 4, 0)
-    maze.claim_cell("t6", 4, 3)
-    maze.claim_cell("t7", 4, 4)
-    maze.claim_cell("t8", 2, 1)
-    maze.claim_cell("t9", 3, 1)
-    
-    maze.make_path("t0", "right", "t1", "left")
-    maze.make_path("t1", "down", "t3", "up")
-    maze.make_path("t5", "down", "t4", "up")
-    maze.make_path("t6", "down", "t7", "up")
-    maze.make_path("t8", "right", "t9", "left")
-
-    maze.grow(10)
-
-    nx.draw_spring(maze.get_graph(), with_labels=True)
-    plt.show()
