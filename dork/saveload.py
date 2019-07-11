@@ -22,18 +22,17 @@ def get_input():
     return file_name
 
 
-def load():
+def load(file_name):
     """This will load a file into data.
     """
     print("Attempting to load data.")
-
-    file_name = get_input()
 
     try:
         with open(file_name) as file:
             data = yaml.safe_load(file.read())
     except IOError:
-        sys.exit("ERROR: Invalid file name: " + file_name + ". Exiting program.")
+        sys.exit("ERROR: Invalid file name: " +
+                 file_name + ". Exiting program.")
 
     print("Load successful.")
 
@@ -108,57 +107,61 @@ def main():  # pragma: no cover
     """
     #data = load()
     #print("Data that was loaded:")
-    #pprint(data)
+    # pprint(data)
 
     #print("Checking rooms, items, and player data for errors...")
-    #for ppty in PROPERTIES:
+    # for ppty in PROPERTIES:
     #    if ppty not in data:
     #        print(f"No {ppty} found.")
     #    if not isinstance(data[ppty], dict):
     #        print(f"{ppty} in data were not proper data.")
     #        return
 
-    #parseroom(data)
-    #parseitem(data)
-    #parseplayer(data)
-    #save(data)
-    roomdata = load()
+    # parseroom(data)
+    # parseitem(data)
+    # parseplayer(data)
+    # save(data)
+    file = get_input()
+    roomdata = load(file)
     roomtest(roomdata)
+    return roomdata
 
 
-def parseroom(data):
+def parseroom(roomdata):
     """Parses room data.
     """
-    rooms = data["Rooms"]
+    rooms = roomdata["Rooms"]
     for name in rooms:
         for direction in DIRECTIONS:
             path(rooms, name, direction)
 
 
-def parseitem(data):
+def parseitem(roomdata):
     """Parses item data.
     """
-    items = data["Items"]
+    items = roomdata["Items"]
     for name in items:
         for idata in ITEMDATA:
             pitem(items, name, idata)
 
 
-def parseplayer(data):
+def parseplayer(roomdata):
     """Parses player data.
     """
-    players = data["Player"]
+    players = roomdata["Player"]
     for name in players:
         for pdata in PLAYERDATA:
             pplayer(players, name, pdata)
 
 
-def roomtest(roomdata):
-    for name, room in roomdata.items():
+def roomtest(data):
+    rooms = data["rooms"]
+    player = data['player']
+    plocation = player.get('location')
+    print('the player is in ' + plocation)
+    for name, room in rooms.items():
         name = room.get("ROOM_NAME")
-        direct = room.get("RIGHT")
-        if direct is not '':
-            print(name + " has " + direct + " right of it.")
+        print(name)
 
 
 if __name__ == "__main__":  # pragma: no cover

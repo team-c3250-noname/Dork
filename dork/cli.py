@@ -163,7 +163,8 @@ def title_screen():
 def setup_game():
     """This will set up the game
     """
-    print(types.MY_PLAYER.location.description)
+    player = types.Game.player
+    print(player.location)
     prompt()
 
 
@@ -196,6 +197,7 @@ def load_game():
     """Will load a saved game
     """
     dork.saveload.main()
+    prompt()
 
 
 def end_game():
@@ -284,9 +286,11 @@ def movement_handler(destination):
 def player_examine(user_action):
     """ Allows users to examine the room and items
     """
+    player = types.Game.player
+    print(player.location)
     if 'room' in user_action:
         print("This room contains a " +
-              types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM])
+              '.')
     else:
         print("You are trying to examine an unknown thing. Please try again")
     return True

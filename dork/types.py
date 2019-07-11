@@ -1,43 +1,31 @@
-# -*- coding: utf-8 -*-
-"""Basic entity classes and methods for Dork.
-"""
+import dork.saveload as load
 
 __all__ = ["Item", "Holder", "Player", "Room", "Path", "Map"]
-
-
-class Item:
-    """A obtainable/holdable item
-    """
-
-    def __init__(self):
-        self.holder = Holder()
-
-
-class Holder:
-    """A holder/container of items
-    """
-
-    def __init__(self):
-        self.items = list()
 
 
 class Map:
     """A map relating the rooms connectivity
         as well as the players/items within
     """
-
     def __init__(self):
         self.rooms = list()
 
 
-class Player(Holder):
+class Game():
+    """Creates and hold the game state
+    """
+    def __init__(self, data):
+        self.player = Player(data['player'])
+        self.room = [room for room in data.get('rooms')]
+
+
+class Player():
     """ This is the player class
     """
-    def __init__(self, location, next_location):
-        super(Player, self).__init__()
-        self.location = location
-        self.next_location = next_location
-        self.inventory = []
+    def __init__(self, data):
+        self.location = data.get('location')
+        self.next_location = data.get('next location')
+        self.inventory = data.get('inventory')
 
 
 class Room():
