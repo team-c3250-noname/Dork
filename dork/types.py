@@ -1,22 +1,27 @@
 import dork.saveload as load
 
-__all__ = ["Item", "Holder", "Player", "Room", "Path", "Map"]
+__all__ = ["Item", "Holder", "Player", "Room", "Path", "Map", "GAME"]
 
-
-class Map:
-    """A map relating the rooms connectivity
-        as well as the players/items within
-    """
-    def __init__(self):
-        self.rooms = list()
+GAME = None
 
 
 class Game():
     """Creates and hold the game state
     """
     def __init__(self, data):
+        self._data = data
         self.player = Player(data['player'])
-        self.room = [room for room in data.get('rooms')]
+        self.rooms = {room_name: Room(room) for room_name, room in data.get('rooms').items()}
+    
+    def save(self):
+        return {
+            "player": self.player.save(),
+            "rooms": {
+                name: room.save()
+                for name, room in self.room.items()
+            }
+        }
+    
 
 
 class Player():
@@ -26,6 +31,13 @@ class Player():
         self.location = data.get('location')
         self.next_location = data.get('next location')
         self.inventory = data.get('inventory')
+    
+    def save(self):
+        return {
+            "location": self.location,
+            "next location": self.next_location,
+            "inventory": self.inventory,
+        }
 
 
 class Room():
@@ -35,19 +47,15 @@ class Room():
     """
 
     def __init__(self, data):
-        super(Room).__init__()
-        self.room_name = data.get('room_name')
-        self.description = data.get('description')
-        self.inspect = data.get('inspect')
-        self.item = data.get('item')
-        self.connections = [Connect(connection) for connection in data.get('connections', [])]
+        self.messages = data.get('messages')
+        self.door = data.get('door')
+        self.paths = data.get('paths')
 
+        # rooms['cell'].door['locked']
+        # rooms['hallway'].messages['description']
 
-class Connect():
-    """subclass to room to include the way to check the locked state of rooms
-    """
-
-    def __init__(self, data):
-        self.locked = data.get('locked')
-        self.unlock = data.get('unlock')
-        self.connection = data.get('connection')
+    def save(self):
+        return {
+            'locked': self.locked,
+            'unlock': self.unlock,
+        }

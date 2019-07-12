@@ -6,6 +6,7 @@
 from pprint import pprint
 import yaml
 import sys
+from dork import cli
 
 PROPERTIES = ["Items", "Player", "Rooms"]
 PLAYERDATA = ["holding", "location", "current", "max"]
@@ -22,10 +23,12 @@ def get_input():
     return file_name
 
 
-def load(file_name):
+def load():
     """This will load a file into data.
     """
     print("Attempting to load data.")
+
+    file_name = get_input()
 
     try:
         with open(file_name) as file:
@@ -51,7 +54,7 @@ def save(data):
     while(saved is False):
         try:
             with open(file_name, 'w') as yaml_file:
-                yaml_file.write(yaml.dump(data, default_flow_style=False))
+                yaml.safe_dump(data, default_flow_style=False, stream=yaml_file)
                 saved = True
         except IOError:
             print("ERROR: Invalid file name: " + file_name)
@@ -105,7 +108,7 @@ def path(rooms, name, direction):
 def main():  # pragma: no cover
     """Runs everything.
     """
-    #data = load()
+    game = cli.game_state()
     #print("Data that was loaded:")
     # pprint(data)
 
@@ -120,12 +123,7 @@ def main():  # pragma: no cover
     # parseroom(data)
     # parseitem(data)
     # parseplayer(data)
-    # save(data)
-    file = get_input()
-    roomdata = load(file)
-    roomtest(roomdata)
-    return roomdata
-
+    save(game.save())
 
 def parseroom(roomdata):
     """Parses room data.
@@ -154,14 +152,14 @@ def parseplayer(roomdata):
             pplayer(players, name, pdata)
 
 
-def roomtest(data):
-    rooms = data["rooms"]
-    player = data['player']
-    plocation = player.get('location')
-    print('the player is in ' + plocation)
-    for name, room in rooms.items():
-        name = room.get("ROOM_NAME")
-        print(name)
+#def roomtest(data):
+#    rooms = data["rooms"]
+#    player = data['player']
+#    plocation = player.get('location')
+#    print('the player is in ' + plocation)
+#    for name, room in rooms.items():
+#        name = room.get("ROOM_NAME")
+#        print(name)
 
 
 if __name__ == "__main__":  # pragma: no cover

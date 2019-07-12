@@ -1,0 +1,21 @@
+player:
+  inventory: []
+  location: cell
+  next location: ''
+rooms:
+  Boss room:
+    room_name: Boss room
+  Entrance:
+    room_name: Entrance
+  Jail Armory:
+    room_name: Jail Armory
+  Jail Tower:
+    room_name: Jail Tower
+  Jail hallway:
+    room_name: Jail Hallway
+  Stairwell:
+    room_name: Stairwell
+  Vault:
+    room_name: Vault
+  cell:
+    room_name: cell
