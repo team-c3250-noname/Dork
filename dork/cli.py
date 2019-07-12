@@ -299,21 +299,29 @@ def movement_handler(game, destination):
     player.location = destination
     print("You have moved to " + destination)
     print("")
-    print(game.rooms[player.location].messgaes['description'])
+    print(game.rooms[player.location].messages['description'])
 
 
 def player_examine(game, user_action):
     """ Allows users to examine the room and items
     """
-    player = game.player
     if 'room' in user_action:
-        print(game.rooms[player.location].messages['inspect'])
-        print("This room contains a " +
-              game.rooms[player.location].door['item'])
+        room_examine(game)
     else:
         print("You are trying to examine an unknown thing. Please try again")
     return True
 
+
+def room_examine(game):
+    """Will examine the room
+    """
+    player = game.player
+    if game.rooms[player.location].door['item'] != '':
+        print(game.rooms[player.location].messages['inspect'])
+        print("This room contains a " +
+              game.rooms[player.location].door['item'])
+    else:
+        print("There is nothing useful here anymore.")
 
 def player_take(game, user_action):
     """Allows user to pick up items and puts them in the players inventory
@@ -393,8 +401,10 @@ def next_room(game):
     """Will find the rooms next to the player
     """
     player = game.player
-    player_directions = {'north': 'up', 'south': 'down',
-                         'east': 'right', 'west': 'left', }
+    player_directions = {'north': 'up', 'up': 'up',
+                         'south': 'down', 'down': 'down',
+                         'east': 'right', 'right': 'right',
+                         'west': 'left', 'left': 'left', }
     direction_check = input("Which direction would you like to try ").lower()
     reprompt = True
     while reprompt is True:

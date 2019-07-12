@@ -3,10 +3,10 @@
 # Generously inspired by our LA,
 # https://github.com/LSmith-Zenoscave
 
-from pprint import pprint
-import yaml
 import sys
+import yaml
 from dork import cli
+
 
 PROPERTIES = ["Items", "Player", "Rooms"]
 PLAYERDATA = ["holding", "location", "current", "max"]
@@ -51,7 +51,7 @@ def save(data):
     file_name = get_input()
     saved = False
 
-    while(saved is False):
+    while saved is False:
         try:
             with open(file_name, 'w') as yaml_file:
                 yaml.safe_dump(data, default_flow_style=False, stream=yaml_file)

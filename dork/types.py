@@ -1,6 +1,4 @@
-import dork.saveload as load
-
-__all__ = ["Item", "Holder", "Player", "Room", "Path", "Map", "GAME"]
+__all__ = ["Player", "Room", "GAME"]
 
 GAME = None
 
@@ -12,16 +10,18 @@ class Game():
         self._data = data
         self.player = Player(data['player'])
         self.rooms = {room_name: Room(room) for room_name, room in data.get('rooms').items()}
-    
+
     def save(self):
+        """Will save the Game class
+        """
         return {
             "player": self.player.save(),
             "rooms": {
                 name: room.save()
-                for name, room in self.room.items()
+                for name, room in self.rooms.items()
             }
         }
-    
+
 
 
 class Player():
@@ -31,8 +31,10 @@ class Player():
         self.location = data.get('location')
         self.next_location = data.get('next location')
         self.inventory = data.get('inventory')
-    
+
     def save(self):
+        """Will save the player class
+        """
         return {
             "location": self.location,
             "next location": self.next_location,
@@ -55,7 +57,10 @@ class Room():
         # rooms['hallway'].messages['description']
 
     def save(self):
+        """Will save the room class
+        """
         return {
-            'locked': self.locked,
-            'unlock': self.unlock,
+            'messages': self.messages,
+            'door': self.door,
+            'paths': self.paths,
         }
