@@ -38,6 +38,7 @@ def load():
                  file_name + ". Exiting program.")
 
     print("Load successful.")
+    print("")
 
     return data
 

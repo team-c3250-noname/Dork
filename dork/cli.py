@@ -9,7 +9,6 @@ import cursor
 import dork
 import dork.saveload
 import dork.types as types
-from dork.types import GAME
 
 
 __all__ = ["main"]
@@ -140,18 +139,17 @@ def main(*args):
 def game_state():
     """Creates and stores the game state
     """
-    global GAME
-    if GAME is None:
+    if types.GAME is None:
         data = dork.saveload.load()
-        GAME = types.Game(data)
-    return GAME
+        types.GAME = types.Game(data)
+    return types.GAME
 
 
 def title_screen():
     """Will display the title screen
     """
     play_options = {'play': setup_game, 'load': load_game,
-                    'help': help_menu, 'quit': end_game}
+                    'help': help_menu, 'quit': quit_game}
     user_play = True
     print("##########################")
     print("#   Welcome to the game  #")
@@ -176,7 +174,8 @@ def setup_game():
     """
     game = game_state()
     player = game.player
-    player_room_description = game.rooms[player.location].messages['description']
+    player_room_description = game.rooms[player.location].messages[
+                              'description']
     print(player_room_description)
     prompt()
 
@@ -214,6 +213,12 @@ def load_game():
     print("the player is in the " + player.location)
     prompt()
 
+
+def quit_game():
+    """This will quit the game
+    """
+    print("Thank you for playing")
+    return False
 
 def end_game(_game):
     """Will show a end game screen and thank the player
@@ -321,7 +326,8 @@ def room_examine(game):
         print("This room contains a " +
               game.rooms[player.location].door['item'])
     else:
-        print("There is nothing useful here anymore.")
+        print("There is nothing useful here. ")
+
 
 def player_take(game, user_action):
     """Allows user to pick up items and puts them in the players inventory
@@ -354,8 +360,14 @@ def user_menu(game, user_action):
 def player_use(game, user_action):
     """Allows player to use items
     """
-    direction = next_room(game)
-    unlock_room(game, user_action, direction)
+    player = game.player
+    inventory = ' '.join(player.inventory)
+    key_word = next((word for word in user_action if word in inventory), 'item')
+    if key_word in inventory:
+        direction = next_room(game)
+        unlock_room(game, user_action, direction)
+    else:
+        print("You do not have that item.")
     return True
 
 
@@ -366,7 +378,7 @@ def unlock_room(game, user_action, direction):
     player.next_location = direction
     unlock = room_check(game, direction)
     if unlock == '':
-        print("That is not a room")
+        print("You dont think that will work.")
     else:
         unlock = unlock.split()
         key_word = next((word for word in user_action if word in unlock),

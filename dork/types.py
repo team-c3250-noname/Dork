@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+"""Basic entity classes and methods for Dork.
+"""
+
 __all__ = ["Player", "Room", "GAME"]
 
 GAME = None
@@ -21,7 +25,6 @@ class Game():
                 for name, room in self.rooms.items()
             }
         }
-
 
 
 class Player():
