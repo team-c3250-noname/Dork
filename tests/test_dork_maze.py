@@ -3,123 +3,42 @@
 import networkx as nx
 from dork.maze import MazeGenerator, Ellers, Maze
 
+def test_maze_ellers():
+    maze = Ellers()
+    maze_gen = maze.generate()
+    next(maze_gen)
+    next(maze_gen)
 
-def get_maze():
-    """generator returns single maze instance...
-    """
-    def _new_join():
-        join_list = [0, 0, 0, 0, 0]
-        join_length = len(join_list)
-        i = 0
-        while True:
-            yield join_list[i % join_length]
-            i += 1
+    assert len(maze.nodes) == 4, f"Ellers should be minimum 4 nodes, 2 lines"
 
-    def _new_down_nodes(line):
-        seen = {}
-        down_indices = []
-        for group in line.sets:
-            if id(line.sets[group]) not in seen:
-                pop = line.sets[group]
-                current_line_set = set(line.nodes)
-                pop = pop.intersection(current_line_set)
-                node_sample = [list(pop)[0]]
-                down_indices.append(node_sample)
-                seen[id(line.sets[group])] = None
-        return down_indices
+    assert maze.up(2) == 0, f"Ellers up from 2 should have been 0"
+    
+    assert maze.up(0) is None, f"Eller up from top line should be None"
+    assert maze.up(1) is None, f"Eller up from top line should be None"
 
-    MazeGenerator.Node.ID = 0
-    setattr(Ellers, "_should_join", _new_join)
-    setattr(Ellers, "_get_down_nodes", _new_down_nodes)
-    maze = Maze(Ellers, 5, 5)
+    assert maze.down(2) is None, f"Ellers down from bottom edge should be none"
+    assert maze.down(3) is None, f"Ellers down from bottom edge should be none"
 
-    while True:
-        yield maze
+    assert maze.left(0) is None, f"Ellers left from left edge should be None"
+    assert maze.left(2) is None, f"Ellers left from left edge should be None"
 
+    assert maze.right(1) is None,\
+        f"Ellers right from right edge should be None"
+    assert maze.right(3) is None,\
+        f"Ellers right from right edge should be None"
+    
+    maze.generate()
 
-def test_dork_maze():
-    """Tests the dork.Maze class
-    """
-    try:
-        maze = Maze(object)
-    except TypeError as err:
-        assert "MazeGenerator" in str(err),\
-            f"Maze is not checking for MazeGenerator Abstract base class"
-    maze = next(get_maze())
+    assert len(maze.nodes)
 
-    assert isinstance(maze.get_graph(), nx.DiGraph),\
-        f"maze graph should be a digraph"
+    maze.open()
+        
 
-    assert len(maze.get_graph().nodes()) == 25,\
-        f"test maze should be 25 nodes"
+    maze.close()
+       
 
-    maze.maze_generator.close()
-    assert next(maze.maze_generator.generate()) is None,\
-        f"maze generator closed?"
-    maze.maze_generator.open()
+    maze.get_nodes()
 
-    _, y = maze.get_node_way(0, "up")
-    assert y == -1, f"Up should have subtracted from y coord"
-    _, y = maze.get_node_way(0, "down")
-    assert y == 1, f"down should have added from y coord"
-    x, _ = maze.get_node_way(0, "left")
-    assert x == -1, f"left should have subtracted from x coord"
-    x, _ = maze.get_node_way(0, "right")
-    assert x == 1, f"right should have added from x coord"
+    maze.get_nodes_and_edges()
 
-
-def test_dork_maze_areas():
-    """tests the area/room-map for maze
-    """
-    maze = next(get_maze())
-
-    maze.claim_cell("t0", 0, 0)
-    maze.claim_cell("t1", 1, 0)
-    maze.claim_cell("t2", 0, 1)
-    maze.claim_cell("t3", 1, 1)
-    maze.claim_cell("t4", 4, 2)
-    maze.claim_cell("t5", 4, 0)
-    maze.claim_cell("t6", 4, 3)
-    maze.claim_cell("t7", 4, 4)
-    maze.claim_cell("t8", 2, 1)
-    maze.claim_cell("t9", 3, 1)
-
-    maze.make_path("t0", "right", "t1", "left")
-    maze.make_path("t1", "down", "t3", "up")
-    maze.make_path("t5", "down", "t4", "up")
-    maze.make_path("t6", "down", "t7", "up")
-    maze.make_path("t8", "right", "t9", "left")
-
-    assert maze.get_path("t0", "right") == [1, 0], f"wrong path"
-
-    try:
-        maze.claim_cell("t0", 0, 0)
-    except KeyError as err:
-        assert "already used for cell" in str(err), f"name t0 already used"
-
-    try:
-        maze.claim_cell("noop", 10, 10)
-    except IndexError as err:
-        assert "out of bounds" in str(err),\
-            f"index should have been out of bounds"
-    try:
-        maze.claim_cell("noop", 0, 0)
-    except ValueError as err:
-        assert "already claimed" in str(err), f"node was already claimed"
-
-    try:
-        maze.make_path("t0", "left", "t1", "down")
-    except ValueError as err:
-        assert "cannot go" in str(err), f"room should not have been formed."
-    try:
-        maze.make_path("t0", "up", "t1", "down")
-    except ValueError as err:
-        assert "cannot go" in str(err), f"room should not have been formed."
-
-    maze.grow(10)
-    assert len(maze.graph.nodes()) == 70, f"maze should have grown by 50 nodes"
-
-    node = maze.maze_generator.Node()
-    n_right = maze.maze_generator.Node()
-    node.set_left_right(n_right, 5)
-    assert node.right == n_right.id, f"n_right should be for node.right"
+    maze.get_edges()
