@@ -13,7 +13,8 @@ class Game():
     def __init__(self, data):
         self._data = data
         self.player = Player(data['player'])
-        self.rooms = {room_name: Room(room) for room_name, room in data.get('rooms').items()}
+        self.rooms = {room_name: Room(room) for room_name,
+                      room in data.get('rooms').items()}
 
     def save(self):
         """Will save the Game class
@@ -34,6 +35,7 @@ class Player():
         self.location = data.get('location')
         self.next_location = data.get('next location')
         self.inventory = data.get('inventory')
+        self.last_room = data.get('last room')
 
     def save(self):
         """Will save the player class
@@ -42,6 +44,7 @@ class Player():
             "location": self.location,
             "next location": self.next_location,
             "inventory": self.inventory,
+            "last room": self.last_room,
         }
 
 

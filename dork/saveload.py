@@ -55,7 +55,8 @@ def save(data):
     while saved is False:
         try:
             with open(file_name, 'w') as yaml_file:
-                yaml.safe_dump(data, default_flow_style=False, stream=yaml_file)
+                yaml.safe_dump(data, default_flow_style=False,
+                               stream=yaml_file)
                 saved = True
         except IOError:
             print("ERROR: Invalid file name: " + file_name)
@@ -110,10 +111,10 @@ def main():  # pragma: no cover
     """Runs everything.
     """
     game = cli.game_state()
-    #print("Data that was loaded:")
+    # print("Data that was loaded:")
     # pprint(data)
 
-    #print("Checking rooms, items, and player data for errors...")
+    # print("Checking rooms, items, and player data for errors...")
     # for ppty in PROPERTIES:
     #    if ppty not in data:
     #        print(f"No {ppty} found.")
@@ -125,6 +126,7 @@ def main():  # pragma: no cover
     # parseitem(data)
     # parseplayer(data)
     save(game.save())
+
 
 def parseroom(roomdata):
     """Parses room data.
@@ -153,7 +155,7 @@ def parseplayer(roomdata):
             pplayer(players, name, pdata)
 
 
-#def roomtest(data):
+# def roomtest(data):
 #    rooms = data["rooms"]
 #    player = data['player']
 #    plocation = player.get('location')

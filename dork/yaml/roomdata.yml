@@ -2,6 +2,8 @@ player:
   location: cell
   next location: ''
   inventory: []
+  last room: Entrance
+  points: 0
 
 rooms:
   cell:
@@ -16,6 +18,7 @@ rooms:
       inspect: |
         upon checking under the bed, you find a key. How convenient
         for you, prisoner!
+      unlock message: "You have unlocked the door but the key broke."
     door: 
       locked: False
       unlock: ''
@@ -37,6 +40,7 @@ rooms:
         trip and hurt yourself without a source of light. You should be
         able to reach up and remove one of the torches from the wall.
       inspect: 'You inspect the room'
+      unlock message: "You have unlocked the door but the key broke."
     door:
       locked: True
       unlock: 'cell key'
@@ -50,18 +54,18 @@ rooms:
   Stairwell:
     messages:
       description: |
-        Using the torch, you are able to see that the stairwell
-        is decrepit and many steps have chunks missing, with others having
-        pieces of rubble on them. You make your way carefully up the stairs and
-        emerge at the top.
+        The stairs are falling apart as you carefully watch your footing and
+        traverse the stairs. Looking down the stairs you know they will lead
+        you back to the hallway but going up will take you to the tower.
       inspect: 'You inspect the room'
+      unlock message: "You have unlocked the door but the key broke."
     door:
       locked: True
       unlock: 'torch'
       item: ''
     paths:
       up: 'Jail Tower'
-      down: ''
+      down: 'Jail hallway'
       left: 'Jail hallway'
       right: ''
 
@@ -78,6 +82,7 @@ rooms:
         there is an iron bar leaned up against the wall, near the door you
         emerged from. You take the iron bar. It is cold in your hands and
         wet from the rain, but otherwise sturdy.
+      unlock message: "You have unlocked the door but the key broke."
     door:
       locked: False
       unlock: ''
@@ -93,16 +98,19 @@ rooms:
       description: |
         You enter the armory and note that the armor and weapon
         racks are all but empty. You also note the presence of a few target
-        dummies and archery targets.
+        dummies and archery targets. In front of you is a door which
+        is cracked open. Looking through you can see a giant of a man
+        standing in the middle of the room.
       inspect: |
         One of the dummies has a sword embedded in it. You are able
         to pull the sword from the dummy with a little effort.
+      unlock message: "You have unlocked the door but the key broke."
     door:
       locked: True
       unlock: 'iron bar'
       item: 'sword'
     paths:
-      up: ''
+      up: 'Boss room'
       down: ''
       left: ''
       right: 'Jail hallway'
@@ -110,14 +118,19 @@ rooms:
   Boss room:
     messages:
       description: |
-        You have entered the boss room
+        You have entered a large room with a giant of a man standing in 
+        the middle. You might be able to take him but who knows. To your
+        left you see a large gated door with what looks like gold bars
+        on the other side and in front of you, and behind the man looks
+        to be a door to the outside.
       inspect: ''
+      unlock message: "You have unlocked the door but the key broke."
     door:
       locked: True
       unlock: 'sword'
       item: ''
     paths:
-      up: ''
+      up: 'Entrance'
       down: 'Jail Armory'
       left: 'Vault'
       right: ''
@@ -125,8 +138,26 @@ rooms:
   Vault:
     messages:
       description: |
-        This is the treasury
+        You have entered the vault. All around you is gold, silver, and
+        bronze coins which could help you if you find the exit to this place.
       inspect: ''
+      unlock message: "You have unlocked the door but the key broke."
+    door:
+      locked: False
+      unlock: ''
+      item: 'coins'
+    paths:
+      up: ''
+      down: ''
+      left: ''
+      right: 'Boss room'
+
+  Entrance:
+    messages:
+      description: |
+        It seems that you have left the prison. 
+      inspect: ''
+      unlock message: "You have unlocked the door but the key broke."
     door:
       locked: False
       unlock: ''
@@ -134,20 +165,5 @@ rooms:
     paths:
       up: ''
       down: ''
-      left: ''
-      right: 'Boss Room'
-
-  Entrance:
-    messages:
-      description: |
-        This is the entrance to the jail
-      inspect: ''
-    door:
-      locked: False
-      unlock: ''
-      item: ''
-    paths:
-      up: ''
-      down: 'Boss Room'
       left: ''
       right: ''

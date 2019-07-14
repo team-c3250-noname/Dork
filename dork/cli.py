@@ -175,7 +175,7 @@ def setup_game():
     game = game_state()
     player = game.player
     player_room_description = game.rooms[player.location].messages[
-                              'description']
+        'description']
     print(player_room_description)
     prompt()
 
@@ -220,6 +220,7 @@ def quit_game():
     print("Thank you for playing")
     return False
 
+
 def end_game(_game):
     """Will show a end game screen and thank the player
     """
@@ -251,6 +252,7 @@ def prompt():
                       'help': (help_menu, no_arg),
                       'quit': (end_game, no_arg)}
     while keep_prompting is True:
+        keep_prompting = last_room_check(game)
         user_action = input("\n" +
                             "What would you like to do? ").lower().split()
         action = next((word for word in user_action if word in player_actions),
@@ -278,6 +280,15 @@ def player_move(game, user_action):
         lock_check(game, game.rooms[player.location].paths[cardinal])
     else:
         print("Invalid direction")
+    return True
+
+
+def last_room_check(game):
+    """Will check if its the last room and if it is will end the game
+    """
+    player = game.player
+    if player.location == player.last_room:
+        return False
     return True
 
 
@@ -362,7 +373,8 @@ def player_use(game, user_action):
     """
     player = game.player
     inventory = ' '.join(player.inventory)
-    key_word = next((word for word in user_action if word in inventory), 'item')
+    key_word = next((word for word in user_action if word in inventory),
+                    'item')
     if key_word in inventory:
         direction = next_room(game)
         unlock_room(game, user_action, direction)
@@ -376,6 +388,7 @@ def unlock_room(game, user_action, direction):
     """
     player = game.player
     player.next_location = direction
+    unlock_message = game.rooms[player.location].messages['unlock message']
     unlock = room_check(game, direction)
     if unlock == '':
         print("You dont think that will work.")
@@ -385,7 +398,7 @@ def unlock_room(game, user_action, direction):
                         'item')
         if key_word in unlock:
             game.rooms[player.next_location].door['locked'] = False
-            print("You have unlocked the room.")
+            print(unlock_message)
             remove_item(game)
         else:
             print('You do not have the key for this room.')
@@ -397,7 +410,6 @@ def remove_item(game):
     player = game.player
     item = game.rooms[player.next_location].door['unlock']
     player.inventory.remove(item)
-    print("you have removed " + item)
 
 
 def room_check(game, direction):
