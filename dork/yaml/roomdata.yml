@@ -18,7 +18,7 @@ rooms:
       inspect: |
         upon checking under the bed, you find a key. How convenient
         for you, prisoner!
-      unlock message: "You have unlocked the door but the key broke."
+      unlock message: " "
     door: 
       locked: False
       unlock: ''
@@ -58,7 +58,7 @@ rooms:
         traverse the stairs. Looking down the stairs you know they will lead
         you back to the hallway but going up will take you to the tower.
       inspect: 'You inspect the room'
-      unlock message: "You have unlocked the door but the key broke."
+      unlock message: "The torch lights your way allowing you to enter the dark and crumbling stairwell."
     door:
       locked: True
       unlock: 'torch'
@@ -82,7 +82,7 @@ rooms:
         there is an iron bar leaned up against the wall, near the door you
         emerged from. You take the iron bar. It is cold in your hands and
         wet from the rain, but otherwise sturdy.
-      unlock message: "You have unlocked the door but the key broke."
+      unlock message: ""
     door:
       locked: False
       unlock: ''
@@ -104,7 +104,7 @@ rooms:
       inspect: |
         One of the dummies has a sword embedded in it. You are able
         to pull the sword from the dummy with a little effort.
-      unlock message: "You have unlocked the door but the key broke."
+      unlock message: "You break down the crumbling wall with the iron bar but the bar doesn't look to good."
     door:
       locked: True
       unlock: 'iron bar'
@@ -118,13 +118,11 @@ rooms:
   Boss room:
     messages:
       description: |
-        You have entered a large room with a giant of a man standing in 
-        the middle. You might be able to take him but who knows. To your
-        left you see a large gated door with what looks like gold bars
-        on the other side and in front of you, and behind the man looks
-        to be a door to the outside.
+        To your left you see a large gated door with what looks like
+        gold bars on the other side and in front of you, and behind
+        the man looks to be a door to the outside.
       inspect: ''
-      unlock message: "You have unlocked the door but the key broke."
+      unlock message: "Using the sword you fight and beat the man."
     door:
       locked: True
       unlock: 'sword'
@@ -141,7 +139,7 @@ rooms:
         You have entered the vault. All around you is gold, silver, and
         bronze coins which could help you if you find the exit to this place.
       inspect: ''
-      unlock message: "You have unlocked the door but the key broke."
+      unlock message: ""
     door:
       locked: False
       unlock: ''
@@ -157,7 +155,7 @@ rooms:
       description: |
         It seems that you have left the prison. 
       inspect: ''
-      unlock message: "You have unlocked the door but the key broke."
+      unlock message: ""
     door:
       locked: False
       unlock: ''

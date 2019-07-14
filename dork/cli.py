@@ -388,7 +388,7 @@ def unlock_room(game, user_action, direction):
     """
     player = game.player
     player.next_location = direction
-    unlock_message = game.rooms[player.location].messages['unlock message']
+    unlock_message = game.rooms[player.next_location].messages['unlock message']
     unlock = room_check(game, direction)
     if unlock == '':
         print("You dont think that will work.")
