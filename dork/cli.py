@@ -402,6 +402,7 @@ def remove_item(game):
     item = game.rooms[player.next_location].door['unlock']
     player.inventory.remove(item)
 
+
 def drop_item(game):
     """Returns item to room from inventory
     """
