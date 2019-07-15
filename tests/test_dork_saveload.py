@@ -13,7 +13,7 @@ def testsave(run):
     assert isinstance(dork.saveload.main, FunctionType)
     try:
         run(dork.saveload.main, input_values=['basicmap'])
-        run(dork.saveload.main, input_values=['???'])
+        run(dork.saveload.main, input_values=['???', 'basicmap'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 
@@ -24,6 +24,6 @@ def testload(run):
     assert isinstance(dork.saveload.load, FunctionType)
     try:
         run(dork.saveload.load, input_values=['basicmap'])
-        run(dork.saveload.load, input_values=['???'])
+        run(dork.saveload.load, input_values=['???', 'basicmap'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
