@@ -21,7 +21,7 @@ rooms:
     door: 
       locked: False
       unlock: ''
-      item: 'cell key'
+      item: ['key', 'skull']
     paths:
       up: 'Jail hallway'
       down: ''
@@ -42,8 +42,8 @@ rooms:
       unlock message: "You have unlocked the door but the key broke."
     door:
       locked: True
-      unlock: 'cell key'
-      item: 'torch'
+      unlock: 'key'
+      item: ['torch']
     paths:
       up: ''
       down: 'cell'
@@ -63,7 +63,7 @@ rooms:
     door:
       locked: True
       unlock: 'torch'
-      item: ''
+      item: []
     paths:
       up: 'Jail Tower'
       down: 'Jail hallway'
@@ -80,14 +80,13 @@ rooms:
         you see nothing but a raging ocean.
       inspect: |
         As you look around on top of the tower, you note that
-        there is an iron bar leaned up against the wall, near the door you
-        emerged from. You take the iron bar. It is cold in your hands and
-        wet from the rain, but otherwise sturdy.
+        there is a bar leaned up against the wall, near the door you
+        emerged from. 
       unlock message: ""
     door:
       locked: False
       unlock: ''
-      item: 'iron bar'
+      item: ['bar']
     paths:
       up: ''
       down: 'Stairwell'
@@ -108,8 +107,8 @@ rooms:
       unlock message: "You break down the crumbling wall with the iron bar but the bar doesn't look to good."
     door:
       locked: True
-      unlock: 'iron bar'
-      item: 'sword'
+      unlock: 'bar'
+      item: ['sword']
     paths:
       up: 'Boss room'
       down: ''
@@ -127,7 +126,7 @@ rooms:
     door:
       locked: True
       unlock: 'sword'
-      item: ''
+      item: []
     paths:
       up: 'Entrance'
       down: 'Jail Armory'
@@ -144,7 +143,7 @@ rooms:
     door:
       locked: False
       unlock: ''
-      item: 'coins'
+      item: ['coins']
     paths:
       up: ''
       down: ''
@@ -160,7 +159,7 @@ rooms:
     door:
       locked: False
       unlock: ''
-      item: ''
+      item: []
     paths:
       up: ''
       down: ''
@@ -168,11 +167,13 @@ rooms:
       right: ''
 
 items:
-  cell key:
+  key:
     description: "Its a cell key"
+  skull:
+    description: "Its a skull"
   torch:
     description: "It is hot"
-  iron bar:
+  bar:
     description: "Old rusty metal bar"
   sword:
     description: "Sharp and shiny"

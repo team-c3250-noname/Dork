@@ -324,8 +324,8 @@ def room_examine(game):
     player = game.player
     if game.rooms[player.location].door['item'] != '':
         print(game.rooms[player.location].messages['inspect'])
-        print("This room contains a " +
-              game.rooms[player.location].door['item'])
+        print("This room contains a " )
+        print(game.rooms[player.location].door['item'])
     else:
         print("There is nothing useful here. ")
 
@@ -337,9 +337,9 @@ def player_take(game, user_action):
     item = game.rooms[player.location].door['item']
     key_word = next((word for word in user_action if word in item), 'item')
     if key_word in item:
-        print("You have picked up the " + item)
-        player.inventory.append(item)
-        game.rooms[player.location].door['item'] = ''
+        print("You have picked up the " + key_word)
+        player.inventory.append(key_word)
+        game.rooms[player.location].door['item'].remove(key_word)
     else:
         print("There is no such item")
     return True
@@ -438,6 +438,3 @@ def next_room(game):
             reprompt = False
             return game.rooms[player.location].paths[direction]
         direction_check = input("Please input cardinal direction. ").lower()
-
-
-
