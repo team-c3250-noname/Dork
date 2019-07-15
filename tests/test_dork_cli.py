@@ -13,31 +13,51 @@ def test_cli_exists(run):
     try:
         run(dork.cli.main)
         run(dork.cli.main, input_values=['jump', ' ', 'quit'])
-        run(dork.cli.main, input_values=['play', ' ', 'quit'])
-        run(dork.cli.main, input_values=['play', 'jump high', 'quit'])
-        run(dork.cli.main, input_values=['play', 'move north', 'quit'])
-        run(dork.cli.main, input_values=['play', 'move south', 'quit'])
-        run(dork.cli.main, input_values=['play', 'move west', 'quit'])
-        run(dork.cli.main, input_values=['play', 'move east', 'quit'])
-        run(dork.cli.main, input_values=['play', 'move went', 'quit'])
-        run(dork.cli.main, input_values=['play', 'examine room', 'quit'])
-        run(dork.cli.main, input_values=['play', 'examine nothing', 'quit'])
-        run(dork.cli.main, input_values=['play', 'pick cellkey', 'quit'])
-        run(dork.cli.main, input_values=['play', 'pick key', 'quit'])
-        run(dork.cli.main, input_values=['play', 'pick key',
-                                         'move north', 'use key', 'quit'])
-        run(dork.cli.main, input_values=['play', 'pick key',
+        run(dork.cli.main, input_values=['play', 'roomdata', ' ', 'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'jump high',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'move north',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'move south',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'move west',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'move east',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'move qest',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'examine room',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata',
+                                         'examine nothing', 'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'pick cellkey',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'pick key',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'pick key',
+                                         'move north', 'use key', 'south',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'pick key',
+                                         'use key', 'qest', 'south',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'pick key',
                                          'move north', 'use key',
-                                         'go north', 'quit'])
-        run(dork.cli.main, input_values=['play', 'pick key',
-                                         'move north', 'use torch',
+                                         'north', 'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'pick key',
+                                         'move north', 'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'pick key',
+                                         'use key', 'north', 'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'pick key',
+                                         'use key', 'north', 'move north',
+                                         'pick torch', 'use torch',
+                                         'west', 'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'user inventory',
                                          'quit'])
-        run(dork.cli.main, input_values=['play', 'pick key', 'use key',
+        run(dork.cli.main, input_values=['play', 'roomdata', 'user save',
                                          'quit'])
-        run(dork.cli.main, input_values=['play', 'user inventory', 'quit'])
-        run(dork.cli.main, input_values=['play', 'user save', 'quit'])
-        run(dork.cli.main, input_values=['play', 'user id', 'quit'])
-        run(dork.cli.main, input_values=['load', ' ', 'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'user id',
+                                         'quit'])
+        run(dork.cli.main, input_values=['load', 'roomdata', ' ', 'quit'])
         run(dork.cli.main, input_values=['help', ' ', 'quit'])
         run(dork.cli.main, input_values=['quit'])
     except:  # noqa: E722

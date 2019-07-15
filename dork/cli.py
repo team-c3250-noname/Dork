@@ -136,11 +136,20 @@ def main(*args):
     title_screen()
 
 
+def game_state():
+    """Creates and stores the game state
+    """
+    if types.GAME is None:
+        data = dork.saveload.load()
+        types.GAME = types.Game(data)
+    return types.GAME
+
+
 def title_screen():
     """Will display the title screen
     """
     play_options = {'play': setup_game, 'load': load_game,
-                    'help': help_menu, 'quit': end_game}
+                    'help': help_menu, 'quit': quit_game}
     user_play = True
     print("##########################")
     print("#   Welcome to the game  #")
@@ -153,7 +162,7 @@ def title_screen():
     print("          quit            ")
 
     while user_play is True:
-        option = input("> ")
+        option = input("> ").strip()
         if option in play_options:
             user_play = play_options[option]()
         else:
@@ -163,7 +172,11 @@ def title_screen():
 def setup_game():
     """This will set up the game
     """
-    print(types.ROOM_MAP[types.MY_PLAYER.location][types.DESCRIPTION])
+    game = game_state()
+    player = game.player
+    player_room_description = game.rooms[player.location].messages[
+        'description']
+    print(player_room_description)
     prompt()
 
 
@@ -188,17 +201,28 @@ def help_menu():
     the help menu.
     """)
     print("")
-    input("To return to the game press enter.")
+    input("To return press enter.")
     return True
 
 
 def load_game():
     """Will load a saved game
     """
-    dork.saveload.main()
+    game = game_state()
+    player = game.player
+    print("the player is in the " + player.location)
+    print(game.rooms[player.location].messages['description'])
+    prompt()
 
 
-def end_game():
+def quit_game():
+    """This will quit the game
+    """
+    print("Thank you for playing")
+    return False
+
+
+def end_game(_game):
     """Will show a end game screen and thank the player
     """
     print("Thank you for playing")
@@ -208,6 +232,7 @@ def end_game():
 def prompt():
     """ Asks user what they would like to do
     """
+    game = game_state()
     keep_prompting = True
 
     def one_arg(args):
@@ -222,106 +247,128 @@ def prompt():
                       'examine': (player_examine, one_arg),
                       'inspect': (player_examine, one_arg),
                       'pick': (player_take, one_arg),
+                      'take': (player_take, one_arg),
                       'use': (player_use, one_arg),
                       'user': (user_menu, one_arg),
                       'help': (help_menu, no_arg),
-                      'quit': (end_game, no_arg)}
+                      'save': (save_game, no_arg),
+                      'quit': (end_game, no_arg), }
     while keep_prompting is True:
+        keep_prompting = last_room_check(game)
         user_action = input("\n" +
                             "What would you like to do? ").lower().split()
         action = next((word for word in user_action if word in player_actions),
                       '')
         if action in player_actions:
             args = player_actions[action][1](user_action)
-            keep_prompting = player_actions[action][0](*args)
+            keep_prompting = player_actions[action][0](game, *args)
         else:
             print("Enter a valid command. ")
 
 
-def player_move(user_action):
+def save_game(_game):
+    """Allows player to save the game
+    """
+    dork.saveload.main()
+
+
+def player_move(game, user_action):
     """ Allows player to move along maze
     """
-    if 'north' in user_action:
-        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.UP])
-    elif 'south' in user_action:
-        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.DOWN])
-    elif 'west' in user_action:
-        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.LEFT])
-    elif 'east' in user_action:
-        lock_check(types.ROOM_MAP[types.MY_PLAYER.location][types.RIGHT])
+    player = game.player
+    directions = ['north', 'up', 'south', 'down', 'east',
+                  'left', 'west', 'right', ]
+    action = next((word for word in user_action if word in directions), '')
+    player_direction = {'north': 'up', 'up': 'up', 'south': 'down',
+                        'down': 'down', 'east': 'right',
+                        'right': 'right', 'west': 'left',
+                        'left': 'left', }
+    if action in player_direction:
+        cardinal = player_direction[action]
+        lock_check(game, game.rooms[player.location].paths[cardinal])
     else:
         print("Invalid direction")
     return True
 
 
-def lock_check(direction):
+def last_room_check(game):
+    """Will check if its the last room and if it is will end the game
+    """
+    player = game.player
+    if player.location == player.last_room:
+        return False
+    return True
+
+
+def lock_check(game, direction):
     """This will check if the door is locked
     """
+    player = game.player
     if direction != '':
-        types.MY_PLAYER.next_location = direction
-        next_lock = types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED]
+        player.next_location = direction
+        next_lock = game.rooms[player.next_location].door['locked']
+        if next_lock is True:
+            print("The door doesn't open.")
+            print('You might be able to use an item.')
+        else:
+            movement_handler(game, direction)
     if direction == '':
         print("That is a wall")
-    elif next_lock is True:
-        print("The door doesn't open.")
-        print('Would you like to use an item?')
-    else:
-        movement_handler(direction)
 
 
-def direction_handler(direction):
-    """Checks the direction to make sure its a valid direction
-    """
-    if direction != '':
-        types.MY_PLAYER.next_location = direction
-        next_lock = types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED]
-    if direction == '':
-        print("That is a wall")
-    elif next_lock is True:
-        print("The door doesn't open.")
-    else:
-        movement_handler(direction)
-
-
-def movement_handler(destination):
+def movement_handler(game, destination):
     """ This will handle movement to different rooms
     """
-    types.MY_PLAYER.location = destination
+    player = game.player
+    player.location = destination
     print("You have moved to " + destination)
     print("")
-    print(types.ROOM_MAP[types.MY_PLAYER.location][types.DESCRIPTION])
+    print(game.rooms[player.location].messages['description'])
 
 
-def player_examine(user_action):
+def player_examine(game, user_action):
     """ Allows users to examine the room and items
     """
     if 'room' in user_action:
-        print("This room contains a " +
-              types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM])
+        room_examine(game)
     else:
         print("You are trying to examine an unknown thing. Please try again")
     return True
 
 
-def player_take(user_action):
+def room_examine(game):
+    """Will examine the room
+    """
+    player = game.player
+    if game.rooms[player.location].door['item'] != '':
+        print(game.rooms[player.location].messages['inspect'])
+        print("This room contains a " +
+              game.rooms[player.location].door['item'])
+    else:
+        print("There is nothing useful here. ")
+
+
+def player_take(game, user_action):
     """Allows user to pick up items and puts them in the players inventory
     """
-    item = types.ROOM_MAP[types.MY_PLAYER.location][types.ITEM]
+    player = game.player
+    item = game.rooms[player.location].door['item']
     key_word = next((word for word in user_action if word in item), 'item')
     if key_word in item:
         print("You have picked up the " + item)
-        types.MY_PLAYER.inventory.append(item)
-        item = ''
+        player.inventory.append(item)
+        game.rooms[player.location].door['item'] = ''
     else:
         print("There is no such item")
     return True
 
 
-def user_menu(user_action):
+def user_menu(game, user_action):
     """Allows users to view their menu
     """
+    player = game.player
     if 'inventory' in user_action:
-        print(types.MY_PLAYER.inventory)
+        print(player.inventory)
     elif 'save' in user_action:
         print("This will lead to saving the game.")
     else:
@@ -329,39 +376,73 @@ def user_menu(user_action):
     return True
 
 
-def player_use(user_action):
+def player_use(game, user_action):
     """Allows player to use items
     """
-    def _in_word(word):
-        return any(word in item for item in user_item)
-
-    if types.MY_PLAYER.next_location == '':
-        print('You are not near a door')
+    player = game.player
+    inventory = ' '.join(player.inventory)
+    key_word = next((word for word in user_action if word in inventory),
+                    'item')
+    if key_word in inventory:
+        direction = next_room(game)
+        unlock_room(game, user_action, direction)
     else:
-        user_item = types.MY_PLAYER.inventory
-        lock = types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED]
-        key_word = next((word for word in user_action if _in_word(word)),
-                        'item')
-        if lock is True:
-            unlock_room(key_word)
-        else:
-            print('The room is not locked.')
+        print("You do not have that item.")
     return True
 
 
-def unlock_room(user_action):
+def unlock_room(game, user_action, direction):
     """unlocks room
     """
-    unlock = types.ROOM_MAP[types.MY_PLAYER.location][types.UNLOCK].split()
-    if user_action in unlock:
-        types.ROOM_MAP[types.MY_PLAYER.next_location][types.LOCKED] = False
-        remove_item()
+    player = game.player
+    player.next_location = direction
+    unlock = room_check(game, direction)
+    if unlock == '':
+        print("You dont think that will work.")
     else:
-        print('You do not have the key for this room.')
+        unlock = unlock.split()
+        key_word = next((word for word in user_action if word in unlock),
+                        'item')
+        if key_word in unlock:
+            unlock_message = game.rooms[player.next_location].messages[
+                'unlock message']
+            game.rooms[player.next_location].door['locked'] = False
+            print(unlock_message)
+            remove_item(game)
+        else:
+            print('You do not have the key for this room.')
 
 
-def remove_item():
+def remove_item(game):
     """Removes item after being used from inventory
     """
-    item = types.ROOM_MAP[types.MY_PLAYER.location][types.UNLOCK]
-    types.MY_PLAYER.inventory.remove(item)
+    player = game.player
+    item = game.rooms[player.next_location].door['unlock']
+    player.inventory.remove(item)
+
+
+def room_check(game, direction):
+    """This will check if the room exists
+    """
+    player = game.player
+    if direction != '':
+        return game.rooms[player.next_location].door['unlock']
+    return ''
+
+
+def next_room(game):
+    """Will find the rooms next to the player
+    """
+    player = game.player
+    player_directions = {'north': 'up', 'up': 'up',
+                         'south': 'down', 'down': 'down',
+                         'east': 'right', 'right': 'right',
+                         'west': 'left', 'left': 'left', }
+    direction_check = input("Which direction would you like to try ").lower()
+    reprompt = True
+    while reprompt is True:
+        if direction_check in player_directions:
+            direction = player_directions[direction_check]
+            reprompt = False
+            return game.rooms[player.location].paths[direction]
+        direction_check = input("Please input cardinal direction. ").lower()

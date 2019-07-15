@@ -3,9 +3,10 @@
 # Generously inspired by our LA,
 # https://github.com/LSmith-Zenoscave
 
-from pprint import pprint
 import sys
 import yaml
+from dork import cli
+
 
 PROPERTIES = ["Items", "Player", "Rooms"]
 PLAYERDATA = ["holding", "location", "current", "max"]
@@ -33,9 +34,11 @@ def load():
         with open(file_name) as file:
             data = yaml.safe_load(file.read())
     except IOError:
-        sys.exit("ERROR: Invalid file name: " + file_name + ". Exiting program.")
+        sys.exit("ERROR: Invalid file name: " +
+                 file_name + ". Exiting program.")
 
     print("Load successful.")
+    print("")
 
     return data
 
@@ -52,7 +55,8 @@ def save(data):
     while saved is False:
         try:
             with open(file_name, 'w') as yaml_file:
-                yaml_file.write(yaml.dump(data, default_flow_style=False))
+                yaml.safe_dump(data, default_flow_style=False,
+                               stream=yaml_file)
                 saved = True
         except IOError:
             print("ERROR: Invalid file name: " + file_name)
@@ -60,117 +64,15 @@ def save(data):
             file_name = get_input()
 
     print("Save successful.")
-    return "0"
+    return 0
 
 
-def pplayer(players, name, pdata):
-    """Parses player data into useful info.
-    """
-    player = players[name]
-    if pdata not in player:
-        pass
-    elif player[pdata] is None:
-        print(f"There is no data in {name}.")
-    else:
-        other = player[pdata]
-        print(f"Player {pdata} {name}: {other}.")
-
-
-def pitem(items, name, idata):
-    """Parses item data into useful info.
-    """
-    item = items[name]
-    if idata not in item:
-        print(f"{name} does not have {idata} as a key.")
-    elif item[idata] is None:
-        print(f"There are no items in {name}.")
-    else:
-        other = item[idata]
-        print(f"{other} is in {name}.")
-
-
-def path(rooms, name, direction):
-    """Parses room information into useful data.
-    """
-    room = rooms[name]
-    if direction not in room:
-        print(f"{name} does not have {direction} as a key.")
-    elif room[direction] is None:
-        print(f"There is nothing {direction} of {name}.")
-    elif room[direction] not in rooms:
-        print(f"Going {direction} from {name} will lead to an error.")
-    else:
-        other = room[direction]
-        print(f"{other} is {direction} of {name}.")
-
-
-def main():  # pragma: no cover
+def main():
     """Runs everything.
     """
-    #data = load()
-    #print("Data that was loaded:")
-    #pprint(data)
-
-    #print("Checking rooms, items, and player data for errors...")
-    #for ppty in PROPERTIES:
-    #    if ppty not in data:
-    #        print(f"No {ppty} found.")
-    #    if not isinstance(data[ppty], dict):
-    #        print(f"{ppty} in data were not proper data.")
-    #        return
-
-    #parseroom(data)
-    #parseitem(data)
-    #parseplayer(data)
-    #save(data)
-    roomdata = load()
-    roomtest(roomdata)
+    game = cli.game_state()
+    save(game.save())
 
 
-def parseroom(data):
-    """Parses room data.
-    """
-    rooms = data["Rooms"]
-    for name in rooms:
-        for direction in DIRECTIONS:
-            path(rooms, name, direction)
-
-
-def parseitem(data):
-    """Parses item data.
-    """
-    items = data["Items"]
-    for name in items:
-        for idata in ITEMDATA:
-            pitem(items, name, idata)
-
-
-def parseplayer(data):
-    """Parses player data.
-    """
-    players = data["Player"]
-    for name in players:
-        for pdata in PLAYERDATA:
-            pplayer(players, name, pdata)
-
-
-def roomtest(roomdata):
-    """Tests the creation and parsing of room data.
-    """
-    for name, room in roomdata.items():
-        name = room.get("ROOM_NAME")
-        print(f"{name} data:")
-        left = room.get("LEFT")
-        down = room.get("DOWN")
-        up = room.get("UP")
-        right = room.get("RIGHT")
-        DIRS = [up, down, left, right]
-        desc = room.get("DESCRIPTION")
-        print("Description: " + desc)
-
-        for dirs in DIRS:
-            if dirs is not '':
-                print(name + " has " + dirs + " next to it.")
-
-if __name__ == "__main__":  # pragma: no cover
+if __name__ == "__main__":
     main()

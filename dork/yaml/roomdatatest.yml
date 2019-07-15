@@ -1,0 +1,205 @@
+player:
+  inventory:
+  - cell key
+  last room: Entrance
+  location: cell
+  next location: ''
+rooms:
+  Boss room:
+    door:
+      item: ''
+      locked: true
+      unlock: sword
+    messages:
+      description: 'To your left you see a large gated door with what looks like
+
+        gold bars on the other side and in front of you, and behind
+
+        the man looks to be a door to the outside.
+
+        '
+      inspect: ''
+      unlock message: Using the sword you fight and beat the man.
+    paths:
+      down: Jail Armory
+      left: Vault
+      right: ''
+      up: Entrance
+  Entrance:
+    door:
+      item: ''
+      locked: false
+      unlock: ''
+    messages:
+      description: "It seems that you have left the prison. \n"
+      inspect: ''
+      unlock message: ''
+    paths:
+      down: ''
+      left: ''
+      right: ''
+      up: ''
+  Jail Armory:
+    door:
+      item: sword
+      locked: true
+      unlock: iron bar
+    messages:
+      description: 'You enter the armory and note that the armor and weapon
+
+        racks are all but empty. You also note the presence of a few target
+
+        dummies and archery targets. In front of you is a door which
+
+        is cracked open. Looking through you can see a giant of a man
+
+        standing in the middle of the room.
+
+        '
+      inspect: 'One of the dummies has a sword embedded in it. You are able
+
+        to pull the sword from the dummy with a little effort.
+
+        '
+      unlock message: You break down the crumbling wall with the iron bar but the
+        bar doesn't look to good.
+    paths:
+      down: ''
+      left: ''
+      right: Jail hallway
+      up: Boss room
+  Jail Tower:
+    door:
+      item: iron bar
+      locked: false
+      unlock: ''
+    messages:
+      description: 'As you exit the stairwell and go outside, you find yourself atop
+        a
+
+        tower. It is raining hard and a storm is currently ongoing. You
+
+        hear the sounds of thunder and see bright flashes of lightning
+
+        every now and then. As you look over the edge of the tower,
+
+        you see nothing but a raging ocean.
+
+        '
+      inspect: 'As you look around on top of the tower, you note that
+
+        there is an iron bar leaned up against the wall, near the door you
+
+        emerged from. You take the iron bar. It is cold in your hands and
+
+        wet from the rain, but otherwise sturdy.
+
+        '
+      unlock message: ''
+    paths:
+      down: Stairwell
+      left: ''
+      right: ''
+      up: ''
+  Jail hallway:
+    door:
+      item: torch
+      locked: true
+      unlock: cell key
+    messages:
+      description: 'A long, narrow hallway lined with cells and torches for light
+        on
+
+        either side. To your immediate left, there is a crumbling wall.
+
+        Perhaps if you had something that could help destroy it...
+
+        To your right, down the corridor, there is a stairwell. The stairs
+
+        lead up, but it is completely pitch black inside. You''ll probably
+
+        trip and hurt yourself without a source of light. You should be
+
+        able to reach up and remove one of the torches from the wall.
+
+        '
+      inspect: You inspect the room
+      unlock message: You have unlocked the door but the key broke.
+    paths:
+      down: cell
+      left: Jail Armory
+      right: Stairwell
+      up: ''
+  Stairwell:
+    door:
+      item: ''
+      locked: true
+      unlock: torch
+    messages:
+      description: 'The stairs are falling apart as you carefully watch your footing
+        and
+
+        traverse the stairs. Looking down the stairs you know they will lead
+
+        you back to the hallway but going up will take you to the tower.
+
+        '
+      inspect: You inspect the room
+      unlock message: 'The torch lights your way allowing you to enter the dark
+
+        and crumbling stairwell.
+
+        '
+    paths:
+      down: Jail hallway
+      left: Jail hallway
+      right: ''
+      up: Jail Tower
+  Vault:
+    door:
+      item: coins
+      locked: false
+      unlock: ''
+    messages:
+      description: 'You have entered the vault. All around you is gold, silver, and
+
+        bronze coins which could help you if you find the exit to this place.
+
+        '
+      inspect: ''
+      unlock message: ''
+    paths:
+      down: ''
+      left: ''
+      right: Boss room
+      up: ''
+  cell:
+    door:
+      item: ''
+      locked: false
+      unlock: ''
+    messages:
+      description: 'You find yourself in a jail cell with the door locked.
+
+        As you look outside the bars, you can see a corridor extending in
+
+        either direction. For now, you need to get out of here. upon further
+
+        inspection in the room, you note various shackles and torture
+
+        instruments, a metal bed suspended from the wall with a chain, but
+
+        nothing more.
+
+        '
+      inspect: 'upon checking under the bed, you find a key. How convenient
+
+        for you, prisoner!
+
+        '
+      unlock message: ''
+    paths:
+      down: ''
+      left: ''
+      right: ''
+      up: Jail hallway
