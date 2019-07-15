@@ -244,7 +244,7 @@ def prompt():
                       'help': (help_menu, no_arg),
                       'save': (save_game, no_arg),
                       'quit': (end_game, no_arg), }
-    while keep_prompting is True and player.location != player.last_room:
+    while keep_prompting is True and player.location is not player.last_room:
         user_action = input("\n" +
                             "What would you like to do? ").lower().split()
         action = next((word for word in user_action if word in player_actions),
@@ -427,6 +427,3 @@ def next_room(game):
             reprompt = False
             return game.rooms[player.location].paths[direction]
         direction_check = input("Please input cardinal direction. ").lower()
-
-
-

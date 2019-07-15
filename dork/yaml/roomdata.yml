@@ -3,6 +3,7 @@ player:
   next location: ''
   inventory: []
   last room: Entrance
+
 rooms:
   cell:
     messages:
