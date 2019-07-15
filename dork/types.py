@@ -36,7 +36,6 @@ class Player():
         self.next_location = data.get('next location')
         self.inventory = data.get('inventory')
         self.last_room = data.get('last room')
-        self.points = data.get('points')
 
     def save(self):
         """Will save the player class
