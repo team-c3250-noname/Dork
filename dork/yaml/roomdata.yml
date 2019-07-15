@@ -18,7 +18,7 @@ rooms:
       inspect: |
         upon checking under the bed, you find a key. How convenient
         for you, prisoner!
-      unlock message: " "
+      unlock message: ""
     door: 
       locked: False
       unlock: ''
@@ -58,7 +58,9 @@ rooms:
         traverse the stairs. Looking down the stairs you know they will lead
         you back to the hallway but going up will take you to the tower.
       inspect: 'You inspect the room'
-      unlock message: "The torch lights your way allowing you to enter the dark and crumbling stairwell."
+      unlock message: |
+        The torch lights your way allowing you to enter the dark
+        and crumbling stairwell.
     door:
       locked: True
       unlock: 'torch'

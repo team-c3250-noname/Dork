@@ -2,7 +2,7 @@
 """Basic tests for state and entity relationships in dork
 """
 import dork.types
-from tests.utils import has_many, is_a
+from tests.utils import is_a
 
 
 def test_players_exist():

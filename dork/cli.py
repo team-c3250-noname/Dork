@@ -211,6 +211,7 @@ def load_game():
     game = game_state()
     player = game.player
     print("the player is in the " + player.location)
+    print(game.rooms[player.location].messages['description'])
     prompt()
 
 
@@ -250,7 +251,8 @@ def prompt():
                       'use': (player_use, one_arg),
                       'user': (user_menu, one_arg),
                       'help': (help_menu, no_arg),
-                      'quit': (end_game, no_arg)}
+                      'save': (save_game, no_arg),
+                      'quit': (end_game, no_arg), }
     while keep_prompting is True:
         keep_prompting = last_room_check(game)
         user_action = input("\n" +
@@ -262,6 +264,12 @@ def prompt():
             keep_prompting = player_actions[action][0](game, *args)
         else:
             print("Enter a valid command. ")
+
+
+def save_game(_game):
+    """Allows player to save the game
+    """
+    dork.saveload.main()
 
 
 def player_move(game, user_action):
@@ -388,7 +396,6 @@ def unlock_room(game, user_action, direction):
     """
     player = game.player
     player.next_location = direction
-    unlock_message = game.rooms[player.next_location].messages['unlock message']
     unlock = room_check(game, direction)
     if unlock == '':
         print("You dont think that will work.")
@@ -397,6 +404,8 @@ def unlock_room(game, user_action, direction):
         key_word = next((word for word in user_action if word in unlock),
                         'item')
         if key_word in unlock:
+            unlock_message = game.rooms[player.next_location].messages[
+                'unlock message']
             game.rooms[player.next_location].door['locked'] = False
             print(unlock_message)
             remove_item(game)

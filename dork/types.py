@@ -49,9 +49,7 @@ class Player():
 
 
 class Room():
-    """A room on the map
-    Note: can only be entered through entraces
-        or exited through exits.
+    """A room on map
     """
 
     def __init__(self, data):
