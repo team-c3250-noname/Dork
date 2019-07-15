@@ -23,16 +23,19 @@ def load():
     print("Attempting to load data.")
 
     file_name = get_input()
+    loaded = False
 
-    try:
-        with open(file_name) as file:
-            data = yaml.safe_load(file.read())
-    except IOError:
-        sys.exit("ERROR: Invalid file name: " +
-                 file_name + ". Exiting program.")
+    while loaded is False:
+        try:
+            with open(file_name) as file:
+                data = yaml.safe_load(file.read())
+                loaded = True
+        except IOError:
+            print("ERROR: Invalid file name: " + file_name)
+            print("Please try a different file name.")
+            file_name = get_input()
 
     print("Load successful.")
-    print("")
 
     return data
 
