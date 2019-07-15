@@ -17,7 +17,8 @@ def get_input():
 
 
 def load():
-    """This will load a file into data.
+    """Load a yaml file, returning it as data.
+    The user is prompted for a file name.
     """
     print("Attempting to load data.")
 
@@ -29,7 +30,7 @@ def load():
             with open(file_name) as file:
                 data = yaml.safe_load(file.read())
                 loaded = True
-        except IOError:
+        except (IOError, FileNotFoundError, ValueError):
             print("ERROR: Invalid file name: " + file_name)
             print("Please try a different file name.")
             file_name = get_input()
@@ -40,14 +41,13 @@ def load():
 
 
 def save():
-    """This will save player and room data to a file.
-    Eventually this should also save maze data.
+    """Save the game state into a yaml file.
+    Also prompts the user for a file name.
     """
     print("Attempting to save data.")
 
     game = game_state()
     data = game.save()
-
     file_name = get_input()
     saved = False
 
@@ -57,17 +57,18 @@ def save():
                 yaml.safe_dump(data, default_flow_style=False,
                                stream=yaml_file)
                 saved = True
-        except IOError:
+        except (IOError, ValueError):
             print("ERROR: Invalid file name: " + file_name)
             print("Please try a different file name.")
             file_name = get_input()
 
     print("Save successful.")
+
     return 0
 
 
 def game_state():
-    """Creates and stores the game state
+    """Creates and stores the game state.
     """
     if types.GAME is None:
         data = load()
