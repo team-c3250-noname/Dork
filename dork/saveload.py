@@ -30,7 +30,7 @@ def load():
             with open(file_name) as file:
                 data = yaml.safe_load(file.read())
                 loaded = True
-        except IOError:
+        except (IOError, FileNotFoundError, ValueError):
             print("ERROR: Invalid file name: " + file_name)
             print("Please try a different file name.")
             file_name = get_input()
@@ -57,7 +57,7 @@ def save():
                 yaml.safe_dump(data, default_flow_style=False,
                                stream=yaml_file)
                 saved = True
-        except IOError:
+        except (IOError, ValueError):
             print("ERROR: Invalid file name: " + file_name)
             print("Please try a different file name.")
             file_name = get_input()
