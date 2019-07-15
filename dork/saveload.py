@@ -64,6 +64,7 @@ def save(data):
             file_name = get_input()
 
     print("Save successful.")
+    return 0
 
 
 def pplayer(players, name, pdata):
