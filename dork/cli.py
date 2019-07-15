@@ -240,11 +240,12 @@ def prompt():
                       'pick': (player_take, one_arg),
                       'take': (player_take, one_arg),
                       'use': (player_use, one_arg),
+                      'drop': (drop_item, no_arg),
                       'user': (user_menu, one_arg),
                       'help': (help_menu, no_arg),
                       'save': (save_game, no_arg),
                       'quit': (end_game, no_arg), }
-    while keep_prompting is True and player.location is not player.last_room:
+    while keep_prompting is True and player.location != player.last_room:
         user_action = input("\n" +
                             "What would you like to do? ").lower().split()
         action = next((word for word in user_action if word in player_actions),
@@ -401,6 +402,16 @@ def remove_item(game):
     item = game.rooms[player.next_location].door['unlock']
     player.inventory.remove(item)
 
+def drop_item(game):
+    """Returns item to room from inventory
+    """
+    player = game.player
+    print(player.inventory)
+    item = input('What would you like to drop?')
+    game.rooms[player.location].door['item'] += item
+    player.inventory.remove(item)
+    return True
+
 
 def room_check(game, direction):
     """This will check if the room exists
@@ -427,3 +438,6 @@ def next_room(game):
             reprompt = False
             return game.rooms[player.location].paths[direction]
         direction_check = input("Please input cardinal direction. ").lower()
+
+
+

@@ -166,3 +166,15 @@ rooms:
       down: ''
       left: ''
       right: ''
+
+items:
+  cell key:
+    description: "Its a cell key"
+  torch:
+    description: "It is hot"
+  iron bar:
+    description: "Old rusty metal bar"
+  sword:
+    description: "Sharp and shiny"
+  coins:
+    description: "I has coin"

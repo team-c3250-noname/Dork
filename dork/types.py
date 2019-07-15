@@ -68,3 +68,17 @@ class Room():
             'door': self.door,
             'paths': self.paths,
         }
+
+
+class Item():
+    """Item in game
+    """
+    def __init__(self, data):
+        self.description = data.get('description')
+        
+    def save(self):
+        """Will save the room class
+        """
+        return {
+            'description': self.description
+            }
