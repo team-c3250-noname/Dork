@@ -1,14 +1,13 @@
 player:
-  inventory:
-  - torch
+  inventory: []
   last room: Entrance
-  location: Jail hallway
-  next location: Jail Armory
+  location: Entrance
+  next location: Entrance
 rooms:
   Boss room:
     door:
       item: ''
-      locked: true
+      locked: false
       unlock: sword
     messages:
       description: 'To your left you see a large gated door with what looks like
@@ -41,8 +40,8 @@ rooms:
       up: ''
   Jail Armory:
     door:
-      item: sword
-      locked: true
+      item: ''
+      locked: false
       unlock: iron bar
     messages:
       description: 'You enter the armory and note that the armor and weapon
@@ -70,7 +69,7 @@ rooms:
       up: Boss room
   Jail Tower:
     door:
-      item: iron bar
+      item: ''
       locked: false
       unlock: ''
     messages:
@@ -133,7 +132,7 @@ rooms:
   Stairwell:
     door:
       item: ''
-      locked: true
+      locked: false
       unlock: torch
     messages:
       description: 'The stairs are falling apart as you carefully watch your footing

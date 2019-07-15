@@ -4,7 +4,7 @@
 # https://github.com/LSmith-Zenoscave
 
 import yaml
-from dork import cli
+import dork.types as types
 
 
 def get_input():
@@ -63,10 +63,19 @@ def save(data):
     return 0
 
 
+def game_state():
+    """Creates and stores the game state
+    """
+    if types.GAME is None:
+        data = load()
+        types.GAME = types.Game(data)
+    return types.GAME
+
+
 def main():
     """Runs everything.
     """
-    game = cli.game_state()
+    game = game_state()
     save(game.save())
 
 

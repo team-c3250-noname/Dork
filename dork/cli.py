@@ -7,8 +7,7 @@ import re
 from io import StringIO
 import cursor
 import dork
-import dork.saveload
-import dork.types as types
+import dork.saveload as sl
 
 
 __all__ = ["main"]
@@ -136,15 +135,6 @@ def main(*args):
     title_screen()
 
 
-def game_state():
-    """Creates and stores the game state
-    """
-    if types.GAME is None:
-        data = dork.saveload.load()
-        types.GAME = types.Game(data)
-    return types.GAME
-
-
 def title_screen():
     """Will display the title screen
     """
@@ -172,7 +162,7 @@ def title_screen():
 def setup_game():
     """This will set up the game
     """
-    game = game_state()
+    game = sl.game_state()
     player = game.player
     player_room_description = game.rooms[player.location].messages[
         'description']
@@ -208,7 +198,7 @@ def help_menu():
 def load_game():
     """Will load a saved game
     """
-    game = game_state()
+    game = sl.game_state()
     player = game.player
     print("the player is in the " + player.location)
     print(game.rooms[player.location].messages['description'])
@@ -232,7 +222,8 @@ def end_game(_game):
 def prompt():
     """ Asks user what they would like to do
     """
-    game = game_state()
+    game = sl.game_state()
+    player = game.player
     keep_prompting = True
 
     def one_arg(args):
@@ -253,8 +244,7 @@ def prompt():
                       'help': (help_menu, no_arg),
                       'save': (save_game, no_arg),
                       'quit': (end_game, no_arg), }
-    while keep_prompting is True:
-        keep_prompting = last_room_check(game)
+    while keep_prompting is True and player.location != player.last_room:
         user_action = input("\n" +
                             "What would you like to do? ").lower().split()
         action = next((word for word in user_action if word in player_actions),
@@ -288,15 +278,6 @@ def player_move(game, user_action):
         lock_check(game, game.rooms[player.location].paths[cardinal])
     else:
         print("Invalid direction")
-    return True
-
-
-def last_room_check(game):
-    """Will check if its the last room and if it is will end the game
-    """
-    player = game.player
-    if player.location == player.last_room:
-        return False
     return True
 
 
