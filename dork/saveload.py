@@ -156,15 +156,5 @@ def parseplayer(roomdata):
             pplayer(players, name, pdata)
 
 
-# def roomtest(data):
-#    rooms = data["rooms"]
-#    player = data['player']
-#    plocation = player.get('location')
-#    print('the player is in ' + plocation)
-#    for name, room in rooms.items():
-#        name = room.get("ROOM_NAME")
-#        print(name)
-
-
 if __name__ == "__main__":  # pragma: no cover
     main()
