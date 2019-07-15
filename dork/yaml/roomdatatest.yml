@@ -1,6 +1,5 @@
 player:
-  inventory:
-  - cell key
+  inventory: []
   last room: Entrance
   location: cell
   next location: ''
@@ -175,7 +174,7 @@ rooms:
       up: ''
   cell:
     door:
-      item: ''
+      item: cell key
       locked: false
       unlock: ''
     messages:

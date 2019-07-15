@@ -14,6 +14,8 @@ def test_cli_exists(run):
         run(dork.cli.main)
         run(dork.cli.main, input_values=['jump', ' ', 'quit'])
         run(dork.cli.main, input_values=['play', 'roomdata', ' ', 'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'save',
+                                         'roomdatatest', 'quit'])
         run(dork.cli.main, input_values=['play', 'roomdata', 'jump high',
                                          'quit'])
         run(dork.cli.main, input_values=['play', 'roomdata', 'move north',
@@ -32,6 +34,8 @@ def test_cli_exists(run):
                                          'examine nothing', 'quit'])
         run(dork.cli.main, input_values=['play', 'roomdata', 'pick cellkey',
                                          'quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'pick key',
+                                         'examine room', 'quit'])
         run(dork.cli.main, input_values=['play', 'roomdata', 'pick key',
                                          'quit'])
         run(dork.cli.main, input_values=['play', 'roomdata', 'pick key',
@@ -60,6 +64,15 @@ def test_cli_exists(run):
         run(dork.cli.main, input_values=['load', 'roomdata', ' ', 'quit'])
         run(dork.cli.main, input_values=['help', ' ', 'quit'])
         run(dork.cli.main, input_values=['quit'])
+        run(dork.cli.main, input_values=['play', 'roomdata', 'pick key',
+                                         'use key', 'north', 'move north',
+                                         'pick torch', 'use torch',
+                                         'right', 'move right', 'move up',
+                                         'pick bar', 'move down',
+                                         'move down', 'use bar', 'left',
+                                         'move left', 'pick sword',
+                                         'use sword', 'up', 'move north',
+                                         'move north'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 
