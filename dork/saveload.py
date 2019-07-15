@@ -8,12 +8,6 @@ import yaml
 from dork import cli
 
 
-PROPERTIES = ["Items", "Player", "Rooms"]
-PLAYERDATA = ["holding", "location", "current", "max"]
-ITEMDATA = ["holds"]
-DIRECTIONS = ["north", "south", "east", "west"]
-
-
 def get_input():
     """Grabs user input to define a save/load name
     """
