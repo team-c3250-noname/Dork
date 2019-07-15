@@ -15,6 +15,8 @@ class Game():
         self.player = Player(data['player'])
         self.rooms = {room_name: Room(room) for room_name,
                       room in data.get('rooms').items()}
+        self.items = {item_name: Item(item) for item_name,
+                      item in data.get('items').items()}
 
     def save(self):
         """Will save the Game class

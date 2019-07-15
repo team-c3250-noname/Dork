@@ -311,11 +311,22 @@ def movement_handler(game, destination):
 def player_examine(game, user_action):
     """ Allows users to examine the room and items
     """
+    player = game.player
+    item = next((word for word in user_action if word in player.inventory), '')
     if 'room' in user_action:
         room_examine(game)
+    elif item in user_action:
+        print(item)
+        item_examine(game, item)
     else:
         print("You are trying to examine an unknown thing. Please try again")
     return True
+
+
+def item_examine(game, item):
+    """Will examine the given item
+    """
+    print(game.items[item].description)
 
 
 def room_examine(game):
