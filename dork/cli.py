@@ -259,7 +259,7 @@ def prompt():
 def save_game(_game):
     """Allows player to save the game
     """
-    dork.saveload.main()
+    dork.saveload.save()
 
 
 def player_move(game, user_action):

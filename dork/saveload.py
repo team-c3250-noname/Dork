@@ -39,11 +39,14 @@ def load():
     return data
 
 
-def save(data):
+def save():
     """This will save player and room data to a file.
     Eventually this should also save maze data.
     """
     print("Attempting to save data.")
+
+    game = game_state()
+    data = game.save()
 
     file_name = get_input()
     saved = False
@@ -70,14 +73,3 @@ def game_state():
         data = load()
         types.GAME = types.Game(data)
     return types.GAME
-
-
-def main():
-    """Runs everything.
-    """
-    game = game_state()
-    save(game.save())
-
-
-if __name__ == "__main__":
-    main()

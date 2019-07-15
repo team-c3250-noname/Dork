@@ -8,12 +8,10 @@ def testsave(run):
     """Save data should actually work no matter what
     type of data is used.
     """
-    assert "main" in vars(
-        dork.saveload), "Dork.cli should define a main method"
-    assert isinstance(dork.saveload.main, FunctionType)
+    assert isinstance(dork.saveload.save, FunctionType)
     try:
-        run(dork.saveload.main, input_values=['basicmap'])
-        run(dork.saveload.main, input_values=['???', 'basicmap'])
+        run(dork.saveload.save, input_values=['basicmap'])
+        run(dork.saveload.save, input_values=['???', 'basicmap'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 
