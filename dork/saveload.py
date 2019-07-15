@@ -3,7 +3,6 @@
 # Generously inspired by our LA,
 # https://github.com/LSmith-Zenoscave
 
-import sys
 import yaml
 from dork import cli
 
