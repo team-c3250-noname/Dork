@@ -67,94 +67,12 @@ def save(data):
     return 0
 
 
-def pplayer(players, name, pdata):
-    """Parses player data into useful info.
-    """
-    player = players[name]
-    if pdata not in player:
-        pass
-    elif player[pdata] is None:
-        print(f"There is no data in {name}.")
-    else:
-        other = player[pdata]
-        print(f"Player {pdata} {name}: {other}.")
-
-
-def pitem(items, name, idata):
-    """Parses item data into useful info.
-    """
-    item = items[name]
-    if idata not in item:
-        print(f"{name} does not have {idata} as a key.")
-    elif item[idata] is None:
-        print(f"There are no items in {name}.")
-    else:
-        other = item[idata]
-        print(f"{other} is in {name}.")
-
-
-def path(rooms, name, direction):
-    """Parses room information into useful data.
-    """
-    room = rooms[name]
-    if direction not in room:
-        print(f"{name} does not have {direction} as a key.")
-    elif room[direction] is None:
-        print(f"There is nothing {direction} of {name}.")
-    elif room[direction] not in rooms:
-        print(f"Going {direction} from {name} will lead to an error.")
-    else:
-        other = room[direction]
-        print(f"{other} is {direction} of {name}.")
-
-
-def main():  # pragma: no cover
+def main():
     """Runs everything.
     """
     game = cli.game_state()
-    # print("Data that was loaded:")
-    # pprint(data)
-
-    # print("Checking rooms, items, and player data for errors...")
-    # for ppty in PROPERTIES:
-    #    if ppty not in data:
-    #        print(f"No {ppty} found.")
-    #    if not isinstance(data[ppty], dict):
-    #        print(f"{ppty} in data were not proper data.")
-    #        return
-
-    # parseroom(data)
-    # parseitem(data)
-    # parseplayer(data)
     save(game.save())
 
 
-def parseroom(roomdata):
-    """Parses room data.
-    """
-    rooms = roomdata["Rooms"]
-    for name in rooms:
-        for direction in DIRECTIONS:
-            path(rooms, name, direction)
-
-
-def parseitem(roomdata):
-    """Parses item data.
-    """
-    items = roomdata["Items"]
-    for name in items:
-        for idata in ITEMDATA:
-            pitem(items, name, idata)
-
-
-def parseplayer(roomdata):
-    """Parses player data.
-    """
-    players = roomdata["Player"]
-    for name in players:
-        for pdata in PLAYERDATA:
-            pplayer(players, name, pdata)
-
-
-if __name__ == "__main__":  # pragma: no cover
+if __name__ == "__main__":
     main()

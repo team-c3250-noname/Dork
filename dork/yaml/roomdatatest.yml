@@ -1,9 +1,9 @@
 player:
   inventory:
-  - torch
+  - cell key
   last room: Entrance
-  location: Jail hallway
-  next location: Jail hallway
+  location: cell
+  next location: ''
 rooms:
   Boss room:
     door:
@@ -103,8 +103,8 @@ rooms:
       up: ''
   Jail hallway:
     door:
-      item: ''
-      locked: false
+      item: torch
+      locked: true
       unlock: cell key
     messages:
       description: 'A long, narrow hallway lined with cells and torches for light
