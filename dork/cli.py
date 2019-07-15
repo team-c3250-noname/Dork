@@ -324,7 +324,7 @@ def room_examine(game):
     player = game.player
     if game.rooms[player.location].door['item'] != '':
         print(game.rooms[player.location].messages['inspect'])
-        print("This room contains a " )
+        print("This room contains a ")
         print(game.rooms[player.location].door['item'])
     else:
         print("There is nothing useful here. ")
