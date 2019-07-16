@@ -35,7 +35,9 @@ def load():
             print("Please try a different file name.")
             file_name = get_input()
 
+    print("")
     print("Load successful.")
+    print("")
 
     return data
 
