@@ -62,7 +62,9 @@ def save():
             print("Please try a different file name.")
             file_name = get_input()
 
+    print("")
     print("Save successful.")
+    print("")
 
     return 0
 
