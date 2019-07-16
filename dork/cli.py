@@ -316,7 +316,6 @@ def player_examine(game, user_action):
     if 'room' in user_action:
         room_examine(game)
     elif item in user_action:
-        print(item)
         item_examine(game, item)
     else:
         print("You are trying to examine an unknown thing. Please try again")
@@ -333,12 +332,12 @@ def room_examine(game):
     """Will examine the room
     """
     player = game.player
-    if game.rooms[player.location].door['item'] != '':
+    if game.rooms[player.location].door['item'] != []:
         print(game.rooms[player.location].messages['inspect'])
-        print("This room contains a ")
+        print("This room contains:")
         print(game.rooms[player.location].door['item'])
     else:
-        print("There is nothing useful here. ")
+        print("There is nothing useful here.")
 
 
 def player_take(game, user_action):
