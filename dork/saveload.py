@@ -36,6 +36,7 @@ def load():
             file_name = get_input()
 
     print("Load successful.")
+    print("")
 
     return data
 
@@ -63,6 +64,7 @@ def save():
             file_name = get_input()
 
     print("Save successful.")
+    print("")
 
     return 0
 

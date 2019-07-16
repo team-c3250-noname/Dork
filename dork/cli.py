@@ -164,7 +164,7 @@ def setup_game():
     """
     game = sl.game_state()
     player = game.player
-    player_room_description = game.rooms[player.location].messages[
+    player_room_description = game.rooms[player.position['location']].messages[
         'description']
     print(player_room_description)
     prompt()
@@ -200,8 +200,8 @@ def load_game():
     """
     game = sl.game_state()
     player = game.player
-    print("the player is in the " + player.location)
-    print(game.rooms[player.location].messages['description'])
+    print("the player is in the " + player.position['location'])
+    print(game.rooms[player.position['location']].messages['description'])
     prompt()
 
 
@@ -223,8 +223,8 @@ def prompt():
     """ Asks user what they would like to do
     """
     game = sl.game_state()
-    player = game.player
     keep_prompting = True
+    not_last = False
 
     def one_arg(args):
         return [args]
@@ -245,7 +245,7 @@ def prompt():
                       'help': (help_menu, no_arg),
                       'save': (save_game, no_arg),
                       'quit': (end_game, no_arg), }
-    while keep_prompting is True and player.location != player.last_room:
+    while keep_prompting is True and not_last is False:
         user_action = input("\n" +
                             "What would you like to do? ").lower().split()
         action = next((word for word in user_action if word in player_actions),
@@ -253,8 +253,19 @@ def prompt():
         if action in player_actions:
             args = player_actions[action][1](user_action)
             keep_prompting = player_actions[action][0](game, *args)
+            fight_check(game)
+            not_last = last_room(game)
         else:
             print("Enter a valid command. ")
+
+
+def last_room(game):
+    """Will check if its the last room
+    """
+    player = game.player
+    if player.position['location'] == player.position['last room']:
+        return True
+    return False
 
 
 def save_game(_game):
@@ -276,7 +287,8 @@ def player_move(game, user_action):
                         'left': 'left', }
     if action in player_direction:
         cardinal = player_direction[action]
-        lock_check(game, game.rooms[player.location].paths[cardinal])
+        lock_check(game, game.rooms[player.position[
+            'location']].paths[cardinal])
     else:
         print("Invalid direction")
     return True
@@ -287,8 +299,8 @@ def lock_check(game, direction):
     """
     player = game.player
     if direction != '':
-        player.next_location = direction
-        next_lock = game.rooms[player.next_location].door['locked']
+        player.position['next location'] = direction
+        next_lock = game.rooms[player.position['next location']].door['locked']
         if next_lock is True:
             print("The door doesn't open.")
             print('You might be able to use an item.')
@@ -302,10 +314,10 @@ def movement_handler(game, destination):
     """ This will handle movement to different rooms
     """
     player = game.player
-    player.location = destination
+    player.position['location'] = destination
     print("You have moved to " + destination)
     print("")
-    print(game.rooms[player.location].messages['description'])
+    print(game.rooms[player.position['location']].messages['description'])
 
 
 def player_examine(game, user_action):
@@ -332,10 +344,10 @@ def room_examine(game):
     """Will examine the room
     """
     player = game.player
-    if game.rooms[player.location].door['item'] != []:
-        print(game.rooms[player.location].messages['inspect'])
+    if game.rooms[player.position['location']].door['item'] != []:
+        print(game.rooms[player.position['location']].messages['inspect'])
         print("This room contains:")
-        print(game.rooms[player.location].door['item'])
+        print(game.rooms[player.position['location']].door['item'])
     else:
         print("There is nothing useful here.")
 
@@ -344,12 +356,12 @@ def player_take(game, user_action):
     """Allows user to pick up items and puts them in the players inventory
     """
     player = game.player
-    item = game.rooms[player.location].door['item']
+    item = game.rooms[player.position['location']].door['item']
     key_word = next((word for word in user_action if word in item), 'item')
     if key_word in item:
         print("You have picked up the " + key_word)
         player.inventory.append(key_word)
-        game.rooms[player.location].door['item'].remove(key_word)
+        game.rooms[player.position['location']].door['item'].remove(key_word)
     else:
         print("There is no such item")
     return True
@@ -387,7 +399,7 @@ def unlock_room(game, user_action, direction):
     """unlocks room
     """
     player = game.player
-    player.next_location = direction
+    player.position['next location'] = direction
     unlock = room_check(game, direction)
     if unlock == '':
         print("You dont think that will work.")
@@ -396,9 +408,9 @@ def unlock_room(game, user_action, direction):
         key_word = next((word for word in user_action if word in unlock),
                         'item')
         if key_word in unlock:
-            unlock_message = game.rooms[player.next_location].messages[
-                'unlock message']
-            game.rooms[player.next_location].door['locked'] = False
+            unlock_message = game.rooms[player.position[
+                'next location']].messages['unlock message']
+            game.rooms[player.position['next location']].door['locked'] = False
             print(unlock_message)
             remove_item(game)
         else:
@@ -409,7 +421,7 @@ def remove_item(game):
     """Removes item after being used from inventory
     """
     player = game.player
-    item = game.rooms[player.next_location].door['unlock']
+    item = game.rooms[player.position['next location']].door['unlock']
     player.inventory.remove(item)
 
 
@@ -419,7 +431,7 @@ def drop_item(game):
     player = game.player
     print(player.inventory)
     item = input('What would you like to drop?')
-    game.rooms[player.location].door['item'] += item
+    game.rooms[player.position['location']].door['item'] += item
     player.inventory.remove(item)
     return True
 
@@ -429,7 +441,7 @@ def room_check(game, direction):
     """
     player = game.player
     if direction != '':
-        return game.rooms[player.next_location].door['unlock']
+        return game.rooms[player.position['next location']].door['unlock']
     return ''
 
 
@@ -447,5 +459,53 @@ def next_room(game):
         if direction_check in player_directions:
             direction = player_directions[direction_check]
             reprompt = False
-            return game.rooms[player.location].paths[direction]
+            return game.rooms[player.position['location']].paths[direction]
         direction_check = input("Please input cardinal direction. ").lower()
+
+
+def fight_check(game):
+    """Will check if the user has an enemy to fight
+    """
+    player = game.player
+    if game.rooms[player.position['location']].fight['fight'] is True:
+        fight_prompt(game)
+
+
+def fight_prompt(game):
+    """Fighting enemy
+    """
+    player = game.player
+    enemy = game.rooms[player.position['location']].fight['enemy']
+    print('You have encountered a ' + enemy)
+    action = input('Do you want to punch or swing')
+    if 'punch' in action:
+        damage = player.stats['attack']
+        fight(game, enemy, damage)
+    elif 'swing' in action:
+        print('what item do you want to use.')
+        print(player.inventory)
+        item = input()
+        damage = game.items[item].damage
+        fight(game, enemy, damage)
+
+
+def fight(game, enemy, damage):
+    """Basic fight
+    """
+    player = game.player
+    phealth = player.stats['health']
+    ehealth = game.npc[enemy].health
+    fighting = True
+
+    while fighting is True:
+        ehealth -= damage
+        phealth -= game.npc[enemy].attack
+        if ehealth <= 0:
+            print('You have died')
+            fighting = False
+        elif phealth <= 0:
+            fighting = False
+        else:
+            input('keep fighting')
+
+

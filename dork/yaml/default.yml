@@ -1,8 +1,12 @@
 player:
-  location: cell
-  next location: ''
+  position:
+    location: cell
+    next location: ''
+    last room: Entrance
   inventory: []
-  last room: Entrance
+  stats:
+    health: 20
+    attack: 2
 
 rooms:
   cell:
@@ -22,6 +26,9 @@ rooms:
       locked: False
       unlock: ''
       item: ['key', 'skull']
+    fight:
+      fight: False
+      enemy: ''
     paths:
       up: 'Jail hallway'
       down: ''
@@ -44,6 +51,9 @@ rooms:
       locked: True
       unlock: 'key'
       item: ['torch']
+    fight:
+      fight: True
+      enemy: 'guard'
     paths:
       up: ''
       down: 'cell'
@@ -64,6 +74,9 @@ rooms:
       locked: True
       unlock: 'torch'
       item: ['brick']
+    fight:
+      fight: False
+      enemy: ''
     paths:
       up: 'Jail Tower'
       down: 'Jail hallway'
@@ -87,6 +100,9 @@ rooms:
       locked: False
       unlock: ''
       item: ['bar']
+    fight:
+      fight: True
+      enemy: 'guard'
     paths:
       up: ''
       down: 'Stairwell'
@@ -109,6 +125,9 @@ rooms:
       locked: True
       unlock: 'bar'
       item: ['sword']
+    fight:
+      fight: True
+      enemy: 'guard'
     paths:
       up: 'Boss room'
       down: ''
@@ -128,6 +147,9 @@ rooms:
       locked: True
       unlock: 'sword'
       item: ['painting']
+    fight:
+      fight: True
+      enemy: 'boss'
     paths:
       up: 'Entrance'
       down: 'Jail Armory'
@@ -145,6 +167,9 @@ rooms:
       locked: False
       unlock: ''
       item: ['coins']
+    fight:
+      fight: False
+      enemy: ''
     paths:
       up: ''
       down: ''
@@ -161,6 +186,9 @@ rooms:
       locked: False
       unlock: ''
       item: []
+    fight:
+      fight: False
+      enemy: ''
     paths:
       up: ''
       down: ''
@@ -170,17 +198,33 @@ rooms:
 items:
   key:
     description: "Its a cell key"
+    damage: 0
   skull:
-    description: "Its a skull"
+    description: "Is this Bob?"
+    damage: 1
   brick:
     description: "Part of the broken stair"
+    damage: 2
   torch:
     description: "It is hot"
+    damage: 0
   bar:
     description: "Old rusty metal bar"
+    damage: 4
   sword:
     description: "Sharp and shiny"
+    damage: 5
   painting:
     description: "A painting depecting dogs playing cards"
+    damage: 0
   coins:
     description: "I has coin"
+    damage: 0
+  
+npc:
+  guard:
+    health: 10
+    attack: 2
+  boss:
+    health: 20
+    attack: 5
