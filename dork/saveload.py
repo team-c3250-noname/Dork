@@ -35,6 +35,7 @@ def load():
             print("Please try a different file name.")
             file_name = get_input()
 
+    print("")
     print("Load successful.")
     print("")
 
@@ -50,6 +51,14 @@ def save(game):
     data = game.save()
     file_name = get_input()
     saved = False
+    name_ok = False
+
+    while name_ok is False:
+        if 'default' in file_name:
+            print("You cannot use this name. Pick another.")
+            file_name = get_input()
+        else:
+            name_ok = True
 
     while saved is False:
         try:
@@ -62,6 +71,7 @@ def save(game):
             print("Please try a different file name.")
             file_name = get_input()
 
+    print("")
     print("Save successful.")
     print("")
 
