@@ -6,18 +6,21 @@ player:
 rooms:
   Boss room:
     door:
-      item: ''
+      item:
+      - painting
       locked: true
       unlock: sword
     messages:
-      description: 'To your left you see a large gated door with what looks like
+      description: 'You enter the room having to step around the corpse of the man.
+
+        To your left you see a large gated door with what looks like
 
         gold bars on the other side and in front of you, and behind
 
         the man looks to be a door to the outside.
 
         '
-      inspect: ''
+      inspect: You see a painting that you could probably take
       unlock message: Using the sword you fight and beat the man.
     paths:
       down: Jail Armory
@@ -26,7 +29,7 @@ rooms:
       up: Entrance
   Entrance:
     door:
-      item: ''
+      item: []
       locked: false
       unlock: ''
     messages:
@@ -40,9 +43,10 @@ rooms:
       up: ''
   Jail Armory:
     door:
-      item: sword
+      item:
+      - sword
       locked: true
-      unlock: iron bar
+      unlock: bar
     messages:
       description: 'You enter the armory and note that the armor and weapon
 
@@ -69,7 +73,8 @@ rooms:
       up: Boss room
   Jail Tower:
     door:
-      item: iron bar
+      item:
+      - bar
       locked: false
       unlock: ''
     messages:
@@ -85,15 +90,8 @@ rooms:
         you see nothing but a raging ocean.
 
         '
-      inspect: 'As you look around on top of the tower, you note that
-
-        there is an iron bar leaned up against the wall, near the door you
-
-        emerged from. You take the iron bar. It is cold in your hands and
-
-        wet from the rain, but otherwise sturdy.
-
-        '
+      inspect: "As you look around on top of the tower, you note that\nthere is a\
+        \ bar leaned up against the wall, near the door you\nemerged from. \n"
       unlock message: ''
     paths:
       down: Stairwell
@@ -102,9 +100,10 @@ rooms:
       up: ''
   Jail hallway:
     door:
-      item: torch
+      item:
+      - torch
       locked: true
-      unlock: cell key
+      unlock: key
     messages:
       description: 'A long, narrow hallway lined with cells and torches for light
         on
@@ -131,7 +130,8 @@ rooms:
       up: ''
   Stairwell:
     door:
-      item: ''
+      item:
+      - brick
       locked: true
       unlock: torch
     messages:
@@ -156,7 +156,8 @@ rooms:
       up: Jail Tower
   Vault:
     door:
-      item: coins
+      item:
+      - coins
       locked: false
       unlock: ''
     messages:
@@ -165,7 +166,7 @@ rooms:
         bronze coins which could help you if you find the exit to this place.
 
         '
-      inspect: ''
+      inspect: You see the coins all around the room.
       unlock message: ''
     paths:
       down: ''
@@ -174,7 +175,9 @@ rooms:
       up: ''
   cell:
     door:
-      item: cell key
+      item:
+      - key
+      - skull
       locked: false
       unlock: ''
     messages:

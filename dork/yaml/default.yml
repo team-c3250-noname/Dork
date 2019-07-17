@@ -3,7 +3,6 @@ player:
   next location: ''
   inventory: []
   last room: Entrance
-  points: 0
 
 rooms:
   cell:
@@ -22,7 +21,7 @@ rooms:
     door: 
       locked: False
       unlock: ''
-      item: 'cell key'
+      item: ['key', 'skull']
     paths:
       up: 'Jail hallway'
       down: ''
@@ -43,8 +42,8 @@ rooms:
       unlock message: "You have unlocked the door but the key broke."
     door:
       locked: True
-      unlock: 'cell key'
-      item: 'torch'
+      unlock: 'key'
+      item: ['torch']
     paths:
       up: ''
       down: 'cell'
@@ -64,7 +63,7 @@ rooms:
     door:
       locked: True
       unlock: 'torch'
-      item: ''
+      item: ['brick']
     paths:
       up: 'Jail Tower'
       down: 'Jail hallway'
@@ -81,14 +80,13 @@ rooms:
         you see nothing but a raging ocean.
       inspect: |
         As you look around on top of the tower, you note that
-        there is an iron bar leaned up against the wall, near the door you
-        emerged from. You take the iron bar. It is cold in your hands and
-        wet from the rain, but otherwise sturdy.
+        there is a bar leaned up against the wall, near the door you
+        emerged from. 
       unlock message: ""
     door:
       locked: False
       unlock: ''
-      item: 'iron bar'
+      item: ['bar']
     paths:
       up: ''
       down: 'Stairwell'
@@ -109,8 +107,8 @@ rooms:
       unlock message: "You break down the crumbling wall with the iron bar but the bar doesn't look to good."
     door:
       locked: True
-      unlock: 'iron bar'
-      item: 'sword'
+      unlock: 'bar'
+      item: ['sword']
     paths:
       up: 'Boss room'
       down: ''
@@ -120,15 +118,16 @@ rooms:
   Boss room:
     messages:
       description: |
+        You enter the room having to step around the corpse of the man.
         To your left you see a large gated door with what looks like
         gold bars on the other side and in front of you, and behind
         the man looks to be a door to the outside.
-      inspect: ''
+      inspect: 'You see a painting that you could probably take'
       unlock message: "Using the sword you fight and beat the man."
     door:
       locked: True
       unlock: 'sword'
-      item: ''
+      item: ['painting']
     paths:
       up: 'Entrance'
       down: 'Jail Armory'
@@ -140,12 +139,12 @@ rooms:
       description: |
         You have entered the vault. All around you is gold, silver, and
         bronze coins which could help you if you find the exit to this place.
-      inspect: ''
+      inspect: 'You see the coins all around the room.'
       unlock message: ""
     door:
       locked: False
       unlock: ''
-      item: 'coins'
+      item: ['coins']
     paths:
       up: ''
       down: ''
@@ -161,9 +160,27 @@ rooms:
     door:
       locked: False
       unlock: ''
-      item: ''
+      item: []
     paths:
       up: ''
       down: ''
       left: ''
       right: ''
+
+items:
+  key:
+    description: "Its a cell key"
+  skull:
+    description: "Its a skull"
+  brick:
+    description: "Part of the broken stair"
+  torch:
+    description: "It is hot"
+  bar:
+    description: "Old rusty metal bar"
+  sword:
+    description: "Sharp and shiny"
+  painting:
+    description: "A painting depecting dogs playing cards"
+  coins:
+    description: "I has coin"

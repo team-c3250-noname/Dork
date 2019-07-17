@@ -240,6 +240,7 @@ def prompt():
                       'pick': (player_take, one_arg),
                       'take': (player_take, one_arg),
                       'use': (player_use, one_arg),
+                      'drop': (drop_item, no_arg),
                       'user': (user_menu, one_arg),
                       'help': (help_menu, no_arg),
                       'save': (save_game, no_arg),
@@ -310,23 +311,33 @@ def movement_handler(game, destination):
 def player_examine(game, user_action):
     """ Allows users to examine the room and items
     """
+    player = game.player
+    item = next((word for word in user_action if word in player.inventory), '')
     if 'room' in user_action:
         room_examine(game)
+    elif item in user_action:
+        item_examine(game, item)
     else:
         print("You are trying to examine an unknown thing. Please try again")
     return True
+
+
+def item_examine(game, item):
+    """Will examine the given item
+    """
+    print(game.items[item].description)
 
 
 def room_examine(game):
     """Will examine the room
     """
     player = game.player
-    if game.rooms[player.location].door['item'] != '':
+    if game.rooms[player.location].door['item'] != []:
         print(game.rooms[player.location].messages['inspect'])
-        print("This room contains a " +
-              game.rooms[player.location].door['item'])
+        print("This room contains:")
+        print(game.rooms[player.location].door['item'])
     else:
-        print("There is nothing useful here. ")
+        print("There is nothing useful here.")
 
 
 def player_take(game, user_action):
@@ -336,9 +347,9 @@ def player_take(game, user_action):
     item = game.rooms[player.location].door['item']
     key_word = next((word for word in user_action if word in item), 'item')
     if key_word in item:
-        print("You have picked up the " + item)
-        player.inventory.append(item)
-        game.rooms[player.location].door['item'] = ''
+        print("You have picked up the " + key_word)
+        player.inventory.append(key_word)
+        game.rooms[player.location].door['item'].remove(key_word)
     else:
         print("There is no such item")
     return True
@@ -400,6 +411,17 @@ def remove_item(game):
     player = game.player
     item = game.rooms[player.next_location].door['unlock']
     player.inventory.remove(item)
+
+
+def drop_item(game):
+    """Returns item to room from inventory
+    """
+    player = game.player
+    print(player.inventory)
+    item = input('What would you like to drop?')
+    game.rooms[player.location].door['item'] += item
+    player.inventory.remove(item)
+    return True
 
 
 def room_check(game, direction):

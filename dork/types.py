@@ -15,6 +15,8 @@ class Game():
         self.player = Player(data['player'])
         self.rooms = {room_name: Room(room) for room_name,
                       room in data.get('rooms').items()}
+        self.items = {item_name: Item(item) for item_name,
+                      item in data.get('items').items()}
 
     def save(self):
         """Will save the Game class
@@ -36,7 +38,6 @@ class Player():
         self.next_location = data.get('next location')
         self.inventory = data.get('inventory')
         self.last_room = data.get('last room')
-        self.points = data.get('points')
 
     def save(self):
         """Will save the player class
@@ -69,3 +70,17 @@ class Room():
             'door': self.door,
             'paths': self.paths,
         }
+
+
+class Item():
+    """Item in game
+    """
+    def __init__(self, data):
+        self.description = data.get('description')
+
+    def save(self):
+        """Will save the room class
+        """
+        return {
+            'description': self.description
+            }
