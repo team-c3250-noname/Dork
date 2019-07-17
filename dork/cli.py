@@ -527,10 +527,10 @@ def fight(game, enemy, damage):
             print("You have killed the " + enemy)
             game.rooms[player.position['location']].fight['fight'] = False
             fighting = False
-            return False
         player.stats['health'] -= game.npc[enemy].attack
         print('You take ' + str(game.npc[enemy].attack))
         if player.stats['health'] <= 0:
             print('You have died')
             fighting = False
             return True
+    return False
