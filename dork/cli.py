@@ -432,7 +432,7 @@ def drop_item(game):
     player = game.player
     print(player.inventory)
     item = input('What would you like to drop?')
-    game.rooms[player.position['location']].door['item'] += item
+    game.rooms[player.position['location']].door['item'].append(item)
     player.inventory.remove(item)
     return True
 
