@@ -207,7 +207,7 @@ items:
     damage: 2
   torch:
     description: "It is hot"
-    damage: 0
+    damage: 1
   bar:
     description: "Old rusty metal bar"
     damage: 4
@@ -218,7 +218,7 @@ items:
     description: "A painting depecting dogs playing cards"
     damage: 0
   coins:
-    description: "I has coin"
+    description: "Pretty coins, maybe i could trade these with khajiit"
     damage: 0
   
 npc:

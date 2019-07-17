@@ -225,6 +225,7 @@ def prompt():
     game = sl.game_state()
     keep_prompting = True
     not_last = False
+    dead = False
 
     def one_arg(args):
         return [args]
@@ -245,7 +246,7 @@ def prompt():
                       'help': (help_menu, no_arg),
                       'save': (save_game, no_arg),
                       'quit': (end_game, no_arg), }
-    while keep_prompting is True and not_last is False:
+    while keep_prompting is True and not_last is False and dead is False:
         user_action = input("\n" +
                             "What would you like to do? ").lower().split()
         action = next((word for word in user_action if word in player_actions),
@@ -253,7 +254,7 @@ def prompt():
         if action in player_actions:
             args = player_actions[action][1](user_action)
             keep_prompting = player_actions[action][0](game, *args)
-            fight_check(game)
+            dead = fight_check(game)
             not_last = last_room(game)
         else:
             print("Enter a valid command. ")
@@ -466,9 +467,11 @@ def next_room(game):
 def fight_check(game):
     """Will check if the user has an enemy to fight
     """
+    check = False
     player = game.player
     if game.rooms[player.position['location']].fight['fight'] is True:
-        fight_prompt(game)
+        check = fight_prompt(game)
+    return check
 
 
 def fight_prompt(game):
@@ -476,36 +479,52 @@ def fight_prompt(game):
     """
     player = game.player
     enemy = game.rooms[player.position['location']].fight['enemy']
+    fuck = True
     print('You have encountered a ' + enemy)
-    action = input('Do you want to punch or swing')
-    if 'punch' in action:
-        damage = player.stats['attack']
-        fight(game, enemy, damage)
-    elif 'swing' in action:
-        print('what item do you want to use.')
-        print(player.inventory)
-        item = input()
-        damage = game.items[item].damage
-        fight(game, enemy, damage)
+    while fuck is True:
+        action = input('Do you want to punch or swing? ')
+        if 'punch' in action:
+            fuck = False
+            damage = player.stats['attack']
+            check2 = fight(game, enemy, damage)
+        elif 'swing' in action:
+            fuck = False
+            if player.inventory == []:
+                damage = player.stats['attack']
+                print('You have nothing so fight like a man')
+            else:
+                print('what item do you want to use.')
+                print(player.inventory)
+                item = input()
+                while item not in player.inventory:
+                    print('Dont you wish you had ' + item)
+                    item = input('Try again: ')
+                damage = game.items[item].damage
+            check2 = fight(game, enemy, damage)
+        else:
+            print('invalid command')
+    return check2
 
 
 def fight(game, enemy, damage):
     """Basic fight
     """
     player = game.player
-    phealth = player.stats['health']
     ehealth = game.npc[enemy].health
     fighting = True
 
     while fighting is True:
+        print('Your health is ' + str(player.stats['health']))
         ehealth -= damage
-        phealth -= game.npc[enemy].attack
+        print('You have damaged the ' + enemy + ' for ' + str(damage))
         if ehealth <= 0:
+            print("You have killed the " + enemy)
+            game.rooms[player.position['location']].fight['fight'] = False
+            fighting = False
+            return False
+        player.stats['health'] -= game.npc[enemy].attack
+        print('You take ' + str(game.npc[enemy].attack))
+        if player.stats['health'] <= 0:
             print('You have died')
             fighting = False
-        elif phealth <= 0:
-            fighting = False
-        else:
-            input('keep fighting')
-
-
+            return True

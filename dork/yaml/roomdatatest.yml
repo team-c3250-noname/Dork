@@ -1,8 +1,44 @@
+items:
+  bar:
+    damage: 4
+    description: Old rusty metal bar
+  brick:
+    damage: 2
+    description: Part of the broken stair
+  coins:
+    damage: 0
+    description: Pretty coins, maybe i could trade these with khajiit
+  key:
+    damage: 0
+    description: Its a cell key
+  painting:
+    damage: 0
+    description: A painting depecting dogs playing cards
+  skull:
+    damage: 1
+    description: Is this Bob?
+  sword:
+    damage: 5
+    description: Sharp and shiny
+  torch:
+    damage: 1
+    description: It is hot
+npc:
+  boss:
+    attack: 5
+    health: 20
+  guard:
+    attack: 2
+    health: 10
 player:
   inventory: []
-  last room: Entrance
-  location: cell
-  next location: ''
+  position:
+    last room: Entrance
+    location: cell
+    next location: ''
+  stats:
+    attack: 2
+    health: 20
 rooms:
   Boss room:
     door:
@@ -10,6 +46,9 @@ rooms:
       - painting
       locked: true
       unlock: sword
+    fight:
+      enemy: boss
+      fight: true
     messages:
       description: 'You enter the room having to step around the corpse of the man.
 
@@ -32,6 +71,9 @@ rooms:
       item: []
       locked: false
       unlock: ''
+    fight:
+      enemy: ''
+      fight: false
     messages:
       description: "It seems that you have left the prison. \n"
       inspect: ''
@@ -47,6 +89,9 @@ rooms:
       - sword
       locked: true
       unlock: bar
+    fight:
+      enemy: guard
+      fight: true
     messages:
       description: 'You enter the armory and note that the armor and weapon
 
@@ -77,6 +122,9 @@ rooms:
       - bar
       locked: false
       unlock: ''
+    fight:
+      enemy: guard
+      fight: true
     messages:
       description: 'As you exit the stairwell and go outside, you find yourself atop
         a
@@ -104,6 +152,9 @@ rooms:
       - torch
       locked: true
       unlock: key
+    fight:
+      enemy: guard
+      fight: true
     messages:
       description: 'A long, narrow hallway lined with cells and torches for light
         on
@@ -134,6 +185,9 @@ rooms:
       - brick
       locked: true
       unlock: torch
+    fight:
+      enemy: ''
+      fight: false
     messages:
       description: 'The stairs are falling apart as you carefully watch your footing
         and
@@ -160,6 +214,9 @@ rooms:
       - coins
       locked: false
       unlock: ''
+    fight:
+      enemy: ''
+      fight: false
     messages:
       description: 'You have entered the vault. All around you is gold, silver, and
 
@@ -180,6 +237,9 @@ rooms:
       - skull
       locked: false
       unlock: ''
+    fight:
+      enemy: ''
+      fight: false
     messages:
       description: 'You find yourself in a jail cell with the door locked.
 
