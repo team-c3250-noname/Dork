@@ -31,15 +31,17 @@ npc:
     attack: 2
     health: 10
 player:
-  inventory: []
+  inventory:
+  - skull
+  - sword
   position:
     last room: Entrance
-    location: cell
-    next location: ''
+    location: Entrance
+    next location: Entrance
   stats:
     attack: 2
-    health: 40
-    point: 0
+    health: 1
+    point: 130
 rooms:
   Boss room:
     door:
@@ -49,7 +51,7 @@ rooms:
       unlock: ''
     fight:
       enemy: boss
-      fight: true
+      fight: false
     messages:
       description: 'You enter the room having to step around the corpse of the man.
 
@@ -86,13 +88,12 @@ rooms:
       up: ''
   Jail Armory:
     door:
-      item:
-      - sword
-      locked: true
+      item: []
+      locked: false
       unlock: bar
     fight:
       enemy: guard
-      fight: true
+      fight: false
     messages:
       description: 'You enter the armory and note that the armor and weapon
 
@@ -119,13 +120,12 @@ rooms:
       up: Boss room
   Jail Tower:
     door:
-      item:
-      - bar
+      item: []
       locked: false
       unlock: ''
     fight:
       enemy: guard
-      fight: true
+      fight: false
     messages:
       description: 'As you exit the stairwell and go outside, you find yourself atop
         a
@@ -149,13 +149,12 @@ rooms:
       up: ''
   Jail hallway:
     door:
-      item:
-      - torch
-      locked: true
+      item: []
+      locked: false
       unlock: key
     fight:
       enemy: guard
-      fight: true
+      fight: false
     messages:
       description: 'A long, narrow hallway lined with cells and torches for light
         on
@@ -184,7 +183,7 @@ rooms:
     door:
       item:
       - brick
-      locked: true
+      locked: false
       unlock: torch
     fight:
       enemy: ''
@@ -233,9 +232,7 @@ rooms:
       up: ''
   cell:
     door:
-      item:
-      - key
-      - skull
+      item: []
       locked: false
       unlock: ''
     fight:
