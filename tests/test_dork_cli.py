@@ -106,8 +106,7 @@ def test_cli_exists(run):
                                          'pick bar', 'move down',
                                          'move down', 'use bar', 'left',
                                          'move left', 'punch', 'pick sword',
-                                         'move north', 'punch',
-                                         'move north'])
+                                         'move north', 'punch'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 
