@@ -538,6 +538,7 @@ def fight(game, enemy, damage):
             flag = True
     return flag
 
+
 def check_score(game):
     """Check current score
     """
