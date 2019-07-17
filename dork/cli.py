@@ -167,7 +167,7 @@ def setup_game():
     player_room_description = game.rooms[player.position['location']].messages[
         'description']
     print(player_room_description)
-    prompt()
+    prompt(game)
 
 
 def help_menu():
@@ -202,7 +202,7 @@ def load_game():
     player = game.player
     print("the player is in the " + player.position['location'])
     print(game.rooms[player.position['location']].messages['description'])
-    prompt()
+    prompt(game)
 
 
 def quit_game():
@@ -219,10 +219,9 @@ def end_game(_game):
     return False
 
 
-def prompt():
+def prompt(game):
     """ Asks user what they would like to do
     """
-    game = sl.game_state()
     keep_prompting = True
     not_last = False
     dead = False
@@ -246,7 +245,7 @@ def prompt():
                       'help': (help_menu, no_arg),
                       'save': (save_game, no_arg),
                       'quit': (end_game, no_arg),
-                      'checkscore': (check_score, no_arg) }
+                      'checkscore': (check_score, no_arg)}
     while keep_prompting is True and not_last is False and dead is False:
         user_action = input("\n" +
                             "What would you like to do? ").lower().split()
@@ -270,10 +269,10 @@ def last_room(game):
     return False
 
 
-def save_game(_game):
+def save_game(game):
     """Allows player to save the game
     """
-    dork.saveload.save()
+    dork.saveload.save(game)
 
 
 def player_move(game, user_action):
@@ -537,6 +536,7 @@ def fight(game, enemy, damage):
             fighting = False
             flag = True
     return flag
+
 
 def check_score(game):
     """Check current score
