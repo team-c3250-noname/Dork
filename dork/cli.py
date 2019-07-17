@@ -543,5 +543,5 @@ def check_score(game):
     """
     player = game.player
     score = player.stats['point']
-    print(f"Your current score is: {score}")
+    print("Your current score is " + score)
     return True
