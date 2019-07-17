@@ -1,7 +1,7 @@
 """Tests saveload.
 """
-import yaml
 from types import FunctionType
+import yaml
 import dork.saveload
 from dork import types
 

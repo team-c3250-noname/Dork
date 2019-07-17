@@ -3,7 +3,6 @@
 """
 from types import FunctionType
 import dork.cli
-import dork.saveload as sl
 
 
 def test_cli_exists(run):
