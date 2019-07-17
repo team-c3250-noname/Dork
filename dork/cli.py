@@ -329,16 +329,10 @@ def player_examine(game, user_action):
     if 'room' in user_action:
         room_examine(game)
     elif item in user_action:
-        item_examine(game, item)
+        print(game.items[item].description)
     else:
         print("You are trying to examine an unknown thing. Please try again")
     return True
-
-
-def item_examine(game, item):
-    """Will examine the given item
-    """
-    print(game.items[item].description)
 
 
 def room_examine(game):
@@ -527,10 +521,12 @@ def fight(game, enemy, damage):
             print("You have killed the " + enemy)
             game.rooms[player.position['location']].fight['fight'] = False
             fighting = False
+            flag = False
+            break
         player.stats['health'] -= game.npc[enemy].attack
         print('You take ' + str(game.npc[enemy].attack))
         if player.stats['health'] <= 0:
             print('You have died')
             fighting = False
-            return True
-    return False
+            flag = True
+    return flag
