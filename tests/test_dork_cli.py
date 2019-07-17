@@ -53,6 +53,24 @@ def test_cli_exists(run):
                                          'use key', 'north', 'quit'])
         run(dork.cli.main, input_values=['play', 'default', 'pick key',
                                          'use key', 'north', 'move north',
+                                         'punch',
+                                         'pick torch', 'use torch',
+                                         'west', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'north', 'move north',
+                                         'swing',
+                                         'pick torch', 'use torch',
+                                         'west', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'pick skull',
+                                         'use key', 'north', 'move north',
+                                         'swing', 'skull',
+                                         'pick torch', 'use torch',
+                                         'west', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'pick skull',
+                                         'use key', 'north', 'move north',
+                                         'swing', 'grenade', 'skull',
                                          'pick torch', 'use torch',
                                          'west', 'quit'])
         run(dork.cli.main, input_values=['play', 'default', 'user inventory',
@@ -66,12 +84,25 @@ def test_cli_exists(run):
         run(dork.cli.main, input_values=['quit'])
         run(dork.cli.main, input_values=['play', 'default', 'pick key',
                                          'use key', 'north', 'move north',
+                                         'punch',
                                          'pick torch', 'use torch',
                                          'right', 'move right', 'move up',
+                                         'punch',
                                          'pick bar', 'move down',
                                          'move down', 'use bar', 'left',
-                                         'move left', 'pick sword',
-                                         'use sword', 'up', 'move north',
+                                         'move left', 'punch', 'pick sword',
+                                         'move north', 'swing', 'sword',
+                                         'move north'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'north', 'move north',
+                                         'punch',
+                                         'pick torch', 'use torch',
+                                         'right', 'move right', 'move up',
+                                         'punch',
+                                         'pick bar', 'move down',
+                                         'move down', 'use bar', 'left',
+                                         'move left', 'punch', 'pick sword',
+                                         'move north', 'punch',
                                          'move north'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")

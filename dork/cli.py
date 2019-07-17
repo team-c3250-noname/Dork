@@ -479,16 +479,16 @@ def fight_prompt(game):
     """
     player = game.player
     enemy = game.rooms[player.position['location']].fight['enemy']
-    fuck = True
+    flag = True
     print('You have encountered a ' + enemy)
-    while fuck is True:
+    while flag is True:
         action = input('Do you want to punch or swing? ')
         if 'punch' in action:
-            fuck = False
+            flag = False
             damage = player.stats['attack']
             check2 = fight(game, enemy, damage)
         elif 'swing' in action:
-            fuck = False
+            flag = False
             if player.inventory == []:
                 damage = player.stats['attack']
                 print('You have nothing so fight like a man')

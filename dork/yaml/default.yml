@@ -5,7 +5,7 @@ player:
     last room: Entrance
   inventory: []
   stats:
-    health: 20
+    health: 40
     attack: 2
 
 rooms:
@@ -144,8 +144,8 @@ rooms:
       inspect: 'You see a painting that you could probably take'
       unlock message: "Using the sword you fight and beat the man."
     door:
-      locked: True
-      unlock: 'sword'
+      locked: False
+      unlock: ''
       item: ['painting']
     fight:
       fight: True
