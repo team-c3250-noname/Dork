@@ -245,7 +245,8 @@ def prompt():
                       'user': (user_menu, one_arg),
                       'help': (help_menu, no_arg),
                       'save': (save_game, no_arg),
-                      'quit': (end_game, no_arg), }
+                      'quit': (end_game, no_arg),
+                      'checkscore': (check_score, no_arg) }
     while keep_prompting is True and not_last is False and dead is False:
         user_action = input("\n" +
                             "What would you like to do? ").lower().split()
@@ -519,6 +520,12 @@ def fight(game, enemy, damage):
         print('You have damaged the ' + enemy + ' for ' + str(damage))
         if ehealth <= 0:
             print("You have killed the " + enemy)
+            if 'guard' in enemy:
+                player.stats['point'] += 10
+                print('You have gain 10 points')
+            elif 'boss' in enemy:
+                player.stats['point'] += 100
+                print('You have gain 100 points')
             game.rooms[player.position['location']].fight['fight'] = False
             fighting = False
             flag = False
@@ -530,3 +537,11 @@ def fight(game, enemy, damage):
             fighting = False
             flag = True
     return flag
+
+def check_score(game):
+    """Check current score
+    """
+    player = game.player
+    score = player.stats['point']
+    print(f"Your current score is: {score}")
+    return True
