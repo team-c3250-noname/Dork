@@ -12,6 +12,7 @@ def testsave(run):
     try:
         run(dork.saveload.save, input_values=['basicmap'])
         run(dork.saveload.save, input_values=['\0', 'basicmap'])
+        run(dork.saveload.save, input_values=['default', 'basicmap'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 
