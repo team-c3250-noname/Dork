@@ -246,7 +246,7 @@ def prompt():
                       'help': (help_menu, no_arg),
                       'save': (save_game, no_arg),
                       'quit': (end_game, no_arg),
-                      'checkscore': (check_score, no_arg) }
+                      'checkscore': (check_score, no_arg)}
     while keep_prompting is True and not_last is False and dead is False:
         user_action = input("\n" +
                             "What would you like to do? ").lower().split()
