@@ -17,6 +17,7 @@ def testsave(run):
             data = yaml.safe_load(file.read())
         game = types.Game(data)
         run(dork.saveload.save, game, input_values=['roomdatatest'])
+        run(dork.saveload.save, game, input_values=['default', 'roomdatatest'])
         run(dork.saveload.save, game, input_values=['\0', 'roomdatatest'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
@@ -27,7 +28,7 @@ def testload(run):
     """
     assert isinstance(dork.saveload.load, FunctionType)
     try:
-        run(dork.saveload.load, input_values=['basicmap'])
-        run(dork.saveload.load, input_values=['\0', 'basicmap'])
+        run(dork.saveload.load, input_values=['default'])
+        run(dork.saveload.load, input_values=['\0', 'default'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
