@@ -50,6 +50,10 @@ def test_cli_exists(run):
         run(dork.cli.main, input_values=['play', 'default', 'pick key',
                                          'examine key', 'quit'])
         run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'pick skull', 'examine room', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'drop', 'key', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
                                          'use key', 'north', 'quit'])
         run(dork.cli.main, input_values=['play', 'default', 'pick key',
                                          'use key', 'north', 'move north',
