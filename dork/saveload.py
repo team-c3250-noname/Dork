@@ -42,13 +42,12 @@ def load():
     return data
 
 
-def save():
+def save(game):
     """Save the game state into a yaml file.
     Also prompts the user for a file name.
     """
     print("Attempting to save data.")
 
-    game = game_state()
     data = game.save()
     file_name = get_input()
     saved = False
@@ -82,7 +81,5 @@ def save():
 def game_state():
     """Creates and stores the game state.
     """
-    if types.GAME is None:
-        data = load()
-        types.GAME = types.Game(data)
-    return types.GAME
+    data = load()
+    return types.Game(data)

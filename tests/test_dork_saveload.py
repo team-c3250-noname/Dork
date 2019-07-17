@@ -1,7 +1,9 @@
 """Tests saveload.
 """
 from types import FunctionType
+import yaml
 import dork.saveload
+from dork import types
 
 
 def testsave(run):
@@ -10,9 +12,12 @@ def testsave(run):
     """
     assert isinstance(dork.saveload.save, FunctionType)
     try:
-        run(dork.saveload.save, input_values=['basicmap'])
-        run(dork.saveload.save, input_values=['\0', 'basicmap'])
-        run(dork.saveload.save, input_values=['default', 'basicmap'])
+        with open('./dork/yaml/default.yml') as file:
+            # Should not call load directly
+            data = yaml.safe_load(file.read())
+        game = types.Game(data)
+        run(dork.saveload.save, game, input_values=['roomdatatest'])
+        run(dork.saveload.save, game, input_values=['\0', 'roomdatatest'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 

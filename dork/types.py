@@ -17,6 +17,8 @@ class Game():
                       room in data.get('rooms').items()}
         self.items = {item_name: Item(item) for item_name,
                       item in data.get('items').items()}
+        self.npc = {npc_name: Nonplayer(npc) for npc_name,
+                    npc in data.get('npc').items()}
 
     def save(self):
         """Will save the Game class
@@ -25,8 +27,13 @@ class Game():
             "player": self.player.save(),
             "rooms": {
                 name: room.save()
-                for name, room in self.rooms.items()
-            }
+                for name, room in self.rooms.items()},
+            "items": {
+                name: item.save()
+                for name, item in self.items.items()},
+            "npc": {
+                name: npc.save()
+                for name, npc in self.npc.items()},
         }
 
 
@@ -34,19 +41,17 @@ class Player():
     """ This is the player class
     """
     def __init__(self, data):
-        self.location = data.get('location')
-        self.next_location = data.get('next location')
+        self.position = data.get('position')
         self.inventory = data.get('inventory')
-        self.last_room = data.get('last room')
+        self.stats = data.get('stats')
 
     def save(self):
         """Will save the player class
         """
         return {
-            "location": self.location,
-            "next location": self.next_location,
+            "position": self.position,
             "inventory": self.inventory,
-            "last room": self.last_room,
+            "stats": self.stats,
         }
 
 
@@ -57,10 +62,8 @@ class Room():
     def __init__(self, data):
         self.messages = data.get('messages')
         self.door = data.get('door')
+        self.fight = data.get('fight')
         self.paths = data.get('paths')
-
-        # rooms['cell'].door['locked']
-        # rooms['hallway'].messages['description']
 
     def save(self):
         """Will save the room class
@@ -68,6 +71,7 @@ class Room():
         return {
             'messages': self.messages,
             'door': self.door,
+            'fight': self.fight,
             'paths': self.paths,
         }
 
@@ -77,10 +81,28 @@ class Item():
     """
     def __init__(self, data):
         self.description = data.get('description')
+        self.damage = data.get('damage')
 
     def save(self):
         """Will save the room class
         """
         return {
-            'description': self.description
+            'description': self.description,
+            'damage': self.damage,
+            }
+
+
+class Nonplayer():
+    """Creates the NPC class
+    """
+    def __init__(self, data):
+        self.health = data.get('health')
+        self.attack = data.get('attack')
+
+    def save(self):
+        """Will save the room class
+        """
+        return {
+            'health': self.health,
+            'attack': self.attack,
             }
