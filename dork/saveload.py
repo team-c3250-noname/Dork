@@ -35,22 +35,30 @@ def load():
             print("Please try a different file name.")
             file_name = get_input()
 
+    print("")
     print("Load successful.")
     print("")
 
     return data
 
 
-def save():
+def save(game):
     """Save the game state into a yaml file.
     Also prompts the user for a file name.
     """
     print("Attempting to save data.")
 
-    game = game_state()
     data = game.save()
     file_name = get_input()
     saved = False
+    name_ok = False
+
+    while name_ok is False:
+        if 'default' in file_name:
+            print("You cannot use this name. Pick another.")
+            file_name = get_input()
+        else:
+            name_ok = True
 
     while saved is False:
         try:
@@ -63,6 +71,7 @@ def save():
             print("Please try a different file name.")
             file_name = get_input()
 
+    print("")
     print("Save successful.")
     print("")
 
@@ -72,7 +81,5 @@ def save():
 def game_state():
     """Creates and stores the game state.
     """
-    if types.GAME is None:
-        data = load()
-        types.GAME = types.Game(data)
-    return types.GAME
+    data = load()
+    return types.Game(data)
