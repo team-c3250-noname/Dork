@@ -41,6 +41,7 @@ player:
   stats:
     attack: 2
     health: 1
+    point: 130
 rooms:
   Boss room:
     door:
