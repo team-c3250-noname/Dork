@@ -431,7 +431,13 @@ def drop_item(game):
     """
     player = game.player
     print(player.inventory)
+    if player.inventory == []:
+        print("You have no items to drop.")
+        return True
     item = input('What would you like to drop?')
+    if item not in player.inventory:
+        print("That isn't an item you have.")
+        return True
     game.rooms[player.position['location']].door['item'].append(item)
     player.inventory.remove(item)
     return True
