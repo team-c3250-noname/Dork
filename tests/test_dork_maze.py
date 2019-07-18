@@ -138,6 +138,7 @@ def test_maze_claim_area():
 
     maze = Maze(width=10, height=10)
     maze.claim_area("hallway", Maze.Area(x=3, y=0, width=3, height=1))
+    assert "hallway" in maze.areas, f"hallway was not found in maze"
 
 
 def test_maze_get_path():
@@ -148,5 +149,6 @@ def test_maze_get_path():
     maze.claim_area("hallway", Maze.Area(x=3, y=0, width=3, height=1))
     maze.claim_area("big_room", Maze.Area(x=3, y=3, width=3, height=3))
 
-    maze.get_path("room", "right", "hallway", "left")
-    maze.get_path("room", "down", "hallway", "up")
+    path = maze.get_path("room", "right", "hallway", "left")
+    assert "room" in path[0][0], f"room from path should start from room"
+    assert "hallway" in path[-1][0], f"path should end at hallway"
