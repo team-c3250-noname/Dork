@@ -2,71 +2,29 @@
 """
 from abc import ABC
 from abc import abstractmethod
-from collections import deque
+from collections import namedtuple
 from random import sample, choice, randint
-from os import linesep
+from itertools import product
+from math import sqrt
 
 import networkx as nx
-
-DIRECTIONS = {"up": 0, "down": 1, "left": 2, "right": 3}
 
 
 class MazeGenerator(ABC):
     """Abstract maze generator
     """
-    class Node:
-        """helper class for node generation
-        """
-        ID = 0
-
-        def __init__(self):
-            self.id = self.__class__.ID
-            self.__class__.ID += 1
-            self.up, self.down, self.left, self.right = None, None, None, None
-
-        def set_left_right(self, node, line_width):
-            """sets this nodes left, or right depending if node
-                 is left or right of this node in the line
-            """
-            if node.id % line_width == 0:
-                if self.id-1 == node.id:
-                    self.left = node.id
-                    node.right = self
-                return
-            if node.id % line_width == 1:
-                if self.id+1 == node.id:
-                    self.right = node.id
-                    node.left = self
-                return
-            if self.id+1 == node.id:
-                self.right = node.id
-                node.left = self
-            if self.id-1 == node.id:
-                self.left = node.id
-                node.right = self
-
-        def __hash__(self):
-            return self.id
-
-        def __str__(self):
-            directions = [self.up, self.down, self.left, self.right]
-            return str(self.id) + ":->" + "->".\
-                join([str(hash(way)) if way else " " for way in directions])
 
     @abstractmethod
     def generate(self):
         """generates a maze with defined width,heights
         """
-    @abstractmethod
-    def open(self):
-        """opens a closed maze, at the bottom of the maze
-        """
+
     @abstractmethod
     def close(self):
         """locks the maze, afterward the generator returns None
         """
     @abstractmethod
-    def _get_nx_nodes(self):
+    def get_nodes(self):
         """returns the nodes of the maze in nx acceptable type (integer)
         """
     @abstractmethod
@@ -74,180 +32,520 @@ class MazeGenerator(ABC):
         """returns the nodes and edges, insuring the last line closes the maze
         """
     @abstractmethod
-    def _get_nx_edges(self):
+    def get_edges(self):
         """returns the edge set of the maze for nx [(integer, integer),...]
         """
 
 
 class Ellers(MazeGenerator):
-    """Ellers maze
+    """Ellers maze, grows down.
     """
-    class Line:
-        """Maze line consisting of nodes
-        """
-        def __init__(self, width):
-            self.nodes = tuple([Ellers.Node() for _ in range(0, width)])
-            self.sets = dict(zip([node for node in self.nodes],
-                                 [set([node]) for node in self.nodes]))
-
-        def __str__(self):
-            groups = [str(group) for group in self.sets]
-            return linesep.join(groups)
-
-    def __init__(self, width=10):
-        self.width = width
-        self.lines = deque()
-        self.end = None
-        self.is_closed = False
+    MIN = 2
 
     @staticmethod
     def _should_join():
         """returns random answer to should join?
         """
-        return choice([0, 1])
+        chosen = choice([0, 1])
+        return chosen
 
-    @staticmethod
-    def _pairwise_random_wall(line):
-        for i, j in zip(line.nodes, line.nodes[1:]):
+    def _get_set(self, node_id):
+        return self.node_set_map[node_id]
+
+    def _random_horizontal_edges(self, line):
+        edges = []
+        for i, j in zip(line, line[1:]):
             if Ellers._should_join():
-                if line.sets[i] is line.sets[j]:
-                    continue
-                line.sets[i].add(j)
-                line.sets[j] = line.sets[i]
-                i.right = j
-                j.left = i
-            else:
-                i.right = None
-                j.left = None
+                i_set = self._get_set(i)
+                j_set = self._get_set(j)
+                if i_set is not j_set:
+                    i_set.add(j)
+                    self.node_set_map[j] = i_set
 
-    @staticmethod
-    def _get_down_nodes(line):
+                    j_set.remove(j)
+                    if j_set.difference(set()) == set():
+                        self.sets.remove(j_set)
+                    edges.append((i, j))
+                    edges.append((j, i))
+        return edges
+
+    def _random_vertical_nodes(self, line):
         seen = {}
         down_indices = []
-        for group in line.sets:
-            if id(line.sets[group]) not in seen:
-                population = line.sets[group]
-                current_line_set = set(line.nodes)
+        line_sets = {}
+
+        kv_pairs = [(id(_set), _set) for _set in self.sets
+                    for node_id in line if node_id in _set]
+        line_sets.update(kv_pairs)
+
+        for _set in line_sets.values():
+            if id(_set) not in seen:
+                population = _set
+                current_line_set = set(line)
                 population = population.intersection(current_line_set)
                 k = randint(1, len(population)-1) if len(population) > 1 else 1
                 node_sample = sample(population, k)
                 down_indices.append(node_sample)
-                seen[id(line.sets[group])] = None
+                seen[id(_set)] = None
         return down_indices
 
-    def generate(self):
-        """generates a maze based on Ellers algorithm
+    def __init__(self, width=MIN):
+        self.width = max(width, self.__class__.MIN)
+
+        self.nodes = []
+        self.edges = []
+
+        self.sets = []
+        self.node_set_map = {}
+
+        self._end = []
+        self.id_counter = 0
+
+    def location(self, node_id):
+        """ gets x,y coordinates for a n-width maze
         """
-        line = Ellers.Line(self.width)
+        return (node_id % self.width, int(node_id / self.width))
+
+    def left(self, node_id):
+        """ returns node left of node_id
+        """
+        x, y = self.location(node_id)
+        x = x - 1
+        return None if x < 0 else x + y * self.width
+
+    def right(self, node_id):
+        """ returns node right of node_id
+        """
+        x, y = self.location(node_id)
+        x = x + 1
+        return None if x >= self.width else x + y * self.width
+
+    def up(self, node_id):
+        """ returns node up of node_id
+        """
+        x, y = self.location(node_id)
+        y = y - 1
+        return None if y < 0 else x + y * self.width
+
+    def down(self, node_id):
+        """ returns node down of node_id
+        """
+        x, y = self.location(node_id)
+        y = y + 1
+        return None if y >= int(self.id_counter / self.width)\
+            else x + y * self.width
+
+    def _new_line(self):
+        new_line = list(range(self.id_counter, self.id_counter + self.width))
+        new_line_unique = [node_id for node_id in new_line
+                           if node_id not in self.node_set_map]
+        for node_id in new_line_unique:
+            node_id_set = set([node_id])
+            self.sets.append(node_id_set)
+            self.node_set_map[node_id] = node_id_set
+
+        self.id_counter += self.width
+        return new_line
+
+    def generate(self):
+        """generates a maze with defined width,heights
+        """
+        current_line, next_line = self._new_line(), None
+        self.nodes.extend(current_line)
+
         while True:
-            if self.is_closed:
+            if self._end is None:
                 yield None
-                continue
-            Ellers._pairwise_random_wall(line)
+            horizontal_edges = self._random_horizontal_edges(current_line)
+            vertical_nodes = self._random_vertical_nodes(current_line)
 
-            next_line = Ellers.Line(self.width)
+            next_line = self._new_line()
+            vertical_edges = []
 
-            down_indices = Ellers._get_down_nodes(line)
+            for nodelist in vertical_nodes:
+                for node in nodelist:
+                    node_set = self.node_set_map[node]
+                    down_node = self.down(node)
+                    self.node_set_map[down_node].remove(down_node)
+                    self.node_set_map[down_node] = node_set
+                    node_set.add(down_node)
+                    vertical_edges.append((node, down_node))
+                    vertical_edges.append((down_node, node))
 
-            for down_nodes in down_indices:
-                last_down_node = None
-                for node in down_nodes:
-                    next_node = next_line.nodes[hash(node) % self.width]
-                    if last_down_node:
-                        last_down_node.set_left_right(next_node, self.width)
-                    previous_set = line.sets[node]
-                    next_line.sets[next_node] = previous_set
-                    next_line.sets[next_node].add(next_node)
-                    next_node.up = node
-                    node.down = next_node
-                    last_down_node = next_node
+            edges = horizontal_edges
+            edges.extend(vertical_edges)
 
-            self.lines.append(line)
-            self.end = next_line
+            self.nodes.extend(next_line)
+            self.edges.extend(edges)
 
-            yield line
-            line = next_line
-
-    def open(self):
-        self.is_closed = False
+            self._end = next_line
+            yield (self.nodes, edges)
+            current_line = next_line
 
     def close(self):
-        self.is_closed = True
+        """locks the maze, afterward the generator returns None
+        """
+        line = self._end
+        for i, j in zip(line, line[1:]):
+            i_set = self._get_set(i)
+            j_set = self._get_set(j)
+            if i_set is not j_set:
+                self.edges.append((i, j))
+                self.edges.append((j, i))
+        self._end = None
 
-    def _get_nx_edges(self):
-        nodes = []
-        for line in self.lines:
-            nodes.extend(line.nodes)
-        edges = []
-        directions = tuple(DIRECTIONS.keys())
-        for node in nodes:
-            for direction in directions:
-                if node.__dict__[direction]:
-                    edges.append((hash(node), hash(node.__dict__[direction])))
-        return edges
-
-    def _get_nx_nodes(self):
-        node_id = []
-        for line in self.lines:
-            node_id.extend([node.id for node in line.nodes])
-        return node_id
+    def get_nodes(self):
+        """returns the nodes of the maze in nx acceptable type (integer)
+        """
+        if self._end is not None:
+            raise RuntimeWarning(
+                "Ellers maze generator should call close before use")
+        return self.nodes
 
     def get_nodes_and_edges(self):
-        line = self.end
-        for i, j in zip(line.nodes, line.nodes[1:]):
-            if line.sets[i] is line.sets[j]:
-                continue
-            new_set = line.sets[j].union(line.sets[i])
-            i.right = j
-            j.left = i
-            line.sets[j] = new_set
-            line.sets[i] = new_set
-        previous_line = self.lines[-1]
-        for node in previous_line.nodes:
-            if node.down:
-                node.down.up = node
-        self.lines.append(line)
-        nodes = self._get_nx_nodes()
-        edges = self._get_nx_edges()
+        """returns the nodes and edges, insuring the last line closes the maze
+        """
+        if self._end is not None:
+            raise RuntimeWarning(
+                "Ellers maze generator should call close before use")
+        return (self.get_nodes(), self.get_edges())
 
-        self.lines.clear()
-        self.lines.append(previous_line)
-        self.lines.append(line)
-
-        return (nodes, edges)
+    def get_edges(self):
+        """returns the edge set of the maze for nx [(integer, integer),...]
+        """
+        if self._end is not None:
+            raise RuntimeWarning(
+                "Ellers maze generator should call close before use")
+        return self.edges
 
 
 class Maze:
     """Uses a maze generator to generate a maze
     """
-    def __init__(self, maze_generator=Ellers, width=10, height=10):
-        self.width = max(width, 10)
-        self.height = 0
-        if not issubclass(maze_generator, MazeGenerator):
-            raise TypeError("Maze requires derived type of MazeGenerator")
-        self.maze_generator = maze_generator(width)
-        self.maze_line = self.maze_generator.generate()
+    Node = namedtuple('Node', ['id', 'x', 'y'])
+    Point = namedtuple('Point', ['x', 'y'])
+    Box = namedtuple('Box', ['width', 'height'])
+
+    class Area:
+        """Maze area...
+        """
+        def __init__(self, *, x=0, y=0, width=1, height=1):
+            self.origin = Maze.Point(x=x, y=y)
+            self.box = Maze.Box(width=width, height=height)
+            self.center = []
+            self.up_border = []
+            self.down_border = []
+            self.left_border = []
+            self.right_border = []
+
+    MIN = 5
+
+    def __init__(self, *, width=MIN, height=None,
+                 filename=None, maze_generator=Ellers):
+        self.width = max(Maze.MIN, width)
+        self.filename = filename
         self.graph = nx.DiGraph()
         self.areas = {}
-        self.views = []
-        self.grow(max(height, 10))
+        self.is_closed = False
+        assert issubclass(maze_generator, MazeGenerator),\
+            f"Maze parameter maze_generator must be derived from MazeGenerator"
+        if self.filename:
+            raise NotImplementedError("file save load not done for maze")
 
-    def get_graph(self):
-        """returns a copy of the graph
-        """
-        return self.graph.copy()
+        self._maze = maze_generator(self.width)
+        self.generator = self._maze.generate()
+        if height:
+            for _ in range(0, height-1):
+                next(self.generator)
+            self.close()
 
-    def grow(self, line_count=10):
-        """grows the maze
+    def size(self):
+        """returns the number of nodes in the maze
         """
-        self.height += line_count
-        line_count = max(line_count, 2)
-        for i in range(0, line_count):
-            next(self.maze_line)
-            if not i % 2 and i > 2:
-                nodes, edges = self.maze_generator.get_nodes_and_edges()
-                self.graph.add_nodes_from(nodes)
-                self.graph.add_edges_from(edges)
-        nodes, edges = self.maze_generator.get_nodes_and_edges()
-        self.graph.add_nodes_from(nodes)
+        if not self.is_closed:
+            raise RuntimeWarning("Mazes are read only until closed")
+        return len(self.graph.nodes())
+
+    def grow(self, line_count=1):
+        """grows the maze, returns (nodes<list>, edges<list of tuples>)
+        """
+        if self.graph.nodes():
+            return (None, None)
+        nodes, edges = [], []
+        for _ in range(0, line_count):
+            maze_nodes, maze_edges = next(self.generator)
+            nodes.extend(maze_nodes)
+            edges.extend(maze_edges)
+        return nodes, edges
+
+    def close(self):
+        """calls the maze generator close to finalize EoM line
+        """
+        self.is_closed = True
+        self._maze.close()
+        self.graph.add_nodes_from(self._maze.get_nodes())
+        self.graph.add_edges_from(self._maze.get_edges())
+
+    def _get_area_offset(self, area, dx, dy):
+        return area.origin.x+dx + (area.origin.y+dy) * self.width
+
+    def _grid_connect(self, area):
+        offsets = product(range(0, area.box.width), range(0, area.box.height))
+        edges = []
+        center_nodes = []
+
+        for dx, dy in offsets:
+            if not any([dx == 0,
+                        dy == 0,
+                        dy == area.box.height-1,
+                        dx == area.box.width-1]):
+                center_nodes.append(self._get_area_offset(area, dx, dy))
+            else:
+                if dy == 0:
+                    area.up_border.append(self._get_area_offset(area, dx, dy))
+                if dy == area.box.height-1:
+                    area.down_border.append(self._get_area_offset(area,
+                                                                  dx, dy))
+                if dx == 0:
+                    area.left_border.append(self._get_area_offset(area,
+                                                                  dx, dy))
+                if dx == area.box.width-1:
+                    area.right_border.append(self._get_area_offset(area,
+                                                                   dx,
+                                                                   dy))
+
+        area.center = center_nodes
+        for node in center_nodes:
+            edges.extend([(node, self._maze.down(node)),
+                          (self._maze.down(node), node)])
+            edges.extend([(node, self._maze.up(node)),
+                          (self._maze.up(node), node)])
+            edges.extend([(node, self._maze.left(node)),
+                          (self._maze.left(node), node)])
+            edges.extend([(node, self._maze.right(node)),
+                          (self._maze.right(node), node)])
+
+        borders = [area.up_border, area.down_border,
+                   area.left_border, area.right_border]
+        for edge in borders:
+            one_way = list(zip(edge, edge[1:]))
+            edges.extend(one_way)
+            other_way = [(v, u) for (u, v) in one_way]
+            edges.extend(other_way)
+
         self.graph.add_edges_from(edges)
+
+    def _get_direction(self, nids, node):
+        possible = [self._maze.up(node),
+                    self._maze.down(node),
+                    self._maze.left(node),
+                    self._maze.right(node)]
+        return list(filter(lambda x: x not in nids and x, possible))[0]
+
+    def _stitch_components(self, components):
+        borders = {id(component): Maze.Area() for component in components}
+        nodes = []
+
+        for component in components:
+            for node in component:
+                x, y = node % self.width, int(node / self.width)
+                nodes.append(Maze.Node(id=node, x=x, y=y))
+
+            x_range = (min(nodes, key=lambda node: node.x),
+                       max(nodes, key=lambda node: node.x))
+            y_range = (min(nodes, key=lambda node: node.y),
+                       max(nodes, key=lambda node: node.y))
+            x_range = range(x_range[0].x, x_range[1].x)
+            y_range = range(y_range[0].y, y_range[1].y)
+
+            lines = []
+            for line in y_range:
+                lines.append([])
+                for node in nodes:
+                    if node.y == line:
+                        lines[-1].append(node)
+
+            def nodex(node):
+                return node.x
+
+            def nodey(node):
+                return node.y
+            for line in lines:
+                borders[id(component)].right_border.append(max(line,
+                                                               key=nodex).id)
+                borders[id(component)].left_border.append(min(line,
+                                                              key=nodex).id)
+
+            lines = []
+            for line in x_range:
+                lines.append([])
+                for node in nodes:
+                    if node.x == line:
+                        lines[-1].append(node)
+
+            for line in lines:
+                borders[id(component)].up_border.append(max(line,
+                                                            key=nodey).id)
+                borders[id(component)].down_border.append(min(line,
+                                                              key=nodey).id)
+
+            self._component_wise_combine(borders)
+
+    def _component_wise_combine(self, walls):
+        for component_one, component_two in product(walls.values(),
+                                                    walls.values()):
+            if component_one is not component_two:
+                directions = ["up", "down", "left", "right"]
+                inverse = {"up": "down", "down": "up",
+                           "left": "right", "right": "left"}
+                possible_edges = []
+                for direction in directions:
+                    candidates = map(getattr(self._maze, direction),
+                                     getattr(component_one, direction +
+                                             "_border")
+                                     )
+                    compare_to = []
+                    compare_to.extend(component_two.up_border)
+                    compare_to.extend(component_two.down_border)
+                    compare_to.extend(component_two.left_border)
+                    compare_to.extend(component_two.right_border)
+                    possible_edges.extend([(candidate,
+                                            getattr(self._maze,
+                                                    inverse[direction])
+                                            (candidate))
+                                           for candidate in candidates if
+                                           candidate in compare_to])
+                if possible_edges:
+                    self.graph.add_edges_from(possible_edges)
+                    self.graph.add_edges_from([(v, u)
+                                               for u, v in possible_edges])
+
+    def _get_area_edges(self, nodes):
+        """returns all edges for an areas nodes
+        """
+        area_edges = [list(self.graph.in_edges(node.id, data=False))
+                      for node in nodes]
+        in_edges_all = [edge for edges in area_edges for edge in edges]
+
+        area_edges = [list(self.graph.out_edges(node.id, data=False))
+                      for node in nodes]
+        area_edges = [edge for edges in area_edges for edge in edges]
+        area_edges.extend(in_edges_all)
+        return area_edges
+
+    def _get_area_nodes(self, area):
+        """gets areas nodes
+        """
+        offsets = product(range(0, area.box.width), range(0, area.box.height))
+        nodes = []
+        for dx, dy in offsets:
+            node = Maze.Node(id=self._get_area_offset(area, dx, dy),
+                             x=area.origin.x+dx, y=area.origin.y+dy)
+            if node.id not in self.graph:
+                raise IndexError(f"maze graph does not have node {node.id}")
+            nodes.append(node)
+        return nodes
+
+    def _get_components(self):
+        """get components excluding areas
+        """
+        components = []
+        for component in nx.strongly_connected_components(self.graph):
+            if any([self._get_area_offset(area, 0, 0) in component
+                    for area in self.areas.values()]):
+                continue
+            components.append(component)
+        return components
+
+    def distance(self, node_id_pair):
+        """calculates distance between node ids
+        """
+        node_id1, node_id2 = node_id_pair[0], node_id_pair[1]
+        x_1, y_1 = node_id1 % self.width, int(node_id1 / self.width)
+        x_2, y_2 = node_id2 % self.width, int(node_id2 / self.width)
+        return (node_id_pair, sqrt(pow((x_2-x_1), 2)+pow((y_2-y_1), 2)))
+
+    def claim_area(self, name, area):
+        """claims a set of nodes, makes maze consistent
+        """
+        if not self.is_closed:
+            raise RuntimeWarning("Mazes are read only until closed")
+
+        if name in self.areas:
+            raise KeyError(f"area {name} already used")
+
+        if any([area.origin.x < 0, area.origin.y < 0,
+                area.box.width < 0, area.box.height < 0]):
+            raise ValueError("origin point and\
+                            dimensions must be positive")
+
+        if area.box.width > self.width or\
+           area.box.height > int(len(self.graph.nodes()) / self.width):
+            raise ValueError(f"area width or height too large")
+
+        if area.origin.x > self.width or\
+           area.origin.y > int(len(self.graph.nodes()) / self.width):
+            raise ValueError(f"origin point outside maze bounds")
+
+        nodes = self._get_area_nodes(area)
+
+        nids = [node.id for node in nodes]
+
+        area_edges = self._get_area_edges(nodes)
+
+        self.graph.remove_edges_from(area_edges)
+
+        ext_nodes = [edge[0] for edge in area_edges if edge[0] not in nids]
+        ext_nodes.extend([edge[1] for edge in area_edges
+                          if edge[1] not in nids])
+        ext_nodes = set(ext_nodes)
+
+        self._grid_connect(area)
+
+        for external_node in ext_nodes:
+            if len(nx.descendants(self.graph, external_node)) <\
+               len(self.graph.nodes()) - len(nids):
+                node = self._get_direction(nids, external_node)
+                self.graph.add_edge(node, external_node)
+                self.graph.add_edge(external_node, node)
+
+        self.areas[name] = area
+
+        components = self._get_components()
+
+        if len(components) > 1:
+            self._stitch_components(components)
+
+        components = self._get_components()
+
+        if len(components) > 1:  # an attempt was made, now SMASH...
+            for component_one, component_two in zip(components,
+                                                    components[1:]):
+                component_product = product(component_one, component_two)
+                edge = min(map(self.distance, component_product),
+                           key=lambda edge: edge[-1])
+                self.graph.add_edge(edge[0], edge[1])
+                self.graph.add_edge(edge[1], edge[0])
+
+    def get_path(self, from_area_name, from_way, to_area_name, to_way):
+        """generates path for two areas if possible, returns none or path<list>
+        """
+        if not self.is_closed:
+            raise RuntimeWarning("Mazes are read only until closed")
+        from_area = self.areas[from_area_name]
+        to_area = self.areas[to_area_name]
+
+        from_node = choice(getattr(from_area, from_way + "_border"))
+        to_node = choice(getattr(to_area, to_way + "_border"))
+
+        from_next = getattr(self._maze, from_way)(from_node)
+        to_next = getattr(self._maze, to_way)(to_node)
+
+        if not from_next or not to_next:
+            return []
+
+        path = nx.shortest_path(self.graph, source=from_next, target=to_next)
+        path.append((to_area_name, to_node))
+        path.insert(0, (from_area_name, from_node))
+
+        return path

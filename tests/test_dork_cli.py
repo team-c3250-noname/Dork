@@ -13,33 +13,104 @@ def test_cli_exists(run):
     try:
         run(dork.cli.main)
         run(dork.cli.main, input_values=['jump', ' ', 'quit'])
-        run(dork.cli.main, input_values=['play', ' ', 'quit'])
-        run(dork.cli.main, input_values=['play', 'jump high', 'quit'])
-        run(dork.cli.main, input_values=['play', 'move north', 'quit'])
-        run(dork.cli.main, input_values=['play', 'move south', 'quit'])
-        run(dork.cli.main, input_values=['play', 'move west', 'quit'])
-        run(dork.cli.main, input_values=['play', 'move east', 'quit'])
-        run(dork.cli.main, input_values=['play', 'move went', 'quit'])
-        run(dork.cli.main, input_values=['play', 'examine room', 'quit'])
-        run(dork.cli.main, input_values=['play', 'examine nothing', 'quit'])
-        run(dork.cli.main, input_values=['play', 'pick cellkey', 'quit'])
-        run(dork.cli.main, input_values=['play', 'pick key', 'quit'])
-        run(dork.cli.main, input_values=['play', 'pick key',
-                                         'move north', 'use key', 'quit'])
-        run(dork.cli.main, input_values=['play', 'pick key',
+        run(dork.cli.main, input_values=['play', 'default', ' ', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'save',
+                                         'roomdatatest', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'jump high',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'move north',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'move south',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'move west',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'move east',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'move qest',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'examine room',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default',
+                                         'examine nothing', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick cellkey',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'examine room', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'move north', 'use key', 'south',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'qest', 'south',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
                                          'move north', 'use key',
-                                         'go north', 'quit'])
-        run(dork.cli.main, input_values=['play', 'pick key',
-                                         'move north', 'use torch',
+                                         'north', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'examine key', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'pick skull', 'examine room', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'drop', 'key', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'north', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'north', 'move north',
+                                         'punch',
+                                         'pick torch', 'use torch',
+                                         'west', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'north', 'move north',
+                                         'swing',
+                                         'pick torch', 'use torch',
+                                         'west', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'pick skull',
+                                         'use key', 'north', 'move north',
+                                         'swing', 'skull',
+                                         'pick torch', 'use torch',
+                                         'west', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'pick skull',
+                                         'use key', 'north', 'move north',
+                                         'swing', 'grenade', 'skull',
+                                         'pick torch', 'use torch',
+                                         'west', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'user inventory',
                                          'quit'])
-        run(dork.cli.main, input_values=['play', 'pick key', 'use key',
+        run(dork.cli.main, input_values=['play', 'default', 'user save',
                                          'quit'])
-        run(dork.cli.main, input_values=['play', 'user inventory', 'quit'])
-        run(dork.cli.main, input_values=['play', 'user save', 'quit'])
-        run(dork.cli.main, input_values=['play', 'user id', 'quit'])
-        run(dork.cli.main, input_values=['load', ' ', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'user id',
+                                         'quit'])
+        run(dork.cli.main, input_values=['load', 'default', ' ', 'quit'])
         run(dork.cli.main, input_values=['help', ' ', 'quit'])
         run(dork.cli.main, input_values=['quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'north', 'move north',
+                                         'punch',
+                                         'pick torch', 'use torch',
+                                         'right', 'move right', 'move up',
+                                         'punch',
+                                         'pick bar', 'move down',
+                                         'move down', 'use bar', 'left',
+                                         'move left', 'punch', 'pick sword',
+                                         'move north', 'swing', 'sword',
+                                         'move north'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'north', 'move north',
+                                         'punch',
+                                         'checkscore', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'north', 'move north',
+                                         'punch',
+                                         'pick torch', 'use torch',
+                                         'right', 'move right', 'move up',
+                                         'punch',
+                                         'pick bar', 'move down',
+                                         'move down', 'use bar', 'left',
+                                         'move left', 'punch', 'pick sword',
+                                         'move north', 'punch'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 

@@ -3,129 +3,83 @@
 # Generously inspired by our LA,
 # https://github.com/LSmith-Zenoscave
 
-from pprint import pprint
 import yaml
-
-PROPERTIES = ["Items", "Player", "Rooms"]
-PLAYERDATA = ["holding", "location", "current", "max"]
-ITEMDATA = ["holds"]
-DIRECTIONS = ["north", "south", "east", "west"]
+import dork.types as types
 
 
-def load(file_name="./dork/yaml/dork.yml"):
-    """This will load a file into data.
+def get_input():
+    """Grabs user input to define a save/load name
     """
-    try:
-        with open(file_name) as file:
-            data = yaml.safe_load(file.read())
-    except IOError:
-        return "Try again"
+    input_name = input("Enter a file name: ")
+    file_name = "./dork/yaml/" + input_name + ".yml"
+
+    return file_name
+
+
+def load():
+    """Load a yaml file, returning it as data.
+    The user is prompted for a file name.
+    """
+    print("Attempting to load data.")
+
+    file_name = get_input()
+    loaded = False
+
+    while loaded is False:
+        try:
+            with open(file_name) as file:
+                data = yaml.safe_load(file.read())
+                loaded = True
+        except (IOError, FileNotFoundError, ValueError):
+            print("ERROR: Invalid file name: " + file_name)
+            print("Please try a different file name.")
+            file_name = get_input()
+
+    print("")
+    print("Load successful.")
+    print("")
+
     return data
 
 
-def save(data):
-    """This will save player and room data to a file.
-    Eventually this should also save maze data.
+def save(game):
+    """Save the game state into a yaml file.
+    Also prompts the user for a file name.
     """
-
     print("Attempting to save data.")
 
-    file_name = "./dork/yaml/dorktest.yml"
-    with open(file_name, 'w') as yaml_file:
-        yaml_file.write(yaml.dump(data, default_flow_style=False))
+    data = game.save()
+    file_name = get_input()
+    saved = False
+    name_ok = False
 
-    print("Save was successful.")
-    return "0"
+    while name_ok is False:
+        if 'default' in file_name:
+            print("You cannot use this name. Pick another.")
+            file_name = get_input()
+        else:
+            name_ok = True
 
+    while saved is False:
+        try:
+            with open(file_name, 'w') as yaml_file:
+                yaml.safe_dump(data, default_flow_style=False,
+                               stream=yaml_file)
+                saved = True
+        except (IOError, ValueError):
+            print("ERROR: Invalid file name: " + file_name)
+            print("Please try a different file name.")
+            file_name = get_input()
 
-def pplayer(players, name, pdata):
-    """Parses player data into useful info.
-    """
-    player = players[name]
-    if pdata not in player:
-        print(".")
-    elif player[pdata] is None:
-        print(f"There is no data in {name}.")
-    else:
-        other = player[pdata]
-        print(f"Player data {name}: {other}.")
+    print("")
+    print("Save successful.")
+    print("")
 
-
-def pitem(items, name, idata):
-    """Parses item data into useful info.
-    """
-    item = items[name]
-    if idata not in item:
-        print(f"{name} does not have {idata} as a key.")
-    elif item[idata] is None:
-        print(f"There are no items in {name}.")
-    else:
-        other = item[idata]
-        print(f"{other} is in {name}.")
+    return 0
 
 
-def path(rooms, name, direction):
-    """Parses room information into useful data.
-    """
-    room = rooms[name]
-    if direction not in room:
-        print(f"{name} does not have {direction} as a key.")
-    elif room[direction] is None:
-        print(f"There is nothing {direction} of {name}.")
-    elif room[direction] not in rooms:
-        print(f"Going {direction} from {name} will lead to an error.")
-    else:
-        other = room[direction]
-        print(f"{other} is {direction} of {name}.")
-
-
-def main():  # pragma: no cover
-    """Runs everything.
+def game_state():
+    """Creates and stores the game state.
     """
     data = load()
-    print("Data that was loaded:")
-    pprint(data)
-
-    print("Checking rooms, items, and player data for errors...")
-    for ppty in PROPERTIES:
-        if ppty not in data:
-            print(f"No {ppty} found.")
-        if not isinstance(data[ppty], dict):
-            print(f"{ppty} in data were not proper data.")
-            return
-
-    parseroom(data)
-    parseitem(data)
-    parseplayer(data)
-    save(data)
-
-
-def parseroom(data):
-    """Parses room data.
-    """
-    rooms = data["Rooms"]
-    for name in rooms:
-        for direction in DIRECTIONS:
-            path(rooms, name, direction)
-
-
-def parseitem(data):
-    """Parses item data.
-    """
-    items = data["Items"]
-    for name in items:
-        for idata in ITEMDATA:
-            pitem(items, name, idata)
-
-
-def parseplayer(data):
-    """Parses player data.
-    """
-    players = data["Player"]
-    for name in players:
-        for pdata in PLAYERDATA:
-            pplayer(players, name, pdata)
-
-
-if __name__ == "__main__":  # pragma: no cover
-    main()
+    return types.Game(data)

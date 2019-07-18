@@ -2,7 +2,7 @@
 """Pytest Fixtures for Dork unit-tests
 """
 import pytest
-import dork
+import dork.types as types
 
 pytest_plugins = ["pytester"]  # pylint: disable=invalid-name
 
@@ -11,14 +11,14 @@ pytest_plugins = ["pytester"]  # pylint: disable=invalid-name
 def player():
     """A basic dork player fixture
     """
-    return dork.types.Player()
+    return types.Player(types.GAME)
 
 
 @pytest.fixture
 def room():
     """A basic dork room fixture
     """
-    return dork.types.Room()
+    return types.Room(types.GAME)
 
 
 @pytest.fixture

@@ -1,0 +1,136 @@
+player:
+  location: cell
+  next location: ''
+  inventory: []
+rooms:
+  cell:
+    room_name: 'cell'
+    description: |
+      You find yourself in a jail cell with the door locked.
+      As you look outside the bars, you can see a corridor extending in
+      either direction. For now, you need to get out of here. Upon further
+      inspection in the room, you note various shackles and torture
+      instruments, a metal bed suspended from the wall with a chain, but
+      nothing more.
+    INSPECT: |
+      Upon checking under the bed, you find a key. How convenient
+      for you, prisoner!
+    LOCKED: False
+    UNLOCK: ''
+    ITEM: 'cell key'
+    UP: 'Jail hallway'
+    DOWN: ''
+    LEFT: ''
+    RIGHT: ''
+
+  Jail hallway:
+    room_name: 'Jail Hallway'
+    description: |
+      A long, narrow hallway lined with cells and torches for light on
+      either side. To your immediate left, there is a crumbling wall.
+      Perhaps if you had something that could help destroy it...
+      To your right, down the corridor, there is a stairwell. The stairs
+      lead up, but it is completely pitch black inside. You'll probably
+      trip and hurt yourself without a source of light. You should be
+      able to reach up and remove one of the torches from the wall.
+    INSPECT: 'You inspect the room'
+    LOCKED: True
+    UNLOCK: 'cell key'
+    ITEM: 'torch'
+    UP: ''
+    DOWN: 'cell'
+    LEFT: 'Jail Armory'
+    RIGHT: 'Stairwell'
+
+  Stairwell:
+    room_name: 'Stairwell'
+    description: |
+      Using the torch, you are able to see that the stairwell
+      is decrepit and many steps have chunks missing, with others having
+      pieces of rubble on them. You make your way carefully up the stairs and
+      emerge at the top.
+    INSPECT: 'You inspect the room'
+    LOCKED: True
+    UNLOCK: 'torch'
+    ITEM: ''
+    UP: 'Jail Tower'
+    DOWN: ''
+    LEFT: 'Jail hallway'
+    RIGHT: ''
+
+  Jail Tower:
+    room_name: 'Jail Tower'
+    description: |
+      As you exit the stairwell and go outside, you find yourself atop a
+      tower. It is raining hard and a storm is currently ongoing. You
+      hear the sounds of thunder and see bright flashes of lightning
+      every now and then. As you look over the edge of the tower,
+      you see nothing but a raging ocean.
+    INSPECT: |
+      As you look around on top of the tower, you note that
+      there is an iron bar leaned up against the wall, near the door you
+      emerged from. You take the iron bar. It is cold in your hands and
+      wet from the rain, but otherwise sturdy.
+    LOCKED: False
+    UNLOCK: ''
+    ITEM: 'iron bar'
+    UP: ''
+    DOWN: 'Stairwell'
+    LEFT: ''
+    RIGHT: ''
+
+  Jail Armory:
+    room_name: 'Jail Armory'
+    description: |
+      You enter the armory and note that the armor and weapon
+      racks are all but empty. You also note the presence of a few target
+      dummies and archery targets.
+    INSPECT: |
+      One of the dummies has a sword embedded in it. You are able
+      to pull the sword from the dummy with a little effort.
+    LOCKED: True
+    UNLOCK: 'iron bar'
+    ITEM: 'sword'
+    UP: ''
+    DOWN: ''
+    LEFT: ''
+    RIGHT: 'Jail hallway'
+
+  Boss room:
+    room_name: 'Boss room'
+    description: |
+      You have entered the boss room
+    INSPECT: ''
+    LOCKED: True
+    UNLOCK: 'sword'
+    ITEM: ''
+    UP: ''
+    DOWN: 'Jail Armory'
+    LEFT: 'Vault'
+    RIGHT: ''
+
+  Vault:
+    room_name: 'Vault'
+    description: |
+      This is the treasury
+    INSPECT: ''
+    LOCKED: False
+    UNLOCK: ''
+    ITEM: ''
+    UP: ''
+    DOWN: ''
+    LEFT: ''
+    RIGHT: 'Boss Room'
+
+  Entrance:
+    room_name: 'Entrance'
+    description: |
+      This is the entrance to the jail
+    INSPECT: ''
+    LOCKED: False
+    UNLOCK: ''
+    ITEM: ''
+    UP: ''
+    DOWN: 'Boss Room'
+    LEFT: ''
+    RIGHT: ''
