@@ -459,8 +459,9 @@ def next_room(game):
         if direction_check in player_directions:
             direction = player_directions[direction_check]
             reprompt = False
-            return game.rooms[player.position['location']].paths[direction]
-        direction_check = input("Please input cardinal direction. ").lower()
+        elif direction_check not in player_directions:
+            direction_check = input("Please input cardinal direction. ").lower()
+    return game.rooms[player.position['location']].paths[direction]
 
 
 def fight_check(game):

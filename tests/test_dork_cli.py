@@ -30,6 +30,8 @@ def test_cli_exists(run):
                                          'quit'])
         run(dork.cli.main, input_values=['play', 'default', 'examine room',
                                          'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'use key',
+                                         'quit'])
         run(dork.cli.main, input_values=['play', 'default',
                                          'examine nothing', 'quit'])
         run(dork.cli.main, input_values=['play', 'default', 'pick cellkey',
