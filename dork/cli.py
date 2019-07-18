@@ -427,7 +427,7 @@ def drop_item(game):
     if player.inventory == []:
         print("You have no items to drop.")
         return True
-    item = input('What would you like to drop?')
+    item = input('What would you like to drop? ')
     if item not in player.inventory:
         print("That isn't an item you have.")
         return True
@@ -454,13 +454,9 @@ def next_room(game):
                          'east': 'right', 'right': 'right',
                          'west': 'left', 'left': 'left', }
     direction_check = input("Which direction would you like to try ").lower()
-    reprompt = True
-    while reprompt is True:
-        if direction_check in player_directions:
-            direction = player_directions[direction_check]
-            reprompt = False
-        elif direction_check not in player_directions:
-            direction_check = input("Please input cardinal direction. ").lower()
+    while direction_check not in player_directions:
+        direction_check = input("Please input cardinal direction. ").lower()
+    direction = player_directions[direction_check]
     return game.rooms[player.position['location']].paths[direction]
 
 

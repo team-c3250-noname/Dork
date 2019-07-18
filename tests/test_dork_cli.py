@@ -53,24 +53,27 @@ def test_cli_exists(run):
                                          'examine key', 'quit'])
         run(dork.cli.main, input_values=['play', 'default', 'pick key',
                                          'pick skull', 'examine room', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'drop', 'quit'])
         run(dork.cli.main, input_values=['play', 'default', 'pick key',
                                          'drop', 'key', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'drop', 'book', 'quit'])
         run(dork.cli.main, input_values=['play', 'default', 'pick key',
                                          'use key', 'north', 'quit'])
         run(dork.cli.main, input_values=['play', 'default', 'pick key',
                                          'use key', 'north', 'move north',
-                                         'punch',
-                                         'pick torch', 'use torch',
+                                         'punch', 'pick torch', 'use torch',
                                          'west', 'quit'])
         run(dork.cli.main, input_values=['play', 'default', 'pick key',
                                          'use key', 'north', 'move north',
-                                         'swing',
-                                         'pick torch', 'use torch',
+                                         'read', 'punch', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'north', 'move north',
+                                         'swing', 'pick torch', 'use torch',
                                          'west', 'quit'])
         run(dork.cli.main, input_values=['play', 'default', 'pick key',
-                                         'pick skull',
-                                         'use key', 'north', 'move north',
-                                         'swing', 'skull',
+                                         'pick skull', 'use key', 'north',
+                                         'move north', 'swing', 'skull',
                                          'pick torch', 'use torch',
                                          'west', 'quit'])
         run(dork.cli.main, input_values=['play', 'default', 'pick key',
