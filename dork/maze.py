@@ -446,7 +446,7 @@ class Maze:
             nodes.append(node)
         return nodes
 
-    def _get_components(self, area):
+    def _get_components(self):
         """get components excluding areas
         """
         components = []
@@ -511,12 +511,12 @@ class Maze:
 
         self.areas[name] = area
 
-        components = self._get_components(area)
+        components = self._get_components()
 
         if len(components) > 1:
             self._stitch_components(components)
 
-        components = self._get_components(area)
+        components = self._get_components()
 
         if len(components) > 1:  # an attempt was made, now SMASH...
             for component_one, component_two in zip(components,
