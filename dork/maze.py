@@ -450,7 +450,6 @@ class Maze:
         """get components excluding areas
         """
         components = []
-        area = area
         for component in nx.strongly_connected_components(self.graph):
             if any([self._get_area_offset(area, 0, 0) in component
                     for area in self.areas.values()]):
