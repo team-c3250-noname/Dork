@@ -9,15 +9,12 @@ import dork.types as types
 
 def get_input():
     """
-    Summary:
-        Reads user input to create a file name for use in save/load.
-
-    Description:
-        This function is intended to grab user input for use in file_name.
-        It uses the input() method to first get a file name, before appending
-        ./dork/yaml/ at the front and .yml in the back. Finally, it returns
-        the completed file_name for use in creating save files or looking
-        for a file to load in other methods.
+    Reads user input to create a file name for use in save/load.
+    This function is intended to grab user input for use in file_name.
+    It uses the input() method to first get a file name, before appending
+    ./dork/yaml/ at the front and .yml in the back. Finally, it returns
+    the completed file_name for use in creating save files or looking
+    for a file to load in other methods.
 
     Note:
         input_name cannot contain "default" within it when saving a file
@@ -34,18 +31,15 @@ def get_input():
 
 def load():
     """
-    Summary:
-        When called, asks the user for a file name, and then loads it into
-        the game state.
-
-    Description:
-        This function starts by calling get_input() to receive a file name
-        from the player and then enters a loop where it checks for the validity
-        of the given file name. If we have no errors it uses yaml's safe_load()
-        function to load the .yml dictionary into the data to be used for the
-        game state. If we do have any errors, we ask the user for a different
-        file name until they give us one that is valid, whereupon the loaded
-        flag is set to True and we exit the loop. Finally, it returns the data.
+    When called, asks the user for a file name, and then loads it into
+    the game state.
+    This function starts by calling get_input() to receive a file name
+    from the player and then enters a loop where it checks for the validity
+    of the given file name. If we have no errors it uses yaml's safe_load()
+    function to load the .yml dictionary into the data to be used for the
+    game state. If we do have any errors, we ask the user for a different
+    file name until they give us one that is valid, whereupon the loaded
+    flag is set to True and we exit the loop. Finally, it returns the data.
 
     Returns:
         data: A dictionary containing game state information such as player
