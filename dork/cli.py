@@ -244,8 +244,7 @@ def prompt(game):
                       'user': (user_menu, one_arg),
                       'help': (help_menu, no_arg),
                       'save': (save_game, no_arg),
-                      'quit': (end_game, no_arg),
-                      'checkscore': (check_score, no_arg)}
+                      'quit': (end_game, no_arg)}
     while keep_prompting is True and not_last is False and dead is False:
         user_action = input("\n" +
                             "What would you like to do? ").lower().split()
@@ -368,8 +367,8 @@ def user_menu(game, user_action):
     player = game.player
     if 'inventory' in user_action:
         print(player.inventory)
-    elif 'save' in user_action:
-        print("This will lead to saving the game.")
+    elif 'score' in user_action:
+        print(f"Your current score is: {player.stats['point']}")
     else:
         print("No menu option found")
     return True
@@ -533,12 +532,3 @@ def fight(game, enemy, damage):
             fighting = False
             flag = True
     return flag
-
-
-def check_score(game):
-    """Check current score
-    """
-    player = game.player
-    score = player.stats['point']
-    print(f"Your current score is: {score}")
-    return True
