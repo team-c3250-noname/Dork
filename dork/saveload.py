@@ -31,8 +31,7 @@ def get_input():
 
 def load():
     """
-    When called, asks the user for a file name, and then loads it into
-    the game state.
+    When called, asks the user for a file name and loads it to the game state.
     This function starts by calling get_input() to receive a file name
     from the player and then enters a loop where it checks for the validity
     of the given file name. If we have no errors it uses yaml's safe_load()
@@ -75,8 +74,30 @@ def load():
 
 
 def save(game):
-    """Save the game state into a yaml file.
-    Also prompts the user for a file name.
+    """
+    Save the game state into a yaml file by prompting for an input name.
+    The save function starts by assigning to data the current game state,
+    and then prompts the user with get_input() to input a save file name.
+    It then enters two loops: the first one ensures that the save name does
+    not contain 'default' as that is our base game that we do not want to
+    overwrite. The second loop ensures that the filename is valid and does
+    not produce any errors, and will continue to prompt the user for a new
+    filename until they input a valid one. Once we have a valid filename,
+    we use yaml's safe_dump() function to dump the data into a dictionary.
+    Finally, we return 0 to indicate a successful execution of save(). 
+
+    Args:
+        game: A dictionary containing the current game state.
+
+    Raises:
+        OSError: If the user is on Windows and attempts to use a forbidden
+        character, such as '?', for the file name.
+        ValueError: If the user inputs an invalid file name, such as a null
+        terminator.
+
+    Returns:
+        0: If the function successfully executes, returns a 0 to indicate
+        that success.
     """
     print("Attempting to save data.")
 
@@ -111,7 +132,13 @@ def save(game):
 
 
 def game_state():
-    """Creates and stores the game state.
+    """
+    First, data is loaded using load() and then returned as a game sate.
+    This function starts by assigning to data using load(), and then
+    immediately returns the game state.
+
+    Returns:
+        types.Game(data): A dictionary containing the game state.
     """
     data = load()
     return types.Game(data)
