@@ -30,5 +30,6 @@ def testload(run):
     try:
         run(dork.saveload.load, input_values=['default'])
         run(dork.saveload.load, input_values=['\0', 'default'])
+        run(dork.saveload.load, input_values=['?', 'default'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")

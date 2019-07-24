@@ -52,8 +52,8 @@ def load():
         location and inventory, rooms and their connections/items, NPCs, etc.
 
     Raises:
-        IOError: This one should be rare (in cases where the disk is full),
-        and is here primarily for safety.
+        OSError: If the file_name is invalid, such as when the player is on
+        Windows and attempts to name the file '?'.
         FileNotFoundError: If the file_name doesn't exist as a .yml file yet.
         ValueError: If the file_name has something inappropriate in it, like
         a null terminator.
@@ -68,7 +68,7 @@ def load():
             with open(file_name) as file:
                 data = yaml.safe_load(file.read())
                 loaded = True
-        except (IOError, FileNotFoundError, ValueError):
+        except (OSError, FileNotFoundError, ValueError):
             print("ERROR: Invalid file name: " + file_name)
             print("Please try a different file name.")
             file_name = get_input()
