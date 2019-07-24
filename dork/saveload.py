@@ -8,7 +8,19 @@ import dork.types as types
 
 
 def get_input():
-    """Grabs user input to define a save/load name
+    """
+    This function is intended to grab user input for use in a file_name
+    It uses the input() method to first get a file name, before appending
+    ./dork/yaml/ at the front and .yml in the back. Finally, it returns
+    the completed file_name for use in creating save files or looking
+    for a file to load in other methods.
+
+    Note:
+        input_name cannot contain "default" within it when saving a file
+        as it is a protected name for our default save.
+
+    Returns:
+        file_name: A string containing a file path for use in save/load ops.
     """
     input_name = input("Enter a file name: ")
     file_name = "./dork/yaml/" + input_name + ".yml"
