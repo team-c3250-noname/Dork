@@ -89,15 +89,15 @@ def save(game):
     Args:
         game: A dictionary containing the current game state.
 
+    Returns:
+        0: If the function successfully executes, returns a 0 to indicate
+        that success.
+ 
     Raises:
         OSError: If the user is on Windows and attempts to use a forbidden
         character, such as '?', for the file name.
         ValueError: If the user inputs an invalid file name, such as a null
         terminator.
-
-    Returns:
-        0: If the function successfully executes, returns a 0 to indicate
-        that success.
     """
     print("Attempting to save data.")
 
