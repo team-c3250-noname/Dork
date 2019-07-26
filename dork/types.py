@@ -23,27 +23,35 @@ class Map():
             self.y = y
 
     @staticmethod
+    def _adjust_minimap_origins(room, direction, origins, name, nodes):
+        if room.paths[direction]:
+            if name not in origins:
+                origins[name] = Map.Point(x=0, y=0)
+            if room.paths[direction] not in origins:
+                origins[room.paths[direction]] = Map.Point(x=0, y=0)
+            x, y = (origins[name].x, origins[name].y)
+            if direction == "up":
+                y -= 1
+            if direction == "down":
+                y += 1
+            if direction == "left":
+                x -= 1
+            if direction == "right":
+                x += 1
+            origins[room.paths[direction]] = Map.Point(x=x, y=y)
+            return (nodes[name], nodes[room.paths[direction]])
+        return tuple()
+
+    @staticmethod
     def _construct_minimap(minimap, nodes, rooms):
         origins = {}
+        edges = []
         for name, room in rooms.items():
-            for direction in ["up", "right", "left", "down"]:
-                if room.paths[direction]:
-                    if name not in origins:
-                        origins[name] = Map.Point(x=0, y=0)
-                    if room.paths[direction] not in origins:
-                        origins[room.paths[direction]] = Map.Point(x=0, y=0)
-                    x, y = (origins[name].x, origins[name].y)
-                    if direction == "up":
-                        y -= 1
-                    if direction == "down":
-                        y += 1
-                    if direction == "left":
-                        x -= 1
-                    if direction == "right":
-                        x += 1
-                    origins[room.paths[direction]] = Map.Point(x=x, y=y)
-                    minimap.add_edge(nodes[name],
-                                     nodes[room.paths[direction]])
+            for direction in ["up", "down", "left", "right"]:
+                edges.append(Map._adjust_minimap_origins(room, direction,
+                                                         origins, name, nodes))
+
+        minimap.add_edges_from(list(filter(lambda edge: edge, edges)))
         return origins, minimap
 
     @staticmethod
