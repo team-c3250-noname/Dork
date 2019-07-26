@@ -30,6 +30,10 @@ def run(mocker, capsys):
 
         mocked_input = mocker.patch('builtins.input')
         mocked_input.side_effect = kwargs.get('input_values', ['quit'] * 100)
+
+        mocked_map = mocker.patch("dork.types.Map")
+        mocked_map.update = lambda x: None
+
         main(*args)
         cap = capsys.readouterr()
         return cap.out, cap.err

@@ -1,18 +1,23 @@
 # -*- coding: utf-8 -*-
 """Basic entity classes and methods for Dork.
 """
-import networkx as nx
 import warnings
-warnings.filterwarnings("ignore")
 import pylab as plt
+import networkx as nx
+
+warnings.filterwarnings("ignore")
+
 __all__ = ["Player", "Room", "GAME"]
 
 GAME = None
 
+
 class Map():
-    """Map class updates with player location change...
+    """Map class updates with player location change
     """
     class Point:
+        """Point class, bookkeeping
+        """
         def __init__(self, *, x=0, y=0):
             self.x = x
             self.y = y
@@ -47,8 +52,10 @@ class Map():
         fig_manager.set_window_title("Team NoName - Dork - Map")
         width = int(fig_manager.window.winfo_screenwidth()*width_of_screen)
         height = width
-        x, y = fig_manager.window.winfo_screenwidth()-width-int(height*corner_offset),\
-               fig_manager.window.winfo_screenheight()-height-int(height*corner_offset)
+        x = fig_manager.window.winfo_screenwidth() - width -\
+            int(width*corner_offset)
+        y = fig_manager.window.winfo_screenheight() - height -\
+            int(height*corner_offset)
         fig_manager.window.wm_deiconify()
         fig_manager.window.wm_geometry(f"{width}x{height}+{x}+{y}")
         fig_manager.window.children["!navigationtoolbar2tk"].pack_forget()
@@ -76,7 +83,7 @@ class Map():
 
         width = max(origins.values(), key=lambda origin: origin.x).x + 1
         self.origins = origins
-        self.map = {room:{"node_id": None, "edges": []} for room in origins}
+        self.map = {room: {"node_id": None, "edges": []} for room in origins}
         for name, origin in origins.items():
             node_id = origin.x + origin.y * width
             nodes[nodes[name]] = node_id
@@ -84,7 +91,7 @@ class Map():
         for name, origin in origins.items():
             for edge in minimap.edges(nodes[name]):
                 self.map[name]["edges"].append(nodes[edge[1]])
-        
+
         Map._setup_window()
         self.show()
 
@@ -92,13 +99,13 @@ class Map():
         """Displays the graph as a networkkx plot
         """
         plt.clf()
-        labels = {node_info["node_id"]:room for room,
+        labels = {node_info["node_id"]: room for room,
                   node_info in self.map.items()}
         max_y = max(self.origins.values(), key=lambda node: node.y).y
-        positions = {self.map[room]["node_id"]:(origin.x, abs(origin.y-max_y))
+        positions = {self.map[room]["node_id"]: (origin.x, abs(origin.y-max_y))
                      for room, origin in self.origins.items()}
-        color_map = ["blue"  for _ in labels]
-        color_map[list(labels.values())\
+        color_map = ["blue" for _ in labels]
+        color_map[list(labels.values())
                   .index(self._game.player.position["location"])] = "red"
         minimap = nx.Graph()
         minimap.add_nodes_from([node_info["node_id"]
@@ -108,7 +115,7 @@ class Map():
                                 for e_node in node_info["edges"]])
         nx.draw(minimap, pos=positions, node_color=color_map, node_size=100)
         delta = 0.1
-        pos_higher = {k:(v[0], v[1]+delta) for k,v in positions.items()}
+        pos_higher = {k: (v[0], v[1]+delta) for k, v in positions.items()}
         nx.draw_networkx_labels(minimap, pos_higher, labels)
         plt.margins(0.2)
         plt.show()
@@ -117,6 +124,7 @@ class Map():
         """update the figure on game-state change
         """
         self.show()
+
 
 class Game():
     """Creates and hold the game state
