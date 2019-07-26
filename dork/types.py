@@ -91,14 +91,14 @@ class Map():
 
         width = max(origins.values(), key=lambda origin: origin.x).x + 1
         self.origins = origins
-        self.map = {room: {"node_id": None, "edges": []} for room in origins}
+        self.room_map = {room: {"node_id": None, "edges": []} for room in origins}
         for name, origin in origins.items():
             node_id = origin.x + origin.y * width
             nodes[nodes[name]] = node_id
-            self.map[name]["node_id"] = node_id
+            self.room_map[name]["node_id"] = node_id
         for name, origin in origins.items():
             for edge in minimap.edges(nodes[name]):
-                self.map[name]["edges"].append(nodes[edge[1]])
+                self.room_map[name]["edges"].append(nodes[edge[1]])
 
         Map._setup_window()
         self.show()
@@ -108,18 +108,18 @@ class Map():
         """
         plt.clf()
         labels = {node_info["node_id"]: room for room,
-                  node_info in self.map.items()}
+                  node_info in self.room_map.items()}
         max_y = max(self.origins.values(), key=lambda node: node.y).y
-        positions = {self.map[room]["node_id"]: (origin.x, abs(origin.y-max_y))
+        positions = {self.room_map[room]["node_id"]: (origin.x, abs(origin.y-max_y))
                      for room, origin in self.origins.items()}
         color_map = ["blue" for _ in labels]
         color_map[list(labels.values())
                   .index(self._game.player.position["location"])] = "red"
         minimap = nx.Graph()
         minimap.add_nodes_from([node_info["node_id"]
-                                for room, node_info in self.map.items()])
+                                for room, node_info in self.room_map.items()])
         minimap.add_edges_from([(node_info["node_id"], e_node)
-                                for room, node_info in self.map.items()
+                                for room, node_info in self.room_map.items()
                                 for e_node in node_info["edges"]])
         nx.draw(minimap, pos=positions, node_color=color_map, node_size=100)
         delta = 0.1
@@ -146,7 +146,7 @@ class Game():
                       item in data.get('items').items()}
         self.npc = {npc_name: Nonplayer(npc) for npc_name,
                     npc in data.get('npc').items()}
-        self.map = Map(self)
+        self.room_map = Map(self)
 
     def save(self):
         """Will save the Game class
