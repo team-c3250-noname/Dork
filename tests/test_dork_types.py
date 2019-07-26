@@ -17,9 +17,10 @@ def dork_test_map():
     minimap = Map(game)
     assert all([room_name in minimap.origins for room_name in room]),\
         "atleast one room was not assigned an origin"
-    assert all([room_name in minimap.map for room_name in room]),\
+    assert all([room_name in minimap.room_map for room_name in room]),\
         "atleast one room name was not found in the map"
-    assert all([node_info["edges"] for _, node_info in minimap.map.items()]),\
+    assert all([node_info["edges"] for _,
+                node_info in minimap.room_map.items()]),\
         "room map is not fully connected"
 
     minimap.update()

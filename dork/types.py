@@ -91,7 +91,8 @@ class Map():
 
         width = max(origins.values(), key=lambda origin: origin.x).x + 1
         self.origins = origins
-        self.room_map = {room: {"node_id": None, "edges": []} for room in origins}
+        self.room_map = {room: {"node_id": None, "edges": []}
+                         for room in origins}
         for name, origin in origins.items():
             node_id = origin.x + origin.y * width
             nodes[nodes[name]] = node_id
@@ -110,7 +111,8 @@ class Map():
         labels = {node_info["node_id"]: room for room,
                   node_info in self.room_map.items()}
         max_y = max(self.origins.values(), key=lambda node: node.y).y
-        positions = {self.room_map[room]["node_id"]: (origin.x, abs(origin.y-max_y))
+        positions = {self.room_map[room]["node_id"]:
+                     (origin.x, abs(origin.y-max_y))
                      for room, origin in self.origins.items()}
         color_map = ["blue" for _ in labels]
         color_map[list(labels.values())
