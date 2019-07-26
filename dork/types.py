@@ -2,8 +2,9 @@
 """Basic entity classes and methods for Dork.
 """
 import networkx as nx
+import warnings
+warnings.filterwarnings("ignore")
 import pylab as plt
-from dork.maze import Maze
 __all__ = ["Player", "Room", "GAME"]
 
 GAME = None
@@ -11,6 +12,11 @@ GAME = None
 class Map():
     """Map class updates with player location change...
     """
+    class Point:
+        def __init__(self, *, x=0, y=0):
+            self.x = x
+            self.y = y
+
     @staticmethod
     def _construct_minimap(minimap, nodes, rooms):
         origins = {}
@@ -18,9 +24,9 @@ class Map():
             for direction in ["up", "right", "left", "down"]:
                 if room.paths[direction]:
                     if name not in origins:
-                        origins[name] = Maze.Point(x=0, y=0)
+                        origins[name] = Map.Point(x=0, y=0)
                     if room.paths[direction] not in origins:
-                        origins[room.paths[direction]] = Maze.Point(x=0, y=0)
+                        origins[room.paths[direction]] = Map.Point(x=0, y=0)
                     x, y = (origins[name].x, origins[name].y)
                     if direction == "up":
                         y -= 1
@@ -30,16 +36,30 @@ class Map():
                         x -= 1
                     if direction == "right":
                         x += 1
-                    origins[room.paths[direction]] = Maze.Point(x=x, y=y)
+                    origins[room.paths[direction]] = Map.Point(x=x, y=y)
                     minimap.add_edge(nodes[name],
                                      nodes[room.paths[direction]])
         return origins, minimap
+
+    @staticmethod
+    def _setup_window(corner_offset=0.05, width_of_screen=0.3):
+        fig_manager = plt.get_current_fig_manager()
+        fig_manager.set_window_title("Team NoName - Dork - Map")
+        width = int(fig_manager.window.winfo_screenwidth()*width_of_screen)
+        height = width
+        x, y = fig_manager.window.winfo_screenwidth()-width-int(height*corner_offset),\
+               fig_manager.window.winfo_screenheight()-height-int(height*corner_offset)
+        fig_manager.window.wm_deiconify()
+        fig_manager.window.wm_geometry(f"{width}x{height}+{x}+{y}")
+        fig_manager.window.children["!navigationtoolbar2tk"].pack_forget()
+        fig_manager.window.overrideredirect(True)
+        plt.ion()
 
     def __init__(self, game):
         self._game = game
         rooms = game.rooms
         minimap = nx.Graph()
-        nodes = {name: node_id for name, node_id in 
+        nodes = {name: node_id for name, node_id in
                  zip(rooms.keys(), range(0, len(rooms.keys())))}
         minimap.add_nodes_from(nodes.values())
         origins, minimap = Map._construct_minimap(minimap, nodes, rooms)
@@ -64,14 +84,15 @@ class Map():
         for name, origin in origins.items():
             for edge in minimap.edges(nodes[name]):
                 self.map[name]["edges"].append(nodes[edge[1]])
-        plt.ion()
+        
+        Map._setup_window()
         self.show()
 
     def show(self):
         """Displays the graph as a networkkx plot
         """
         plt.clf()
-        labels = {node_info["node_id"]:room for room, 
+        labels = {node_info["node_id"]:room for room,
                   node_info in self.map.items()}
         max_y = max(self.origins.values(), key=lambda node: node.y).y
         positions = {self.map[room]["node_id"]:(origin.x, abs(origin.y-max_y))
@@ -85,8 +106,11 @@ class Map():
         minimap.add_edges_from([(node_info["node_id"], e_node)
                                 for room, node_info in self.map.items()
                                 for e_node in node_info["edges"]])
-        nx.draw(minimap, pos=positions, with_labels=True,\
-                labels=labels, node_color=color_map)
+        nx.draw(minimap, pos=positions, node_color=color_map, node_size=100)
+        delta = 0.1
+        pos_higher = {k:(v[0], v[1]+delta) for k,v in positions.items()}
+        nx.draw_networkx_labels(minimap, pos_higher, labels)
+        plt.margins(0.2)
         plt.show()
 
     def update(self):
