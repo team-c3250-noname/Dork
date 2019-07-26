@@ -5,7 +5,7 @@ from types import FunctionType
 import dork.cli
 
 
-def test_cli_exists(run):
+def test_cli_exists(maptype, run):
     """Dork.cli.main should always exist and run
     """
     assert "main" in vars(dork.cli), "Dork.cli should define a main method"
