@@ -21,5 +21,5 @@ def dork_test_map():
         "atleast one room name was not found in the map"
     assert all([node_info["edges"] for _, node_info in minimap.map.items()]),\
         "room map is not fully connected"
-    
+
     minimap.update()
