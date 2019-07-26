@@ -21,6 +21,26 @@ def room():
     return types.Room(types.GAME)
 
 
+def noop():
+    """noop replacement
+    """
+
+
+def noop_kwargs(_, **__):  # noqa: E722
+    """noop with kwargs
+    """
+
+
+@pytest.fixture(autouse=True)
+def maptype(monkeypatch):
+    """fixture that prevents Map from drawing a plot
+    """
+    import pylab
+    import networkx
+    monkeypatch.setattr(pylab, 'show', noop)
+    monkeypatch.setattr(networkx, "draw", noop_kwargs)
+
+
 @pytest.fixture
 def run(mocker, capsys):
     """CLI run method fixture
@@ -30,10 +50,6 @@ def run(mocker, capsys):
 
         mocked_input = mocker.patch('builtins.input')
         mocked_input.side_effect = kwargs.get('input_values', ['quit'] * 100)
-
-        mocked_map = mocker.patch("dork.types.Map")
-        mocked_map.update = lambda x: None
-        setattr(mocked_map, "_setup_window", lambda x: None)
 
         main(*args)
         cap = capsys.readouterr()

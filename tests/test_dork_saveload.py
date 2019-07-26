@@ -6,7 +6,7 @@ import dork.saveload
 from dork import types
 
 
-def testsave(maptype, run):
+def testsave(run):
     """Save data should actually work no matter what
     type of data is used.
     """
@@ -24,7 +24,7 @@ def testsave(maptype, run):
         raise AssertionError("cannot run 'dork' command")
 
 
-def testload(maptype, run):
+def testload(run):
     """load should grab the data and parse it without further input
     """
     assert isinstance(dork.saveload.load, FunctionType)

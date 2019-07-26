@@ -2,8 +2,8 @@
 """Basic entity classes and methods for Dork.
 """
 import warnings
-import pylab as plt
 import networkx as nx
+import pylab as plt
 
 warnings.filterwarnings("ignore")
 
