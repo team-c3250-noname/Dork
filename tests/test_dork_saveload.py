@@ -6,7 +6,7 @@ import dork.saveload
 from dork import types
 
 
-def testsave(run):
+def testsave(mocker, run):
     """Save data should actually work no matter what
     type of data is used.
     """
@@ -15,6 +15,9 @@ def testsave(run):
         with open('./dork/yaml/default.yml') as file:
             # Should not call load directly
             data = yaml.safe_load(file.read())
+        mocked_map = mocker.patch("dork.types.Map")
+        mocked_map.update = lambda x: None
+        setattr(mocked_map, "_setup_window", lambda x: None)
         game = types.Game(data)
         run(dork.saveload.save, game, input_values=['roomdatatest'])
         run(dork.saveload.save, game, input_values=['default', 'roomdatatest'])
