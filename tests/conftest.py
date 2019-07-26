@@ -33,6 +33,7 @@ def run(mocker, capsys):
 
         mocked_map = mocker.patch("dork.types.Map")
         mocked_map.update = lambda x: None
+        setattr(mocked_map, "_setup_window", lambda x: None)
 
         main(*args)
         cap = capsys.readouterr()
