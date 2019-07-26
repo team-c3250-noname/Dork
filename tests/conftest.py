@@ -30,6 +30,7 @@ def noop_kwargs(_, **__):  # noqa: E722
     """noop with kwargs
     """
 
+
 def noop_args(*_):
     """noop multiple arguments
     """
