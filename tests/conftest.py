@@ -30,6 +30,10 @@ def noop_kwargs(_, **__):  # noqa: E722
     """noop with kwargs
     """
 
+def noop_args(*_):
+    """noop multiple arguments
+    """
+
 
 @pytest.fixture(autouse=True)
 def maptype(monkeypatch):
@@ -39,6 +43,7 @@ def maptype(monkeypatch):
     import networkx
     monkeypatch.setattr(pylab, 'show', noop)
     monkeypatch.setattr(networkx, "draw", noop_kwargs)
+    monkeypatch.setattr(types.Map, "_setup_window", noop_args)
 
 
 @pytest.fixture
