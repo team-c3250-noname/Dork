@@ -50,8 +50,10 @@ def test_maze_ellers(mocker):
             f"get_nodes should warn against open mazes"
 
     maze.close()
-
-    assert next(maze_generator) is None, f"closed mazes should return None"
+    try:
+        next(maze_generator)
+    except StopIteration:
+        pass
 
     assert len(maze.nodes) == 4, f"Ellers should be minimum 4 nodes, 2 lines"
     assert len(maze.get_nodes()) == 4, f"Ellers should be minimum 4 nodes"
@@ -62,20 +64,6 @@ def test_maze_ellers(mocker):
 
     assert maze.up(2) == 0, f"Ellers up from 2 should have been 0"
 
-    assert maze.up(0) is None, f"Eller up from top line should be None"
-    assert maze.up(1) is None, f"Eller up from top line should be None"
-
-    assert maze.down(2) is None, f"Ellers down from bottom edge should be none"
-    assert maze.down(3) is None, f"Ellers down from bottom edge should be none"
-
-    assert maze.left(0) is None, f"Ellers left from left edge should be None"
-    assert maze.left(2) is None, f"Ellers left from left edge should be None"
-
-    assert maze.right(1) is None,\
-        f"Ellers right from right edge should be None"
-    assert maze.right(3) is None,\
-        f"Ellers right from right edge should be None"
-
     graph = nx.DiGraph()
     graph.add_nodes_from(maze.get_nodes())
     graph.add_edges_from(maze.get_edges())
@@ -83,14 +71,51 @@ def test_maze_ellers(mocker):
         f"generated mazes should be fully connected"
 
 
+def test_maze_ellers_directions(mocker):
+    """checks if directions are bounded
+    """
+
+    def join_replace():
+        return 0
+
+    def vert(line):
+        return [line]
+
+    setattr(Ellers, "_should_join", join_replace)
+    maze = Ellers(width=2)
+
+    mocker.patch.object(maze, "_random_vertical_nodes", vert)
+    maze_generator = maze.generate()
+    next(maze_generator)
+
+    try:
+        maze.up(0)
+        maze.up(1)
+    except IndexError as err:
+        assert "cannot have" in str(err), f"out of bounds, but wrong error, up"
+    try:
+        maze.down(2)
+        maze.down(3)
+    except IndexError as err:
+        assert "cannot have" in str(err),\
+               f"out of bounds, but wrong error, down"
+    try:
+        maze.left(0)
+        maze.left(2)
+    except IndexError as err:
+        assert "cannot have" in str(err),\
+               f"out of bounds, but wrong error, left"
+    try:
+        maze.right(1)
+        maze.right(3)
+    except IndexError as err:
+        assert "cannot have" in str(err),\
+               f"out of bounds, but wrong error, right"
+
+
 def test_maze_maze():
     """tests maze initialization
     """
-    try:
-        maze = Maze(filename="test.yaml")
-        maze = maze
-    except NotImplementedError as err:
-        assert "save load" in str(err), f"maze filename save load not done"
 
     maze = Maze(width=5)
     maze.grow(4)
@@ -110,7 +135,7 @@ def test_maze_maze():
     maze.close()
 
     assert maze.size() == 25, f"maze should have 25 nodes"
-    assert maze.grow() == (None, None), f"closed maze should not grow"
+    assert maze.grow() == ([], []), f"closed maze should not grow"
 
 
 def test_maze_claim_area():
