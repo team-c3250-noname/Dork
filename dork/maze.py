@@ -349,9 +349,6 @@ class Maze:
                 maze = Maze(width=10, height=10)
 
                 <claim areas and paths>
-        
-        
-
     """
     class Node:
         """Node holds identifier and coordinates

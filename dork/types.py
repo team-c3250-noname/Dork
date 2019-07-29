@@ -20,8 +20,8 @@ class Map():
 
     Attributes:
         origins: dictionary of room_name keys to Point with x,y coordinates
-        room_map: a dictioanry mapping room_names to node-edge-list 
-                  representations {room_name: {node_id: 
+        room_map: a dictioanry mapping room_names to node-edge-list
+                  representations {room_name: {node_id:
                   <list of nodes node_id connects to>}}
     Note:
         TODO - Associate the minimap to Maze node identifiers
