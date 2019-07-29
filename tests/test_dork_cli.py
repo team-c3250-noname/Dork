@@ -145,6 +145,12 @@ def test_user_menu(run):
     try:
         run(dork.cli.main, input_values=['play', 'default', 'user inventory',
                                          'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'north', 'move north',
+                                         'punch',
+                                         'checkscore', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'checkscore',
+                                         'quit'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 
