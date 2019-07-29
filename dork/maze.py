@@ -332,14 +332,26 @@ class Maze:
         Maze must be closed before Areas and paths are added.
 
     Example:
-        maze = Maze(width=10)
-        maze.grow(10)
-        maze.close()
-        <claim areas and paths>
 
-        This is the same as
-        maze = Maze(width=10, height=10)
-        <claim areas and paths>
+            ::
+
+                maze = Maze(width=10)
+
+                maze.grow(10)
+
+                maze.close()
+
+                <claim areas and paths>
+
+
+                This is the same as
+
+                maze = Maze(width=10, height=10)
+
+                <claim areas and paths>
+        
+        
+
     """
     class Node:
         """Node holds identifier and coordinates

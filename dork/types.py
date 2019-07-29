@@ -7,7 +7,7 @@ import pylab as plt
 
 warnings.filterwarnings("ignore")
 
-__all__ = ["Player", "Room", "GAME"]
+__all__ = ["Player", "Room", "GAME", "Map"]
 
 GAME = None
 
@@ -23,8 +23,8 @@ class Map():
         room_map: a dictioanry mapping room_names to node-edge-list 
                   representations {room_name: {node_id: 
                   <list of nodes node_id connects to>}}
-    Todo:
-        Associate the minimap to Maze node identifiers
+    Note:
+        TODO - Associate the minimap to Maze node identifiers
     """
     class Point:
         """Point class, bookkeeping
