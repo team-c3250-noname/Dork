@@ -138,6 +138,16 @@ def test_user_drop(run):
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 
+def test_user_menu(run):
+    """user_menu test
+    """
+    assert isinstance(dork.cli.main, FunctionType)
+    try:
+        run(dork.cli.main, input_values=['play', 'default', 'user inventory',
+                                         'quit'])
+    except:  # noqa: E722
+        raise AssertionError("cannot run 'dork' command")
+
 def test_cli_help(run):
     """CLI's help command should return helpful information
     """
