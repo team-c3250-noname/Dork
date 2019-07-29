@@ -165,8 +165,7 @@ class Ellers(MazeGenerator):
             positive integer
 
         Raises:
-            IndexError: coordinates must decompose into positive x, y
-            components
+            IndexError: coordinates must decompose into positive x,y components
         """
         x, y = self.location(node_id)
         x = x - 1
@@ -184,8 +183,7 @@ class Ellers(MazeGenerator):
             positive integer
 
         Raises:
-            IndexError: coordinates must decompose into positive x, y
-            components
+            IndexError: coordinates must decompose into positive x,y components
         """
         x, y = self.location(node_id)
         x = x + 1
@@ -204,8 +202,7 @@ class Ellers(MazeGenerator):
             positive integer
 
         Raises:
-            IndexError: coordinates must decompose into positive x, y
-            components
+            IndexError: coordinates must decompose into positive x,y components
         """
         x, y = self.location(node_id)
         y = y - 1
@@ -223,8 +220,7 @@ class Ellers(MazeGenerator):
             positive integer
 
         Raises:
-            IndexError: coordinates must decompose into positive x, y
-            components
+            IndexError: coordinates must decompose into positive x,y components
         """
         x, y = self.location(node_id)
         y = y + 1
