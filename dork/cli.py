@@ -367,12 +367,15 @@ def player_take(game, user_action):
 
 
 def user_menu(game, user_action):
-    """Allows users to view their menu
+    """Allows users to view their menu or check current score
 
-    Args:
-        user_action:
+    Take the user action and goes into the if statement to check the user
+    command, and display the information based on different command
     
-    Returns:
+    Args:
+        user_action: the user action type in by keyboard
+    
+    Returns: Ture if success
     """
     player = game.player
     if 'inventory' in user_action:
