@@ -98,6 +98,7 @@ class Nonplayer():
     def __init__(self, data):
         self.health = data.get('health')
         self.attack = data.get('attack')
+        self.points = data.get('points')
 
     def save(self):
         """Will save the room class
@@ -105,4 +106,5 @@ class Nonplayer():
         return {
             'health': self.health,
             'attack': self.attack,
+            'points': self.points,
             }

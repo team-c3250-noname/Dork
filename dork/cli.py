@@ -136,7 +136,12 @@ def main(*args):
 
 
 def title_screen():
-    """Will display the title screen
+    """
+    Will display the four options for users. Play will set up a new game.
+    Load will load a file that the user can play. Help will print out
+    simple commands that will help the user play the game. Quit will
+    exit the game. If none of the play options are entered the user
+    will be prompted to input a valid command.
     """
     play_options = {'play': setup_game, 'load': load_game,
                     'help': help_menu, 'quit': quit_game}
@@ -160,7 +165,10 @@ def title_screen():
 
 
 def setup_game():
-    """This will set up the game
+    """
+    This will set up a new game from a yaml file. It gets the game state of
+    the inputted file, prints the description of the starting room and passes
+    the game state to prompt.
     """
     game = sl.game_state()
     player = game.player
@@ -171,7 +179,13 @@ def setup_game():
 
 
 def help_menu():
-    """Shows the help menu
+    """
+    Prints out the help menu and shows possible commands
+    they can use. Requires the user to press enter to return
+    to the title screen.
+
+    Returns:
+        Will return true when the user inputs anything. 
     """
     print("                            Help Menu")
     print("""
@@ -196,7 +210,9 @@ def help_menu():
 
 
 def load_game():
-    """Will load a saved game
+    """
+    Will load a game from a stated file. The file has to be located with
+    the other yaml files in order to be loaded properly.
     """
     game = sl.game_state()
     player = game.player
@@ -206,14 +222,20 @@ def load_game():
 
 
 def quit_game():
-    """This will quit the game
+    """
+    Quit game will print out a statement and return false to 
+    title screen which will end the program.
+
+    Returns:
+        quit game will return false
     """
     print("Thank you for playing")
     return False
 
 
 def end_game(_game):
-    """Will show a end game screen and thank the player
+    """
+    Will show a end game screen and thank the player.
     """
     print("Thank you for playing")
     return False
@@ -260,7 +282,13 @@ def prompt(game):
 
 
 def last_room(game):
-    """Will check if its the last room
+    """
+    Will check if the location of the player is the last room or not.
+    This checks if the game will end. 
+
+    Returns:
+        Will return True if the player is in the last room
+        otherwise it will return False
     """
     player = game.player
     if player.position['location'] == player.position['last room']:
@@ -302,8 +330,8 @@ def lock_check(game, direction):
         player.position['next location'] = direction
         next_lock = game.rooms[player.position['next location']].door['locked']
         if next_lock is True:
-            print("The door doesn't open.")
-            print('You might be able to use an item.')
+            print('You might be able to use' +
+                  'an item if you want to go that way.')
         else:
             movement_handler(game, direction)
     if direction == '':
@@ -321,7 +349,12 @@ def movement_handler(game, destination):
 
 
 def player_examine(game, user_action):
-    """ Allows users to examine the room and items
+    """
+    Allows users to examine the room and items. Will return True
+    when done examining the room or item
+
+    Returns:
+        True when done examining the room or item
     """
     player = game.player
     item = next((word for word in user_action if word in player.inventory), '')
@@ -335,7 +368,10 @@ def player_examine(game, user_action):
 
 
 def room_examine(game):
-    """Will examine the room
+    """
+    Will print the room inspection message and the items that the room contains
+    or if there is no items in the room then it will print that there is
+    nothing in the room.
     """
     player = game.player
     if game.rooms[player.position['location']].door['item'] != []:
@@ -461,7 +497,13 @@ def next_room(game):
 
 
 def fight_check(game):
-    """Will check if the user has an enemy to fight
+    """
+    Fight_check will check the room that the player had entered to see if 
+    there is an enemy. If there is an enemy the function goes to
+    fight_prompt. Else it will return False.
+
+    Returns:
+        Will return check with either True or False
     """
     check = False
     player = game.player
@@ -471,7 +513,15 @@ def fight_check(game):
 
 
 def fight_prompt(game):
-    """Fighting enemy
+    """
+    Once the room that the player is in has a fight then they will choose
+    from punching or using an item with 'swing'. If the user doesn't have
+    the item in their inventory then it will print out something else while
+    if the user inputs anything other than punch or swing then it will ask
+    the user to input a valid command.
+
+    Returns:
+        True when the fighting is over.
     """
     player = game.player
     enemy = game.rooms[player.position['location']].fight['enemy']
@@ -482,7 +532,7 @@ def fight_prompt(game):
         if 'punch' in action:
             flag = False
             damage = player.stats['attack']
-            check2 = fight(game, enemy, damage)
+            check2 = fight(game, damage)
         elif 'swing' in action:
             flag = False
             if player.inventory == []:
@@ -496,17 +546,25 @@ def fight_prompt(game):
                     print('Dont you wish you had ' + item)
                     item = input('Try again: ')
                 damage = game.items[item].damage
-            check2 = fight(game, enemy, damage)
+            check2 = fight(game, damage)
         else:
             print('invalid command')
     return check2
 
 
-def fight(game, enemy, damage):
-    """Basic fight
+def fight(game, damage):
+    """
+    The fight function takes the game state, the enemy that the user is fighting,
+    and the damage that the user inflicts. While the health of the enemy or the 
+    player is above zero the function continues. 
+
+    Returns:
+        The function returns flag which sets check2 to true or false
     """
     player = game.player
+    enemy = game.rooms[player.position['location']].fight['enemy']
     ehealth = game.npc[enemy].health
+    points = game.npc[enemy].points
     fighting = True
 
     while fighting is True:
@@ -515,12 +573,8 @@ def fight(game, enemy, damage):
         print('You have damaged the ' + enemy + ' for ' + str(damage))
         if ehealth <= 0:
             print("You have killed the " + enemy)
-            if 'guard' in enemy:
-                player.stats['point'] += 10
-                print('You have gain 10 points')
-            elif 'boss' in enemy:
-                player.stats['point'] += 100
-                print('You have gain 100 points')
+            player.stats['point'] += points
+            print('You have gained ' + str(points) + ' points')
             game.rooms[player.position['location']].fight['fight'] = False
             fighting = False
             flag = False
