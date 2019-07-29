@@ -124,7 +124,7 @@ def test_user_take(run):
     """
     assert isinstance(dork.cli.main, FunctionType)
     try:
-        run(dork.cli.main, input_values=['play', 'default', 'pick cellkey',
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
                                          'quit'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
