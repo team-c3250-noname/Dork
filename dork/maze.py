@@ -331,10 +331,10 @@ class Maze:
         areas: dictionary using room name as key to Maze.Area instances
         is_closed: boolean, True if the maze has a capped end line
         generator: MazeGenerator generator of new lines
-    
+
     Caution:
         Maze must be closed before Areas and paths are added.
-    
+
     Example:
         maze = Maze(width=10)
         maze.grow(10)
