@@ -15,6 +15,7 @@ def testsave(run):
         with open('./dork/yaml/default.yml') as file:
             # Should not call load directly
             data = yaml.safe_load(file.read())
+
         game = types.Game(data)
         run(dork.saveload.save, game, input_values=['roomdatatest'])
         run(dork.saveload.save, game, input_values=['default', 'roomdatatest'])
