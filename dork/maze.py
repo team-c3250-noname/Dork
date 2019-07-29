@@ -59,6 +59,9 @@ class Ellers(MazeGenerator):
         sets: list of sets that build the maze
         node_set_map: dictionary maps node identifiers to sets
         id_counter: incrementing integer for unique identifiers
+
+    See Also:
+        weblog.jamisbuck.org/2010/12/29/maze-generation-eller-s-algorithm
     """
     MIN = 2
 
@@ -328,6 +331,19 @@ class Maze:
         areas: dictionary using room name as key to Maze.Area instances
         is_closed: boolean, True if the maze has a capped end line
         generator: MazeGenerator generator of new lines
+    
+    Caution:
+        Maze must be closed before Areas and paths are added.
+    
+    Example:
+        maze = Maze(width=10)
+        maze.grow(10)
+        maze.close()
+        <claim areas and paths>
+
+        This is the same as
+        maze = Maze(width=10, height=10)
+        <claim areas and paths>
     """
     class Node:
         """Node holds identifier and coordinates
