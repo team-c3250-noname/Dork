@@ -185,7 +185,7 @@ def help_menu():
     to the title screen.
 
     Returns:
-        Will return true when the user inputs anything. 
+        Will return true when the user inputs anything.
     """
     print("                            Help Menu")
     print("""
@@ -223,7 +223,7 @@ def load_game():
 
 def quit_game():
     """
-    Quit game will print out a statement and return false to 
+    Quit game will print out a statement and return false to
     title screen which will end the program.
 
     Returns:
@@ -284,7 +284,7 @@ def prompt(game):
 def last_room(game):
     """
     Will check if the location of the player is the last room or not.
-    This checks if the game will end. 
+    This checks if the game will end.
 
     Returns:
         Will return True if the player is in the last room
@@ -498,7 +498,7 @@ def next_room(game):
 
 def fight_check(game):
     """
-    Fight_check will check the room that the player had entered to see if 
+    Fight_check will check the room that the player had entered to see if
     there is an enemy. If there is an enemy the function goes to
     fight_prompt. Else it will return False.
 
@@ -554,9 +554,9 @@ def fight_prompt(game):
 
 def fight(game, damage):
     """
-    The fight function takes the game state, the enemy that the user is fighting,
-    and the damage that the user inflicts. While the health of the enemy or the 
-    player is above zero the function continues. 
+    The fight function takes the game state, the enemy that the user is
+    fighting, and the damage that the user inflicts. While the health of
+    the enemy or the player is above zero the function continues.
 
     Returns:
         The function returns flag which sets check2 to true or false
