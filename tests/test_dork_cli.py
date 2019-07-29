@@ -256,3 +256,16 @@ def test_fight(run, mocker):
     mocked_fight.call_count = 0
     run(dork.cli.fight, game, damage)
     assert mocked_fight.call_count == 1
+
+
+def test_prompt(run, mocker):
+    """This will test the prompt function
+    """
+    mocked_prompt = mocker.patch('dork.cli.prompt')
+
+    with open('./dork/yaml/default.yml') as file:
+        # Should not call load directly
+        data = yaml.safe_load(file.read())
+    game = types.Game(data)
+    run(dork.cli.prompt, game)
+    assert mocked_prompt.call_count == 1
