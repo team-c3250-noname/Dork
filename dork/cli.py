@@ -316,6 +316,7 @@ def movement_handler(game, destination):
     """
     player = game.player
     player.position['location'] = destination
+    game.room_map.update()
     print("You have moved to " + destination)
     print("")
     print(game.rooms[player.position['location']].messages['description'])
