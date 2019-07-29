@@ -47,7 +47,7 @@ class Map():
             origins: the origin list to update
             name: key as string
             nodes: dictionary mapping node ids to rooms, and old ids to new ids
-        
+
         Returns:
             new edge tuple updated with maze-coordinate node identifiers
             empty edge tuple if no edge existed in that direction
@@ -78,7 +78,7 @@ class Map():
             minimap: graph with coordinates based on room associations
             nodes: dictionary of node identifiers
             rooms: dictionary of room_name to Room objects
-        
+
         Returns:
             tuple with origins that can map into a Maze graph, and the
             associated networkx graph
