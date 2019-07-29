@@ -7,16 +7,31 @@ import pylab as plt
 
 warnings.filterwarnings("ignore")
 
-__all__ = ["Player", "Room", "GAME"]
+__all__ = ["Player", "Room", "GAME", "Map"]
 
 GAME = None
 
 
 class Map():
     """Map class updates with player location change
+
+    This class takes a room dictionary and converts it to
+    a coordinate system that can be mapped to the maze
+
+    Attributes:
+        origins: dictionary of room_name keys to Point with x,y coordinates
+        room_map: a dictioanry mapping room_names to node-edge-list
+                  representations {room_name: {node_id:
+                  <list of nodes node_id connects to>}}
+    Note:
+        TODO - Associate the minimap to Maze node identifiers
     """
     class Point:
         """Point class, bookkeeping
+
+        Attributes:
+            x: integer coordinate
+            y: integer coordinate
         """
         def __init__(self, *, x=0, y=0):
             self.x = x
@@ -24,6 +39,19 @@ class Map():
 
     @staticmethod
     def _adjust_minimap_origins(room, direction, origins, name, nodes):
+        """transforms minimap origins into maze coordinate system
+
+        Args:
+            room: Room object
+            direction: as string
+            origins: the origin list to update
+            name: key as string
+            nodes: dictionary mapping node ids to rooms, and old ids to new ids
+
+        Returns:
+            new edge tuple updated with maze-coordinate node identifiers
+            empty edge tuple if no edge existed in that direction
+        """
         if room.paths[direction]:
             if name not in origins:
                 origins[name] = Map.Point(x=0, y=0)
@@ -44,6 +72,17 @@ class Map():
 
     @staticmethod
     def _construct_minimap(minimap, nodes, rooms):
+        """takes room associations and converts to a minimap graph
+
+        Args:
+            minimap: graph with coordinates based on room associations
+            nodes: dictionary of node identifiers
+            rooms: dictionary of room_name to Room objects
+
+        Returns:
+            tuple with origins that can map into a Maze graph, and the
+            associated networkx graph
+        """
         origins = {}
         edges = []
         for name, room in rooms.items():
@@ -56,6 +95,12 @@ class Map():
 
     @staticmethod
     def _setup_window(corner_offset=0.05, width_of_screen=0.3):
+        """sets up pylab window without borders and on the bottom-right corner
+
+        Args:
+            corner_offset: % of dimension to offset from corner
+            width_of_screen: % of screen dimensions to size the window
+        """
         fig_manager = plt.get_current_fig_manager()
         fig_manager.set_window_title("Team NoName - Dork - Map")
         width = int(fig_manager.window.winfo_screenwidth()*width_of_screen)
@@ -106,6 +151,9 @@ class Map():
 
     def show(self):
         """Displays the graph as a networkkx plot
+
+        Note:
+            Redraws entire graph each time user moves
         """
         plt.clf()
         labels = {node_info["node_id"]: room for room,
