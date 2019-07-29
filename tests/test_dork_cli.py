@@ -154,6 +154,24 @@ def test_user_menu(run):
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 
+def test_next_room(run):
+    """next_room test
+    """
+    assert isinstance(dork.cli.main, FunctionType)
+    try:
+        run(dork.cli.main, input_values=['play', 'default', 'move north',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'move south',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'move west',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'move east',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'move qest',
+                                         'quit'])
+    except:  # noqa: E722
+        raise AssertionError("cannot run 'dork' command")
+
 def test_cli_help(run):
     """CLI's help command should return helpful information
     """
