@@ -257,7 +257,7 @@ class Ellers(MazeGenerator):
 
         while True:
             if self._end is None:
-                return ([], [])
+                yield ([], [])
             horizontal_edges = self._random_horizontal_edges(current_line)
             vertical_nodes = self._random_vertical_nodes(current_line)
 
