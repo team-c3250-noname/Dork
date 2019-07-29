@@ -348,6 +348,11 @@ def room_examine(game):
 
 def player_take(game, user_action):
     """Allows user to pick up items and puts them in the players inventory
+
+    Args:
+        user_action:
+    
+    Returns:
     """
     player = game.player
     item = game.rooms[player.position['location']].door['item']
@@ -363,6 +368,11 @@ def player_take(game, user_action):
 
 def user_menu(game, user_action):
     """Allows users to view their menu
+
+    Args:
+        user_action:
+    
+    Returns:
     """
     player = game.player
     if 'inventory' in user_action:
@@ -421,6 +431,10 @@ def remove_item(game):
 
 def drop_item(game):
     """Returns item to room from inventory
+
+    Args:
+
+    Returns:
     """
     player = game.player
     print(player.inventory)
@@ -438,6 +452,11 @@ def drop_item(game):
 
 def room_check(game, direction):
     """This will check if the room exists
+
+    Args:
+        direction:
+
+    Returns:
     """
     player = game.player
     if direction != '':
@@ -447,6 +466,10 @@ def room_check(game, direction):
 
 def next_room(game):
     """Will find the rooms next to the player
+
+    Args:
+
+    Returns:
     """
     player = game.player
     player_directions = {'north': 'up', 'up': 'up',
