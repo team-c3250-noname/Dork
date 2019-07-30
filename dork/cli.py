@@ -349,8 +349,10 @@ def room_examine(game):
 def player_take(game, user_action):
     """Allows user to pick up items and puts them in the players inventory
 
+    
+
     Args:
-        user_action:
+        user_action: the user action type in by keyboard
 
     Returns:
     """
@@ -375,7 +377,8 @@ def user_menu(game, user_action):
     Args:
         user_action: the user action type in by keyboard
 
-    Returns: Ture if success
+    Returns:
+        Ture if successfully executed
     """
     player = game.player
     if 'inventory' in user_action:
@@ -436,6 +439,7 @@ def drop_item(game):
     """Returns item to room from inventory
 
     Args:
+        game: contains the current game state
 
     Returns:
     """
@@ -457,9 +461,10 @@ def room_check(game, direction):
     """This will check if the room exists
 
     Args:
-        direction:
+        direction: the direction to check if the room is locked
 
     Returns:
+        An empty string
     """
     player = game.player
     if direction != '':
@@ -471,6 +476,7 @@ def next_room(game):
     """Will find the rooms next to the player
 
     Args:
+        game: contains the current game state
 
     Returns:
     """
