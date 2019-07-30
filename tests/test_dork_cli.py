@@ -131,7 +131,7 @@ def test_player_take(run):
         run(dork.cli.main, input_values=['play', 'default', 'pick kfhdfh',
                                          'quit'])
     except:  # noqa: E722
-        raise AssertionError("Key item does not found")
+        raise AssertionError("cannot run 'dork' command")
 
 
 def test_drop_item(run):
