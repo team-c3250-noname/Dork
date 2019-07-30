@@ -349,7 +349,7 @@ def room_examine(game):
 def player_take(game, user_action):
     """Allows user to pick up items and puts them in the players inventory
 
-    player data is taken from the game state. Item data is also taken from the 
+    Player data is taken from the game state. Item data is also taken from the 
     combination of the room and player's posion. Take the user's input and check
     if that input is in the room. If it is, we'll add it in the player inventory,
     if not just prompt "There is no such item"
@@ -376,7 +376,7 @@ def player_take(game, user_action):
 def user_menu(game, user_action):
     """Allows users to view their menu or check current score
 
-    player data is taken from the game state. Then take the user action
+    Player data is taken from the game state. Then take the user action
     and goes into the if statement to check the user command, and display
     the information based on different command. If there is a invalid
     comment, then prompt "No menu option found"
@@ -446,10 +446,10 @@ def remove_item(game):
 def drop_item(game):
     """Returns item to room from inventory
 
-    player data is taken from the game state. Then print the items
+    Player data is taken from the game state. Then print the items
     from the player inventory so that the user can choose which one
     to drop. If the player inventory is empty, then there is nothing
-    can be dropped. If the user type in an invalid item name, the 
+    can be dropped. If the user type in an invalid item name, the
     program will prompt "That isn't an item you have. If the item
     name is valid, then the item will be move away from player
     inventory and go into the room.
@@ -477,6 +477,8 @@ def drop_item(game):
 def room_check(game, direction):
     """This will check if the room exists
 
+    Player data is taken from the game state.
+
     Args:
         game: contains the current game state
         direction: the direction to check if the room is locked
@@ -493,6 +495,7 @@ def room_check(game, direction):
 def next_room(game):
     """Will find the rooms next to the player
 
+    Player data is taken from the game state.
     Args:
         game: contains the current game state
 
