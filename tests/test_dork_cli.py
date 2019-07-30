@@ -12,7 +12,7 @@ def test_cli_exists(run):
     assert isinstance(dork.cli.main, FunctionType)
     try:
         run(dork.cli.main)
-        """     
+        """
         run(dork.cli.main, input_values=['jump', ' ', 'quit'])
         run(dork.cli.main, input_values=['play', 'default', ' ', 'quit'])
         run(dork.cli.main, input_values=['play', 'default', 'save',
@@ -121,22 +121,28 @@ def test_cli_exists(run):
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 
-def test_user_take(run):
+def test_player_take(run):
     """user_take test
-    """
+     """
     assert isinstance(dork.cli.main, FunctionType)
     try:
         run(dork.cli.main, input_values=['play', 'default', 'pick key',
                                          'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick kfhdfh',
+                                         'quit'])
     except:  # noqa: E722
-        raise AssertionError("cannot run 'dork' command")
+        raise AssertionError("Key item does not found")
 
-def test_user_drop(run):
+def test_drop_item(run):
     """drop_item test
     """
     assert isinstance(dork.cli.main, FunctionType)
     try:
         run(dork.cli.main, input_values=['play', 'default', 'drop', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'drop', 'key', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'drop', 'alskdjf', 'quit'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 
@@ -152,6 +158,8 @@ def test_user_menu(run):
                                          'punch',
                                          'user score', 'quit'])
         run(dork.cli.main, input_values=['play', 'default', 'user score',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'user point',
                                          'quit'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
@@ -169,8 +177,8 @@ def test_next_room(run):
                                          'quit'])
         run(dork.cli.main, input_values=['play', 'default', 'move east',
                                          'quit'])
-        run(dork.cli.main, input_values=['play', 'default', 'move qest',
-                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'qest', 'north', 'quit'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 
