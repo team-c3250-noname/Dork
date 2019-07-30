@@ -84,7 +84,7 @@ def save(game):
     not produce any errors, and will continue to prompt the user for a new
     filename until they input a valid one. Once we have a valid filename,
     we use yaml's safe_dump() function to dump the data into a dictionary.
-    Finally, we return 0 to indicate a successful execution of save(). 
+    Finally, we return 0 to indicate a successful execution of save().
 
     Args:
         game: A dictionary containing the current game state.
@@ -92,7 +92,7 @@ def save(game):
     Returns:
         0: If the function successfully executes, returns a 0 to indicate
         that success.
- 
+
     Raises:
         OSError: If the user is on Windows and attempts to use a forbidden
         character, such as '?', for the file name.
