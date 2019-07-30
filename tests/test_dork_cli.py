@@ -269,3 +269,24 @@ def test_prompt(run, mocker):
     game = types.Game(data)
     run(dork.cli.prompt, game)
     assert mocked_prompt.call_count == 1
+
+def test_player_move(run, mocker):
+    """Test player_move function
+    """
+    directions = ['north', 'up', 'south', 'down', 'east',
+                  'left', 'west', 'right', ]
+    action = next((word for word in user_action if word in directions), '')
+    player_direction = {'north': 'up', 'up': 'up', 'south': 'down',
+                        'down': 'down', 'east': 'right',
+                        'right': 'right', 'west': 'left',
+                        'left': 'left', }
+    with open('./dork/yaml/default.yml') as file:
+        # Should not call load directly
+        data = yaml.safe_load(file.read())
+    game = types.Game(data)
+    for name, fstr in player_direction.items():
+             mocked = mocker.patch(fstr)
+        run(dork.cli.player_move, input_values=[name])
+        assert mocked.call_count == 1
+    out, _ = run(dork.cli.title_screen, input_values=['jump', 'quit'])
+    assert 'Please enter a valid command' in out
