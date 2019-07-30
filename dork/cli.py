@@ -355,6 +355,7 @@ def player_take(game, user_action):
     if not just prompt "There is no such item"
 
     Args:
+        game: contains the current game state
         user_action: the user action type in by keyboard
 
     Returns:
@@ -381,6 +382,7 @@ def user_menu(game, user_action):
     comment, then prompt "No menu option found"
 
     Args:
+        game: contains the current game state
         user_action: the user action type in by keyboard
 
     Returns:
@@ -444,10 +446,19 @@ def remove_item(game):
 def drop_item(game):
     """Returns item to room from inventory
 
+    player data is taken from the game state. Then print the items
+    from the player inventory so that the user can choose which one
+    to drop. If the player inventory is empty, then there is nothing
+    can be dropped. If the user type in an invalid item name, the 
+    program will prompt "That isn't an item you have. If the item
+    name is valid, then the item will be move away from player
+    inventory and go into the room.
+
     Args:
         game: contains the current game state
 
     Returns:
+        Ture if successfully executed
     """
     player = game.player
     print(player.inventory)
@@ -467,6 +478,7 @@ def room_check(game, direction):
     """This will check if the room exists
 
     Args:
+        game: contains the current game state
         direction: the direction to check if the room is locked
 
     Returns:
