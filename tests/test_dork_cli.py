@@ -3,8 +3,6 @@
 """
 from types import FunctionType
 import dork.cli
-import dork.types as types
-
 
 def test_cli_exists(run):
     """Dork.cli.main should always exist and run
