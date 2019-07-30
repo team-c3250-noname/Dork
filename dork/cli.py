@@ -351,7 +351,7 @@ def player_take(game, user_action):
 
     Args:
         user_action:
-    
+
     Returns:
     """
     player = game.player
@@ -371,10 +371,10 @@ def user_menu(game, user_action):
 
     Take the user action and goes into the if statement to check the user
     command, and display the information based on different command
-    
+
     Args:
         user_action: the user action type in by keyboard
-    
+
     Returns: Ture if success
     """
     player = game.player

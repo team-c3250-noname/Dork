@@ -4,6 +4,7 @@
 from types import FunctionType
 import dork.cli
 
+
 def test_cli_exists(run):
     """Dork.cli.main should always exist and run
     """
@@ -120,6 +121,7 @@ def test_cli_exists(run):
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 
+
 def test_player_take(run):
     """user_take test
      """
@@ -131,6 +133,7 @@ def test_player_take(run):
                                          'quit'])
     except:  # noqa: E722
         raise AssertionError("Key item does not found")
+
 
 def test_drop_item(run):
     """drop_item test
@@ -144,6 +147,7 @@ def test_drop_item(run):
                                          'drop', 'alskdjf', 'quit'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
+
 
 def test_user_menu(run):
     """user_menu test
@@ -163,6 +167,7 @@ def test_user_menu(run):
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 
+
 def test_next_room(run):
     """next_room test
     """
@@ -181,6 +186,7 @@ def test_next_room(run):
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 
+
 def test_room_check(run):
 
     assert isinstance(dork.cli.main, FunctionType)
@@ -191,6 +197,7 @@ def test_room_check(run):
                                          'use key', 'west', 'quit'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
+
 
 def test_cli_help(run):
     """CLI's help command should return helpful information
