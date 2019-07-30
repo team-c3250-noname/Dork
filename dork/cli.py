@@ -375,8 +375,10 @@ def player_take(game, user_action):
 def user_menu(game, user_action):
     """Allows users to view their menu or check current score
 
-    Take the user action and goes into the if statement to check the user
-    command, and display the information based on different command
+    player data is taken from the game state. Then take the user action
+    and goes into the if statement to check the user command, and display
+    the information based on different command. If there is a invalid
+    comment, then prompt "No menu option found"
 
     Args:
         user_action: the user action type in by keyboard
