@@ -3,6 +3,7 @@
 """
 from types import FunctionType
 import dork.cli
+import dork.types as types
 
 
 def test_cli_exists(run):
@@ -179,6 +180,17 @@ def test_next_room(run):
                                          'quit'])
         run(dork.cli.main, input_values=['play', 'default', 'pick key',
                                          'use key', 'qest', 'north', 'quit'])
+    except:  # noqa: E722
+        raise AssertionError("cannot run 'dork' command")
+
+def test_room_check(run):
+
+    assert isinstance(dork.cli.main, FunctionType)
+    try:
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'north', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'west', 'quit'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 
