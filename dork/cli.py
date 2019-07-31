@@ -237,8 +237,11 @@ def end_game(_game):
     """
     Will show a end game screen and thank the player.
 
-    Returns:
-        False
+    Args:
+        _game: Current game state
+
+    Returns: Returns false to end game loop
+
     """
     print("Thank you for playing")
     return False
@@ -318,6 +321,9 @@ def last_room(game):
     Will check if the location of the player is the last room or not.
     This checks if the game will end.
 
+    Args:
+        game: Current game state
+
     Returns:
         Will return True if the player is in the last room
         otherwise it will return False
@@ -329,13 +335,19 @@ def last_room(game):
 
 
 def save_game(game):
-    """Allows player to save the game
+    """
+    Allows player to save the game
+
+    Args:
+        game: Current game state
+
     """
     dork.saveload.save(game)
 
 
 def player_move(game, user_action):
     """
+
     Allows player to move through rooms in the maze
     The player data is grabbed the game state. Directions are defined,
     and the player's action is grabbed from their input. If the action
@@ -349,6 +361,7 @@ def player_move(game, user_action):
 
     Returns:
         True: Upon successful execution of movement.
+
     """
     player = game.player
     directions = ['north', 'up', 'south', 'down', 'east',
