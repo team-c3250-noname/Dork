@@ -495,12 +495,16 @@ def room_check(game, direction):
 def next_room(game):
     """Will find the rooms next to the player
 
-    Player data is taken from the game state.
+    Player data is taken from the game state. Then the progame take the
+    direction where the player want to use the key to. If the direction
+    is invalid then the program will ask the user to input cardinal
+    direction. Once the direction is valid, then returns the direction
 
     Args:
         game: contains the current game state
 
     Returns:
+        The valid direction input by the user
     """
     player = game.player
     player_directions = {'north': 'up', 'up': 'up',
