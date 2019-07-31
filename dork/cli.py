@@ -136,7 +136,12 @@ def main(*args):
 
 
 def title_screen():
-    """Will display the title screen
+    """
+    Will display the four options for users. Play will set up a new game.
+    Load will load a file that the user can play. Help will print out
+    simple commands that will help the user play the game. Quit will
+    exit the game. If none of the play options are entered the user
+    will be prompted to input a valid command.
     """
     play_options = {'play': setup_game, 'load': load_game,
                     'help': help_menu, 'quit': quit_game}
@@ -160,7 +165,10 @@ def title_screen():
 
 
 def setup_game():
-    """This will set up the game
+    """
+    This will set up a new game from a yaml file. It gets the game state of
+    the inputted file, prints the description of the starting room and passes
+    the game state to prompt.
     """
     game = sl.game_state()
     player = game.player
@@ -171,7 +179,13 @@ def setup_game():
 
 
 def help_menu():
-    """Shows the help menu
+    """
+    Prints out the help menu and shows possible commands
+    they can use. Requires the user to press enter to return
+    to the title screen.
+
+    Returns:
+        Will return true when the user inputs anything.
     """
     print("                            Help Menu")
     print("""
@@ -196,7 +210,9 @@ def help_menu():
 
 
 def load_game():
-    """Will load a saved game
+    """
+    Will load a game from a stated file. The file has to be located with
+    the other yaml files in order to be loaded properly.
     """
     game = sl.game_state()
     player = game.player
@@ -206,30 +222,71 @@ def load_game():
 
 
 def quit_game():
-    """This will quit the game
+    """
+    Quit game will print out a statement and return false to
+    title screen which will end the program.
+
+    Returns:
+        quit game will return false
     """
     print("Thank you for playing")
     return False
 
 
 def end_game(_game):
-    """Will show a end game screen and thank the player
+    """
+    Will show a end game screen and thank the player.
+
+    Args:
+        _game: Current game state
+
+    Returns: Returns false to end game loop
+
     """
     print("Thank you for playing")
     return False
 
 
 def prompt(game):
-    """ Asks user what they would like to do
+    """
+    Prompt will print out as statement
+    asking the user what they would like to do.
+    If invalid input is entered it will print out an error statement.
+
+    Args:
+        game: A dictionary containing the current game state.
+
     """
     keep_prompting = True
     not_last = False
     dead = False
 
     def one_arg(args):
+        """
+        A simple utility for commands that require one argument
+        Simply returns the argument.
+
+        Args:
+            args: The argument that is being used.
+
+        Returns:
+            [args]:The argument for the comman
+
+        """
         return [args]
 
     def no_arg(_args):
+        """
+        A simple utility for commands that require no argument
+        Simply returns an empty list.
+
+        Args:
+            _args: Dummy variable used for testing purposes.
+
+        Returns:
+            []:The argument for the comman
+
+        """
         return []
 
     player_actions = {'move': (player_move, one_arg),
@@ -244,8 +301,7 @@ def prompt(game):
                       'user': (user_menu, one_arg),
                       'help': (help_menu, no_arg),
                       'save': (save_game, no_arg),
-                      'quit': (end_game, no_arg),
-                      'checkscore': (check_score, no_arg)}
+                      'quit': (end_game, no_arg)}
     while keep_prompting is True and not_last is False and dead is False:
         user_action = input("\n" +
                             "What would you like to do? ").lower().split()
@@ -261,7 +317,16 @@ def prompt(game):
 
 
 def last_room(game):
-    """Will check if its the last room
+    """
+    Will check if the location of the player is the last room or not.
+    This checks if the game will end.
+
+    Args:
+        game: Current game state
+
+    Returns:
+        Will return True if the player is in the last room
+        otherwise it will return False
     """
     player = game.player
     if player.position['location'] == player.position['last room']:
@@ -270,13 +335,33 @@ def last_room(game):
 
 
 def save_game(game):
-    """Allows player to save the game
+    """
+    Allows player to save the game
+
+    Args:
+        game: Current game state
+
     """
     dork.saveload.save(game)
 
 
 def player_move(game, user_action):
-    """ Allows player to move along maze
+    """
+
+    Allows player to move through rooms in the maze
+    The player data is grabbed the game state. Directions are defined,
+    and the player's action is grabbed from their input. If the action
+    is in a valid direction, we check if the room they want to move into
+    exists and is not locked. The player is moved to the room if so,
+    and we return back to the main loop.
+
+    Args:
+        game: The current game state
+        user_action: The user's input for their action
+
+    Returns:
+        True: Upon successful execution of movement.
+
     """
     player = game.player
     directions = ['north', 'up', 'south', 'down', 'east',
@@ -297,14 +382,18 @@ def player_move(game, user_action):
 
 def lock_check(game, direction):
     """This will check if the door is locked
+
+    Args:
+        game: The current game state
+        direction: The direction of the room to check
     """
     player = game.player
     if direction != '':
         player.position['next location'] = direction
         next_lock = game.rooms[player.position['next location']].door['locked']
         if next_lock is True:
-            print("The door doesn't open.")
-            print('You might be able to use an item.')
+            print('You might be able to use ' +
+                  'an item if you want to go that way.')
         else:
             movement_handler(game, direction)
     if direction == '':
@@ -313,16 +402,29 @@ def lock_check(game, direction):
 
 def movement_handler(game, destination):
     """ This will handle movement to different rooms
+    Args:
+        game: The current game state
+        destination: The room to be moved to
     """
     player = game.player
     player.position['location'] = destination
+    game.room_map.update()
     print("You have moved to " + destination)
     print("")
     print(game.rooms[player.position['location']].messages['description'])
 
 
 def player_examine(game, user_action):
-    """ Allows users to examine the room and items
+    """
+    Allows users to examine the room and items. Will return True
+    when done examining the room or item
+
+    Args:
+        game: The current game state
+        user_action: The user's input to use
+
+    Returns:
+        True when done examining the room or item
     """
     player = game.player
     item = next((word for word in user_action if word in player.inventory), '')
@@ -336,7 +438,13 @@ def player_examine(game, user_action):
 
 
 def room_examine(game):
-    """Will examine the room
+    """
+    Will print the room inspection message and the items that the room contains
+    or if there is no items in the room then it will print that there is
+    nothing in the room.
+
+    Args:
+        game: The current game state
     """
     player = game.player
     if game.rooms[player.position['location']].door['item'] != []:
@@ -349,6 +457,18 @@ def room_examine(game):
 
 def player_take(game, user_action):
     """Allows user to pick up items and puts them in the players inventory
+
+    Player data is taken from the game state. Item data is also taken from the
+    combination of the room and player's posion. Take the user's input and
+    check if that input is in the room. If it is, we'll add it in the player
+    inventory, if not just prompt "There is no such item"
+
+    Args:
+        game: contains the current game state
+        user_action: the user action type in by keyboard
+
+    Returns:
+        Ture if successfully executed
     """
     player = game.player
     item = game.rooms[player.position['location']].door['item']
@@ -363,13 +483,25 @@ def player_take(game, user_action):
 
 
 def user_menu(game, user_action):
-    """Allows users to view their menu
+    """Allows users to view their menu or check current score
+
+    Player data is taken from the game state. Then take the user action
+    and goes into the if statement to check the user command, and display
+    the information based on different command. If there is a invalid
+    comment, then prompt "No menu option found"
+
+    Args:
+        game: contains the current game state
+        user_action: the user action type in by keyboard
+
+    Returns:
+        Ture if successfully executed
     """
     player = game.player
     if 'inventory' in user_action:
         print(player.inventory)
-    elif 'save' in user_action:
-        print("This will lead to saving the game.")
+    elif 'score' in user_action:
+        print(f"Your current score is: {player.stats['point']}")
     else:
         print("No menu option found")
     return True
@@ -377,6 +509,13 @@ def user_menu(game, user_action):
 
 def player_use(game, user_action):
     """Allows player to use items
+
+    Args:
+        game: The current game state.
+        user_action: The user's input to act on
+
+    Returns:
+        True: Upon successful execution
     """
     player = game.player
     inventory = ' '.join(player.inventory)
@@ -391,7 +530,19 @@ def player_use(game, user_action):
 
 
 def unlock_room(game, user_action, direction):
-    """unlocks room
+    """
+    Unlocks the room so the player can enter it.
+    The player data is grabbed from the game state, and we check
+    the room to see if the item is valid to be used. If it isn't,
+    we return an error. If it is, we parse through the user's
+    action and grab the unlock message for the room the user
+    is unlocking, before finally removing the item used from the game.
+    If they do not have the key, we tell them so.
+
+    Args:
+        game: The current game state.
+        user_action: The user's input for their action
+        direction: The room that is going to be unlocked
     """
     player = game.player
     player.position['next location'] = direction
@@ -413,7 +564,15 @@ def unlock_room(game, user_action, direction):
 
 
 def remove_item(game):
-    """Removes item after being used from inventory
+    """
+    Removes item after being used from inventory.
+    This function grabs the player information from the game state,
+    and grabs the item that they used to unlock a room. The
+    remove function is then called on the item to remove it from
+    the game state.
+
+    Args:
+        game: The current game state.
     """
     player = game.player
     item = game.rooms[player.position['next location']].door['unlock']
@@ -422,13 +581,27 @@ def remove_item(game):
 
 def drop_item(game):
     """Returns item to room from inventory
+
+    Player data is taken from the game state. Then print the items
+    from the player inventory so that the user can choose which one
+    to drop. If the player inventory is empty, then there is nothing
+    can be dropped. If the user type in an invalid item name, the
+    program will prompt "That isn't an item you have. If the item
+    name is valid, then the item will be move away from player
+    inventory and go into the room
+
+    Args:
+        game: contains the current game state
+
+    Returns:
+        Ture if successfully executed
     """
     player = game.player
     print(player.inventory)
     if player.inventory == []:
         print("You have no items to drop.")
         return True
-    item = input('What would you like to drop?')
+    item = input('What would you like to drop? ')
     if item not in player.inventory:
         print("That isn't an item you have.")
         return True
@@ -439,6 +612,17 @@ def drop_item(game):
 
 def room_check(game, direction):
     """This will check if the room exists
+
+    Player data is taken from the game state. If the direction is
+    not empty, then locked door get unlock and return an empty
+    string
+
+    Args:
+        game: contains the current game state
+        direction: the direction to check if the room is locked
+
+    Returns:
+        An empty string
     """
     player = game.player
     if direction != '':
@@ -448,6 +632,17 @@ def room_check(game, direction):
 
 def next_room(game):
     """Will find the rooms next to the player
+
+    Player data is taken from the game state. Then the progame take the
+    direction where the player want to use the key to. If the direction
+    is invalid then the program will ask the user to input cardinal
+    direction. Once the direction is valid, then returns the direction
+
+    Args:
+        game: contains the current game state
+
+    Returns:
+        The valid direction input by the user
     """
     player = game.player
     player_directions = {'north': 'up', 'up': 'up',
@@ -455,17 +650,23 @@ def next_room(game):
                          'east': 'right', 'right': 'right',
                          'west': 'left', 'left': 'left', }
     direction_check = input("Which direction would you like to try ").lower()
-    reprompt = True
-    while reprompt is True:
-        if direction_check in player_directions:
-            direction = player_directions[direction_check]
-            reprompt = False
-            return game.rooms[player.position['location']].paths[direction]
+    while direction_check not in player_directions:
         direction_check = input("Please input cardinal direction. ").lower()
+    direction = player_directions[direction_check]
+    return game.rooms[player.position['location']].paths[direction]
 
 
 def fight_check(game):
-    """Will check if the user has an enemy to fight
+    """
+    Fight_check will check the room that the player had entered to see if
+    there is an enemy. If there is an enemy the function goes to
+    fight_prompt. Else it will return False.
+
+    Args:
+        game: The current game state
+
+    Returns:
+        Will return check with either True or False
     """
     check = False
     player = game.player
@@ -475,7 +676,18 @@ def fight_check(game):
 
 
 def fight_prompt(game):
-    """Fighting enemy
+    """
+    Once the room that the player is in has a fight then they will choose
+    from punching or using an item with 'swing'. If the user doesn't have
+    the item in their inventory then it will print out something else while
+    if the user inputs anything other than punch or swing then it will ask
+    the user to input a valid command.
+
+    Args:
+        game: The current game state
+
+    Returns:
+        True when the fighting is over.
     """
     player = game.player
     enemy = game.rooms[player.position['location']].fight['enemy']
@@ -486,7 +698,7 @@ def fight_prompt(game):
         if 'punch' in action:
             flag = False
             damage = player.stats['attack']
-            check2 = fight(game, enemy, damage)
+            check2 = fight(game, damage)
         elif 'swing' in action:
             flag = False
             if player.inventory == []:
@@ -500,17 +712,29 @@ def fight_prompt(game):
                     print('Dont you wish you had ' + item)
                     item = input('Try again: ')
                 damage = game.items[item].damage
-            check2 = fight(game, enemy, damage)
+            check2 = fight(game, damage)
         else:
             print('invalid command')
     return check2
 
 
-def fight(game, enemy, damage):
-    """Basic fight
+def fight(game, damage):
+    """
+    The fight function takes the game state, the enemy that the user is
+    fighting, and the damage that the user inflicts. While the health of
+    the enemy or the player is above zero the function continues.
+
+    Args:
+        game: The current game state
+        damage: The damage value of the player
+
+    Returns:
+        The function returns flag which sets check2 to true or false
     """
     player = game.player
+    enemy = game.rooms[player.position['location']].fight['enemy']
     ehealth = game.npc[enemy].health
+    points = game.npc[enemy].points
     fighting = True
 
     while fighting is True:
@@ -519,12 +743,8 @@ def fight(game, enemy, damage):
         print('You have damaged the ' + enemy + ' for ' + str(damage))
         if ehealth <= 0:
             print("You have killed the " + enemy)
-            if 'guard' in enemy:
-                player.stats['point'] += 10
-                print('You have gain 10 points')
-            elif 'boss' in enemy:
-                player.stats['point'] += 100
-                print('You have gain 100 points')
+            player.stats['point'] += points
+            print('You have gained ' + str(points) + ' points')
             game.rooms[player.position['location']].fight['fight'] = False
             fighting = False
             flag = False
@@ -536,12 +756,3 @@ def fight(game, enemy, damage):
             fighting = False
             flag = True
     return flag
-
-
-def check_score(game):
-    """Check current score
-    """
-    player = game.player
-    score = player.stats['point']
-    print(f"Your current score is: {score}")
-    return True

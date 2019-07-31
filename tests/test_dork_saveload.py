@@ -15,6 +15,7 @@ def testsave(run):
         with open('./dork/yaml/default.yml') as file:
             # Should not call load directly
             data = yaml.safe_load(file.read())
+
         game = types.Game(data)
         run(dork.saveload.save, game, input_values=['roomdatatest'])
         run(dork.saveload.save, game, input_values=['default', 'roomdatatest'])
@@ -30,5 +31,15 @@ def testload(run):
     try:
         run(dork.saveload.load, input_values=['default'])
         run(dork.saveload.load, input_values=['\0', 'default'])
+    except:  # noqa: E722
+        raise AssertionError("cannot run 'dork' command")
+
+
+def teststate(run):
+    """Ensures the game state is loaded properly
+    """
+    assert isinstance(dork.saveload.game_state, FunctionType)
+    try:
+        run(dork.saveload.game_state)
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")

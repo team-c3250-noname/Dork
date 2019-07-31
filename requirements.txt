@@ -1,3 +1,4 @@
 pyyaml
 cursor
 networkx
+matplotlib

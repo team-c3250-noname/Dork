@@ -2,7 +2,6 @@
 """
 from abc import ABC
 from abc import abstractmethod
-from collections import namedtuple
 from random import sample, choice, randint
 from itertools import product
 from math import sqrt
@@ -16,16 +15,23 @@ class MazeGenerator(ABC):
 
     @abstractmethod
     def generate(self):
-        """generates a maze with defined width,heights
+        """generates a maze with defined width, line by line
+
+
+        Yields:
+            A 2-tuple list of node identifiers and edge tuples
+            or empty 2-tuple list if closed has been called
+
+            ([0,1,2,3...], [(0,1), (3,2), ...])
         """
 
     @abstractmethod
     def close(self):
-        """locks the maze, afterward the generator returns None
+        """locks the maze
         """
     @abstractmethod
     def get_nodes(self):
-        """returns the nodes of the maze in nx acceptable type (integer)
+        """returns the node list of the maze
         """
     @abstractmethod
     def get_nodes_and_edges(self):
@@ -33,19 +39,34 @@ class MazeGenerator(ABC):
         """
     @abstractmethod
     def get_edges(self):
-        """returns the edge set of the maze for nx [(integer, integer),...]
+        """returns the edge list of the maze as 2-tuple list
         """
 
 
 class Ellers(MazeGenerator):
-    """Ellers maze, grows down.
+    """Ellers builds a maze based on fixed-width line generation using sets
+
+    Coordinates with (0,0) at the top left corner and (width,height) at
+    bottom right corner.
+
+    Initialize the maze with a fixed width, then call the generate member
+    to get a generator. Pass it to next to add lines to the maze. When done
+    call close to append the last line, use the nodes and edges in networkx.
+
+    Attributes:
+        nodes: list of integers as node identifiers
+        edges: list of edge tuples (node id, node id)
+        sets: list of sets that build the maze
+        node_set_map: dictionary maps node identifiers to sets
+        id_counter: incrementing integer for unique identifiers
+
+    See Also:
+        weblog.jamisbuck.org/2010/12/29/maze-generation-eller-s-algorithm
     """
     MIN = 2
 
     @staticmethod
     def _should_join():
-        """returns random answer to should join?
-        """
         chosen = choice([0, 1])
         return chosen
 
@@ -53,6 +74,18 @@ class Ellers(MazeGenerator):
         return self.node_set_map[node_id]
 
     def _random_horizontal_edges(self, line):
+        """Returns pair-wise edge list for this line
+
+        Iterates over each pair of nodes in the line, randomly
+        connecting them by creating an edge and assigning their
+        them to the same set.
+
+        Args:
+            line: list of integers as node identifiers
+
+        Returns:
+            edges: list of 2-tuple intergers as node identifers [(0, 1)...]
+        """
         edges = []
         for i, j in zip(line, line[1:]):
             if Ellers._should_join():
@@ -70,6 +103,16 @@ class Ellers(MazeGenerator):
         return edges
 
     def _random_vertical_nodes(self, line):
+        """Returns list of integers as node identifiers
+
+        Selects [1,n) nodes from the line to connect to the next line
+
+        Args:
+            line: list of integers as node identifiers
+
+        Returns:
+            edges: list of 2-tuple intergers as node identifers [(0, 1)...]
+        """
         seen = {}
         down_indices = []
         line_sets = {}
@@ -90,7 +133,7 @@ class Ellers(MazeGenerator):
         return down_indices
 
     def __init__(self, width=MIN):
-        self.width = max(width, self.__class__.MIN)
+        self._width = max(width, self.__class__.MIN)
 
         self.nodes = []
         self.edges = []
@@ -103,40 +146,91 @@ class Ellers(MazeGenerator):
 
     def location(self, node_id):
         """ gets x,y coordinates for a n-width maze
+
+        Args:
+            node_id: integer
+
+        Returns:
+            coordinates as 2-integer-tuple
         """
-        return (node_id % self.width, int(node_id / self.width))
+        return (node_id % self._width, int(node_id / self._width))
 
     def left(self, node_id):
         """ returns node left of node_id
+
+        Args:
+            node_id: integer
+
+        Returns:
+            positive integer
+
+        Raises:
+            IndexError: coordinates must decompose into positive x,y components
         """
         x, y = self.location(node_id)
         x = x - 1
-        return None if x < 0 else x + y * self.width
+        if x < 0:
+            raise IndexError("node_id cannot have negative x coordinate")
+        return x + y * self._width
 
     def right(self, node_id):
-        """ returns node right of node_id
+        """ returns node left of node_id
+
+        Args:
+            node_id: integer
+
+        Returns:
+            positive integer
+
+        Raises:
+            IndexError: coordinates must decompose into positive x,y components
         """
         x, y = self.location(node_id)
         x = x + 1
-        return None if x >= self.width else x + y * self.width
+        if x >= self._width:
+            raise IndexError("node_id cannot have x coordinate\
+                             larger than or equal to width")
+        return x + y * self._width
 
     def up(self, node_id):
-        """ returns node up of node_id
+        """ returns node left of node_id
+
+        Args:
+            node_id: integer
+
+        Returns:
+            positive integer
+
+        Raises:
+            IndexError: coordinates must decompose into positive x,y components
         """
         x, y = self.location(node_id)
         y = y - 1
-        return None if y < 0 else x + y * self.width
+        if y < 0:
+            raise IndexError("node_id cannot have negative y coordinate")
+        return x + y * self._width
 
     def down(self, node_id):
-        """ returns node down of node_id
+        """ returns node left of node_id
+
+        Args:
+            node_id: integer
+
+        Returns:
+            positive integer
+
+        Raises:
+            IndexError: coordinates must decompose into positive x,y components
         """
         x, y = self.location(node_id)
         y = y + 1
-        return None if y >= int(self.id_counter / self.width)\
-            else x + y * self.width
+        if y >= int(self.id_counter / self._width):
+            raise IndexError("node_id cannot have y coordinate\
+                             larger than or equal to maze height")
+        return x + y * self._width
 
     def _new_line(self):
-        new_line = list(range(self.id_counter, self.id_counter + self.width))
+        new_line = list(range(self.id_counter, self.id_counter + self._width))
         new_line_unique = [node_id for node_id in new_line
                            if node_id not in self.node_set_map]
         for node_id in new_line_unique:
@@ -144,18 +238,22 @@ class Ellers(MazeGenerator):
             self.sets.append(node_id_set)
             self.node_set_map[node_id] = node_id_set
 
-        self.id_counter += self.width
+        self.id_counter += self._width
         return new_line
 
     def generate(self):
-        """generates a maze with defined width,heights
+        """Yields a new line
+
+        When calling this function store result in a variable and pass it to
+        next() to get the next line as a node-list, edge-list tuple
+
         """
         current_line, next_line = self._new_line(), None
         self.nodes.extend(current_line)
 
         while True:
             if self._end is None:
-                yield None
+                yield ([], [])
             horizontal_edges = self._random_horizontal_edges(current_line)
             vertical_nodes = self._random_vertical_nodes(current_line)
 
@@ -183,7 +281,7 @@ class Ellers(MazeGenerator):
             current_line = next_line
 
     def close(self):
-        """locks the maze, afterward the generator returns None
+        """see base class
         """
         line = self._end
         for i, j in zip(line, line[1:]):
@@ -195,7 +293,7 @@ class Ellers(MazeGenerator):
         self._end = None
 
     def get_nodes(self):
-        """returns the nodes of the maze in nx acceptable type (integer)
+        """see base class
         """
         if self._end is not None:
             raise RuntimeWarning(
@@ -203,7 +301,7 @@ class Ellers(MazeGenerator):
         return self.nodes
 
     def get_nodes_and_edges(self):
-        """returns the nodes and edges, insuring the last line closes the maze
+        """see base class
         """
         if self._end is not None:
             raise RuntimeWarning(
@@ -211,7 +309,7 @@ class Ellers(MazeGenerator):
         return (self.get_nodes(), self.get_edges())
 
     def get_edges(self):
-        """returns the edge set of the maze for nx [(integer, integer),...]
+        """see base class
         """
         if self._end is not None:
             raise RuntimeWarning(
@@ -221,13 +319,85 @@ class Ellers(MazeGenerator):
 
 class Maze:
     """Uses a maze generator to generate a maze
+
+    Attributes:
+        width: integer number of cells per line in the maze
+        height: integer number of lines
+        graph: Networkx directional graph
+        areas: dictionary using room name as key to Maze.Area instances
+        is_closed: boolean, True if the maze has a capped end line
+        generator: MazeGenerator generator of new lines
+
+    Caution:
+        Maze must be closed before Areas and paths are added.
+
+    Example:
+
+            ::
+
+                maze = Maze(width=10)
+
+                maze.grow(10)
+
+                maze.close()
+
+                <claim areas and paths>
+
+
+                This is the same as
+
+                maze = Maze(width=10, height=10)
+
+                <claim areas and paths>
     """
-    Node = namedtuple('Node', ['id', 'x', 'y'])
-    Point = namedtuple('Point', ['x', 'y'])
-    Box = namedtuple('Box', ['width', 'height'])
+    class Node:
+        """Node holds identifier and coordinates
+
+        Attributes:
+            id: integer node identifier
+            x: integer x coordinate
+            y: integer y coordinate
+        """
+        def __init__(self, *, node_id=-1, x=-1, y=-1):
+            self.id = node_id
+            self.x = x
+            self.y = y
+
+    class Point:
+        """Point holds coordinates
+
+        Attributes:
+            x: integer x coordinate
+            y: integer y coordinate
+        """
+        def __init__(self, *, x=-1, y=-1):
+            self.x = x
+            self.y = y
+
+    class Box:
+        """Box holds dimensions
+
+        Attribtues:
+            width: integer, width of area
+            hegiht: integer, height of area
+        """
+        def __init__(self, *, width=-1, height=-1):
+            self.width = width
+            self.height = height
 
     class Area:
-        """Maze area...
+        """Maze area
+
+        A rectangular area that is assoicated with nodes in the maze
+
+        Attributes:
+            origin: A Maze.Point that is decomposed coordinates of a node id
+            box: A Maze.Box holding dimensions of the area
+            center: list of node identifiers that are not border nodes
+            up_border: list of nodes ids on top border of the area
+            down_border: list of nodes ids on bottom border of the area
+            left_border: list of nodes ids on left border of the area
+            right_border: list of nodes ids on right border of the area
         """
         def __init__(self, *, x=0, y=0, width=1, height=1):
             self.origin = Maze.Point(x=x, y=y)
@@ -240,18 +410,20 @@ class Maze:
 
     MIN = 5
 
-    def __init__(self, *, width=MIN, height=None,
-                 filename=None, maze_generator=Ellers):
+    def __init__(self, *, width=MIN, height=None, maze_generator=Ellers):
+        """Inits the maze with Ellers generator, a width of atleast 5 cells
+
+        If height is defined, then a closed maze is constructed
+
+        Raises:
+            TypeError: maze_generator must be subclass of MazeGenerator
+        """
         self.width = max(Maze.MIN, width)
-        self.filename = filename
         self.graph = nx.DiGraph()
         self.areas = {}
         self.is_closed = False
         assert issubclass(maze_generator, MazeGenerator),\
             f"Maze parameter maze_generator must be derived from MazeGenerator"
-        if self.filename:
-            raise NotImplementedError("file save load not done for maze")
-
         self._maze = maze_generator(self.width)
         self.generator = self._maze.generate()
         if height:
@@ -267,10 +439,16 @@ class Maze:
         return len(self.graph.nodes())
 
     def grow(self, line_count=1):
-        """grows the maze, returns (nodes<list>, edges<list of tuples>)
+        """grows the maze by calling next on generator
+
+        Args:
+            line_count: integer specifying the number of lines to generate
+
+        Returns:
+            2-tuple with node list and edge list. ([0,1,2...], [(0, 1)...])
         """
         if self.graph.nodes():
-            return (None, None)
+            return [], []
         nodes, edges = [], []
         for _ in range(0, line_count):
             maze_nodes, maze_edges = next(self.generator)
@@ -290,6 +468,11 @@ class Maze:
         return area.origin.x+dx + (area.origin.y+dy) * self.width
 
     def _grid_connect(self, area):
+        """Connects an areas nodes in a grid pattern
+
+        Args:
+            Area: Maze.Area
+        """
         offsets = product(range(0, area.box.width), range(0, area.box.height))
         edges = []
         center_nodes = []
@@ -316,14 +499,14 @@ class Maze:
 
         area.center = center_nodes
         for node in center_nodes:
-            edges.extend([(node, self._maze.down(node)),
-                          (self._maze.down(node), node)])
-            edges.extend([(node, self._maze.up(node)),
-                          (self._maze.up(node), node)])
-            edges.extend([(node, self._maze.left(node)),
-                          (self._maze.left(node), node)])
-            edges.extend([(node, self._maze.right(node)),
-                          (self._maze.right(node), node)])
+            edges.extend([(node, Maze._apply_dir(self._maze.down, node)),
+                          (Maze._apply_dir(self._maze.down, node), node)])
+            edges.extend([(node, Maze._apply_dir(self._maze.up, node)),
+                          (Maze._apply_dir(self._maze.up, node), node)])
+            edges.extend([(node, Maze._apply_dir(self._maze.left, node)),
+                          (Maze._apply_dir(self._maze.left, node), node)])
+            edges.extend([(node, Maze._apply_dir(self._maze.right, node)),
+                          (Maze._apply_dir(self._maze.right, node), node)])
 
         borders = [area.up_border, area.down_border,
                    area.left_border, area.right_border]
@@ -335,21 +518,45 @@ class Maze:
 
         self.graph.add_edges_from(edges)
 
+    @staticmethod
+    def _apply_dir(dir_function, node):
+        try:
+            return dir_function(node)
+        except IndexError:
+            return None
+
     def _get_direction(self, nids, node):
-        possible = [self._maze.up(node),
-                    self._maze.down(node),
-                    self._maze.left(node),
-                    self._maze.right(node)]
+        """Returns a valid node identifier from any direction from node
+
+        Args:
+            nids: node ids associated with the border of an area
+            node: node identifier to offset from
+        """
+        possible = []
+
+        possible = [Maze._apply_dir(self._maze.up, node),
+                    Maze._apply_dir(self._maze.down, node),
+                    Maze._apply_dir(self._maze.left, node),
+                    Maze._apply_dir(self._maze.right, node)]
         return list(filter(lambda x: x not in nids and x, possible))[0]
 
     def _stitch_components(self, components):
+        """Makes non area associated components fully connected
+
+        When claiming an area, the graph can become split, breaking up paths
+        between rooms. This funtion gets border nodes of each component and
+        passes it to the combining function.
+
+        Args:
+            components: list of lists of node identifiers
+        """
         borders = {id(component): Maze.Area() for component in components}
         nodes = []
 
         for component in components:
             for node in component:
                 x, y = node % self.width, int(node / self.width)
-                nodes.append(Maze.Node(id=node, x=x, y=y))
+                nodes.append(Maze.Node(node_id=node, x=x, y=y))
 
             x_range = (min(nodes, key=lambda node: node.x),
                        max(nodes, key=lambda node: node.x))
@@ -370,6 +577,7 @@ class Maze:
 
             def nodey(node):
                 return node.y
+
             for line in lines:
                 borders[id(component)].right_border.append(max(line,
                                                                key=nodex).id)
@@ -392,6 +600,13 @@ class Maze:
             self._component_wise_combine(borders)
 
     def _component_wise_combine(self, walls):
+        """combines border nodes of components
+
+        Attempts to combine components logically using maze directions
+
+        Args:
+            walls: list of lists of node identifiers that border components
+        """
         for component_one, component_two in product(walls.values(),
                                                     walls.values()):
             if component_one is not component_two:
@@ -409,12 +624,15 @@ class Maze:
                     compare_to.extend(component_two.down_border)
                     compare_to.extend(component_two.left_border)
                     compare_to.extend(component_two.right_border)
-                    possible_edges.extend([(candidate,
-                                            getattr(self._maze,
-                                                    inverse[direction])
-                                            (candidate))
-                                           for candidate in candidates if
-                                           candidate in compare_to])
+                    try:
+                        possible_edges.extend([(candidate,
+                                                getattr(self._maze,
+                                                        inverse[direction])
+                                                (candidate))
+                                               for candidate in candidates if
+                                               candidate in compare_to])
+                    except IndexError:
+                        pass
                 if possible_edges:
                     self.graph.add_edges_from(possible_edges)
                     self.graph.add_edges_from([(v, u)
@@ -439,7 +657,7 @@ class Maze:
         offsets = product(range(0, area.box.width), range(0, area.box.height))
         nodes = []
         for dx, dy in offsets:
-            node = Maze.Node(id=self._get_area_offset(area, dx, dy),
+            node = Maze.Node(node_id=self._get_area_offset(area, dx, dy),
                              x=area.origin.x+dx, y=area.origin.y+dy)
             if node.id not in self.graph:
                 raise IndexError(f"maze graph does not have node {node.id}")
@@ -459,6 +677,12 @@ class Maze:
 
     def distance(self, node_id_pair):
         """calculates distance between node ids
+
+        Args:
+            node_id_pair: a tuple of node identifiers
+
+        Returns:
+            A tuple with the node_id_pair and the distance
         """
         node_id1, node_id2 = node_id_pair[0], node_id_pair[1]
         x_1, y_1 = node_id1 % self.width, int(node_id1 / self.width)
@@ -467,6 +691,19 @@ class Maze:
 
     def claim_area(self, name, area):
         """claims a set of nodes, makes maze consistent
+
+        Once an area is claimed the maze graph can become disconnected,
+        the function attempts to connect the maze using the coordinate
+        system, but falls back to shortest distance if that fails.
+
+        Args:
+            name: Unique name for the area
+            area: Maze.Area instance
+
+        Raises:
+            RuntimeWarning: maze needs to be closed
+            KeyError: maze area with name was already claimed
+            ValueError: area position or dimensions not valid for maze
         """
         if not self.is_closed:
             raise RuntimeWarning("Mazes are read only until closed")
@@ -528,7 +765,22 @@ class Maze:
                 self.graph.add_edge(edge[1], edge[0])
 
     def get_path(self, from_area_name, from_way, to_area_name, to_way):
-        """generates path for two areas if possible, returns none or path<list>
+        """generates path for two areas if possible
+
+        Args:
+            from_area_name: name as a string for the departing area
+            from_way: direction as a string
+            to_area_name: name as a string for the destination area
+            to_way: direction as a string
+
+        Returns:
+            Empty list if no path is possible
+
+            Tuple with the first and last elment being the arguments to the
+            function and node identifiers as the path between them.
+
+        Raises:
+            RuntimeWarning: the maze should be closed before path generation
         """
         if not self.is_closed:
             raise RuntimeWarning("Mazes are read only until closed")
