@@ -295,6 +295,13 @@ def test_player_examine(run, mocker):
     user_action = 'room'
     run(dork.cli.player_examine, game, user_action)
     assert mocked.call_count == 1
+    user_action = ['key']
+    game.player.inventory = ['key']
+    out, _ = run(dork.cli.player_examine, game, user_action)
+    assert 'key' in out
+    user_action = ['car']
+    out, _ = run(dork.cli.player_examine, game, user_action)
+    assert 'unknown' in out
 
 
 def test_room_examine(run):
@@ -373,13 +380,6 @@ def test_fight(run):
     damage = 0
     out, _ = run(dork.cli.fight, game, damage)
     assert 'died' in out
-    run(dork.cli.fight, game, damage)
-    assert mocked_fight.call_count == 1
-    game.player.position['location'] = 'Boss room'
-    damage = 10
-    mocked_fight.call_count = 0
-    run(dork.cli.fight, game, damage)
-    assert mocked_fight.call_count == 1
 
 
 def test_prompt(run, mocker):
@@ -414,7 +414,7 @@ def test_player_move(run, mocker):
         # Should not call load directly
         data = yaml.safe_load(file.read())
     game = types.Game(data)
-    user_action = "move north"
+    user_action = ["move north"]
     run(dork.cli.player_move, game, user_action)
     assert mocked_lock_check.call_count == 0
 
@@ -423,15 +423,143 @@ def test_player_use(run, mocker):
     """This will test the player_use function
     """
     mocked = mocker.patch('dork.cli.unlock_room')
-    mocked_room=mocker.patch('dork.cli.next_room')
+    mocker.patch('dork.cli.next_room')
     with open('./dork/yaml/default.yml') as file:
         # Should not call load directly
         data = yaml.safe_load(file.read())
     game = types.Game(data)
-    user_action = "use key"
+    user_action = ['use', 'key']
     game.player.inventory = ['key']
     run(dork.cli.player_use, game, user_action)
     assert mocked.call_count == 1
-    user_action = "use sword"
+    user_action = ["use", "sword"]
     out, _ = run(dork.cli.player_use, game, user_action)
     assert 'You do not have that item.' in out
+
+
+def test_player_take(run):
+    """user_take test
+     """
+    assert isinstance(dork.cli.main, FunctionType)
+    try:
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick kfhdfh',
+                                         'quit'])
+    except:  # noqa: E722
+        raise AssertionError("cannot run 'dork' command")
+
+
+def test_unlockroom(run, mocker):
+    """Tests the unlock_room function.
+    """
+    mocked_unlock = mocker.patch('dork.cli.unlock_room')
+    with open('./dork/yaml/default.yml') as file:
+        # Should not call load directly
+        data = yaml.safe_load(file.read())
+
+    # unlock_room uses game, user_action, and direction (in order)
+    game = types.Game(data)
+    game.player.inventory = ['key']
+    user_action = ['use key']
+    direction = 'Jail hallway'
+    run(dork.cli.unlock_room, game, user_action, direction)
+    assert mocked_unlock.call_count == 1
+
+
+def test_drop_item(run):
+    """drop_item test
+    """
+    assert isinstance(dork.cli.main, FunctionType)
+    try:
+        run(dork.cli.main, input_values=['play', 'default', 'drop', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'drop', 'key', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'drop', 'alskdjf', 'quit'])
+    except:  # noqa: E722
+        raise AssertionError("cannot run 'dork' command")
+
+
+def test_user_menu(run):
+    """user_menu test
+    """
+    assert isinstance(dork.cli.main, FunctionType)
+    try:
+        run(dork.cli.main, input_values=['play', 'default', 'user inventory',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'north', 'move north',
+                                         'punch',
+                                         'user score', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'user score',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'user point',
+                                         'quit'])
+    except:  # noqa: E722
+        raise AssertionError("cannot run 'dork' command")
+
+
+def test_next_room(run):
+    """next_room test
+    """
+    assert isinstance(dork.cli.main, FunctionType)
+    try:
+        run(dork.cli.main, input_values=['play', 'default', 'move north',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'move south',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'move west',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'move east',
+                                         'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'qest', 'north', 'quit'])
+    except:  # noqa: E722
+        raise AssertionError("cannot run 'dork' command")
+
+
+def test_room_check(run):
+    """room_check test
+    """
+    assert isinstance(dork.cli.main, FunctionType)
+    try:
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'north', 'quit'])
+        run(dork.cli.main, input_values=['play', 'default', 'pick key',
+                                         'use key', 'west', 'quit'])
+    except:  # noqa: E722
+        raise AssertionError("cannot run 'dork' command")
+
+
+def test_removeitem(run, mocker):
+    """Tests the remove_item function.
+    """
+    mocked_remove = mocker.patch('dork.cli.remove_item')
+    with open('./dork/yaml/default.yml') as file:
+        # Should not call load directly
+        data = yaml.safe_load(file.read())
+
+    # remove_item uses game as an arg
+    game = types.Game(data)
+    game.player.inventory = ['key']
+    run(dork.cli.remove_item, game)
+    assert mocked_remove.call_count == 1
+
+
+def test_end_game(run):
+    """Test end game function
+    """
+    with open('./dork/yaml/default.yml') as file:
+        # Should not call load directly
+        data = yaml.safe_load(file.read())
+    game = types.Game(data)
+    out, _ = run(dork.cli.end_game, game)
+    assert "Thank you" in out
+
+
+def test_quit_game(run):
+    """Test quit game function
+    """
+    out, _ = run(dork.cli.quit_game)
+    assert "Thank you" in out
