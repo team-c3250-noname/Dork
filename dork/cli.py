@@ -382,6 +382,10 @@ def player_move(game, user_action):
 
 def lock_check(game, direction):
     """This will check if the door is locked
+
+    Args:
+        game: The current game state
+        direction: The direction of the room to check
     """
     player = game.player
     if direction != '':
@@ -398,6 +402,9 @@ def lock_check(game, direction):
 
 def movement_handler(game, destination):
     """ This will handle movement to different rooms
+    Args:
+        game: The current game state
+        destination: The room to be moved to
     """
     player = game.player
     player.position['location'] = destination
@@ -411,6 +418,10 @@ def player_examine(game, user_action):
     """
     Allows users to examine the room and items. Will return True
     when done examining the room or item
+
+    Args:
+        game: The current game state
+        user_action: The user's input to use
 
     Returns:
         True when done examining the room or item
@@ -431,6 +442,9 @@ def room_examine(game):
     Will print the room inspection message and the items that the room contains
     or if there is no items in the room then it will print that there is
     nothing in the room.
+
+    Args:
+        game: The current game state
     """
     player = game.player
     if game.rooms[player.position['location']].door['item'] != []:
@@ -495,6 +509,13 @@ def user_menu(game, user_action):
 
 def player_use(game, user_action):
     """Allows player to use items
+
+    Args:
+        game: The current game state.
+        user_action: The user's input to act on
+
+    Returns:
+        True: Upon successful execution
     """
     player = game.player
     inventory = ' '.join(player.inventory)
@@ -641,6 +662,9 @@ def fight_check(game):
     there is an enemy. If there is an enemy the function goes to
     fight_prompt. Else it will return False.
 
+    Args:
+        game: The current game state
+
     Returns:
         Will return check with either True or False
     """
@@ -658,6 +682,9 @@ def fight_prompt(game):
     the item in their inventory then it will print out something else while
     if the user inputs anything other than punch or swing then it will ask
     the user to input a valid command.
+
+    Args:
+        game: The current game state
 
     Returns:
         True when the fighting is over.
@@ -696,6 +723,10 @@ def fight(game, damage):
     The fight function takes the game state, the enemy that the user is
     fighting, and the damage that the user inflicts. While the health of
     the enemy or the player is above zero the function continues.
+
+    Args:
+        game: The current game state
+        damage: The damage value of the player
 
     Returns:
         The function returns flag which sets check2 to true or false
