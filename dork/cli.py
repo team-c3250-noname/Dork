@@ -239,7 +239,7 @@ def end_game(_game):
 
     Args:
         _game: Current game state
-     
+    
     Returns: Returns false to end game loop
 
     """
