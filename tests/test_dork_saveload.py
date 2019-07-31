@@ -34,6 +34,7 @@ def testload(run):
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 
+
 def teststate(run):
     """Ensures the game state is loaded properly
     """
