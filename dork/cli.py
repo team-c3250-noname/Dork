@@ -242,16 +242,45 @@ def end_game(_game):
 
 
 def prompt(game):
-    """ Asks user what they would like to do
+    """
+    Prompt will print out as statement
+    asking the user what they would like to do.
+    If invalid input is entered it will print out an error statement.
+
+    Args:
+        game: A dictionary containing the current game state.
+
     """
     keep_prompting = True
     not_last = False
     dead = False
 
     def one_arg(args):
+        """
+        A simple utility for commands that require one argument
+        Simply returns the argument.
+
+        Args:
+            args: The argument that is being used.
+
+        Returns:
+            [args]:The argument for the comman
+
+        """
         return [args]
 
     def no_arg(_args):
+        """
+        A simple utility for commands that require no argument
+        Simply returns an empty list.
+
+        Args:
+            _args: Dummy variable used for testing purposes.
+
+        Returns:
+            []:The argument for the comman
+
+        """
         return []
 
     player_actions = {'move': (player_move, one_arg),
