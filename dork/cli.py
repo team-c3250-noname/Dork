@@ -330,7 +330,7 @@ def lock_check(game, direction):
         player.position['next location'] = direction
         next_lock = game.rooms[player.position['next location']].door['locked']
         if next_lock is True:
-            print('You might be able to use' +
+            print('You might be able to use ' +
                   'an item if you want to go that way.')
         else:
             movement_handler(game, direction)
