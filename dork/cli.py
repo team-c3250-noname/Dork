@@ -303,7 +303,20 @@ def save_game(game):
 
 
 def player_move(game, user_action):
-    """ Allows player to move along maze
+    """
+    Allows player to move through rooms in the maze
+    The player data is grabbed the game state. Directions are defined,
+    and the player's action is grabbed from their input. If the action
+    is in a valid direction, we check if the room they want to move into
+    exists and is not locked. The player is moved to the room if so,
+    and we return back to the main loop.
+
+    Args:
+        game: The current game state
+        user_action: The user's input for their action
+
+    Returns:
+        True: Upon successful execution of movement.
     """
     player = game.player
     directions = ['north', 'up', 'south', 'down', 'east',
@@ -451,7 +464,19 @@ def player_use(game, user_action):
 
 
 def unlock_room(game, user_action, direction):
-    """unlocks room
+    """
+    Unlocks the room so the player can enter it.
+    The player data is grabbed from the game state, and we check
+    the room to see if the item is valid to be used. If it isn't,
+    we return an error. If it is, we parse through the user's
+    action and grab the unlock message for the room the user
+    is unlocking, before finally removing the item used from the game.
+    If they do not have the key, we tell them so.
+
+    Args:
+        game: The current game state.
+        user_action: The user's input for their action
+        direction: The room that is going to be unlocked
     """
     player = game.player
     player.position['next location'] = direction
@@ -473,7 +498,15 @@ def unlock_room(game, user_action, direction):
 
 
 def remove_item(game):
-    """Removes item after being used from inventory
+    """
+    Removes item after being used from inventory.
+    This function grabs the player information from the game state,
+    and grabs the item that they used to unlock a room. The
+    remove function is then called on the item to remove it from
+    the game state.
+
+    Args:
+        game: The current game state.
     """
     player = game.player
     item = game.rooms[player.position['next location']].door['unlock']
