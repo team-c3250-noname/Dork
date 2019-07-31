@@ -33,3 +33,13 @@ def testload(run):
         run(dork.saveload.load, input_values=['\0', 'default'])
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
+
+
+def teststate(run):
+    """Ensures the game state is loaded properly
+    """
+    assert isinstance(dork.saveload.game_state, FunctionType)
+    try:
+        run(dork.saveload.game_state)
+    except:  # noqa: E722
+        raise AssertionError("cannot run 'dork' command")

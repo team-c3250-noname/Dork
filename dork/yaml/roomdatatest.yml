@@ -27,9 +27,11 @@ npc:
   boss:
     attack: 5
     health: 20
+    points: 100
   guard:
     attack: 2
     health: 10
+    points: 10
 player:
   inventory: []
   position:
