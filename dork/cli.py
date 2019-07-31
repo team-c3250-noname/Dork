@@ -496,6 +496,7 @@ def next_room(game):
     """Will find the rooms next to the player
 
     Player data is taken from the game state.
+
     Args:
         game: contains the current game state
 
