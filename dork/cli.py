@@ -236,6 +236,9 @@ def quit_game():
 def end_game(_game):
     """
     Will show a end game screen and thank the player.
+
+    Returns:
+        False
     """
     print("Thank you for playing")
     return False
