@@ -350,9 +350,9 @@ def player_take(game, user_action):
     """Allows user to pick up items and puts them in the players inventory
 
     Player data is taken from the game state. Item data is also taken from the
-    combination of the room and player's posion. Take the user's input and check
-    if that input is in the room. If it is, we'll add it in the player inventory,
-    if not just prompt "There is no such item"
+    combination of the room and player's posion. Take the user's input and
+    check if that input is in the room. If it is, we'll add it in the player
+    inventory, if not just prompt "There is no such item"
 
     Args:
         game: contains the current game state
