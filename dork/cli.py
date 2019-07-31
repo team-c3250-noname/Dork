@@ -452,7 +452,7 @@ def drop_item(game):
     can be dropped. If the user type in an invalid item name, the
     program will prompt "That isn't an item you have. If the item
     name is valid, then the item will be move away from player
-    inventory and go into the room.
+    inventory and go into the room
 
     Args:
         game: contains the current game state
@@ -477,7 +477,9 @@ def drop_item(game):
 def room_check(game, direction):
     """This will check if the room exists
 
-    Player data is taken from the game state.
+    Player data is taken from the game state. If the direction is
+    not empty, then locked door get unlock and return an empty
+    string
 
     Args:
         game: contains the current game state
