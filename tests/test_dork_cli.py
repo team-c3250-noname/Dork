@@ -13,7 +13,6 @@ def test_cli_exists(run):
     assert "main" in vars(dork.cli), "Dork.cli should define a main method"
     assert isinstance(dork.cli.main, FunctionType)
     try:
-        """
         run(dork.cli.main)
         run(dork.cli.main, input_values=['jump', ' ', 'quit'])
         run(dork.cli.main, input_values=['play', 'default', ' ', 'quit'])
@@ -121,7 +120,6 @@ def test_cli_exists(run):
                                          'move down', 'use bar', 'left',
                                          'move left', 'punch', 'pick sword',
                                          'move north', 'punch'])
-        """
     except:  # noqa: E722
         raise AssertionError("cannot run 'dork' command")
 
@@ -400,7 +398,7 @@ def test_prompt(run, mocker):
                       'quit': 'dork.cli.end_game'}
     for name, fstr in player_actions.items():
         mocked = mocker.patch(fstr)
-    run(dork.cli.prompt, game, input_values=[name])
+        run(dork.cli.prompt, game, input_values=[name])
     assert mocked.call_count == 1
     out, _ = run(dork.cli.prompt, game, input_values=['run north', 'quit'])
     assert "Enter a valid command. " in out
