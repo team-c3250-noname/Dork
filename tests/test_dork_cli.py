@@ -435,19 +435,6 @@ def test_player_use(run, mocker):
     assert 'You do not have that item.' in out
 
 
-def test_player_take(run):
-    """user_take test
-     """
-    assert isinstance(dork.cli.main, FunctionType)
-    try:
-        run(dork.cli.main, input_values=['play', 'default', 'pick key',
-                                         'quit'])
-        run(dork.cli.main, input_values=['play', 'default', 'pick kfhdfh',
-                                         'quit'])
-    except:  # noqa: E722
-        raise AssertionError("cannot run 'dork' command")
-
-
 def test_unlockroom(run, mocker):
     """Tests the unlock_room function.
     """
