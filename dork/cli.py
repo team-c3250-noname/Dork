@@ -244,8 +244,7 @@ def prompt(game):
                       'user': (user_menu, one_arg),
                       'help': (help_menu, no_arg),
                       'save': (save_game, no_arg),
-                      'quit': (end_game, no_arg),
-                      'checkscore': (check_score, no_arg)}
+                      'quit': (end_game, no_arg)}
     while keep_prompting is True and not_last is False and dead is False:
         user_action = input("\n" +
                             "What would you like to do? ").lower().split()
@@ -350,6 +349,18 @@ def room_examine(game):
 
 def player_take(game, user_action):
     """Allows user to pick up items and puts them in the players inventory
+
+    Player data is taken from the game state. Item data is also taken from the
+    combination of the room and player's posion. Take the user's input and
+    check if that input is in the room. If it is, we'll add it in the player
+    inventory, if not just prompt "There is no such item"
+
+    Args:
+        game: contains the current game state
+        user_action: the user action type in by keyboard
+
+    Returns:
+        Ture if successfully executed
     """
     player = game.player
     item = game.rooms[player.position['location']].door['item']
@@ -364,13 +375,25 @@ def player_take(game, user_action):
 
 
 def user_menu(game, user_action):
-    """Allows users to view their menu
+    """Allows users to view their menu or check current score
+
+    Player data is taken from the game state. Then take the user action
+    and goes into the if statement to check the user command, and display
+    the information based on different command. If there is a invalid
+    comment, then prompt "No menu option found"
+
+    Args:
+        game: contains the current game state
+        user_action: the user action type in by keyboard
+
+    Returns:
+        Ture if successfully executed
     """
     player = game.player
     if 'inventory' in user_action:
         print(player.inventory)
-    elif 'save' in user_action:
-        print("This will lead to saving the game.")
+    elif 'score' in user_action:
+        print(f"Your current score is: {player.stats['point']}")
     else:
         print("No menu option found")
     return True
@@ -423,6 +446,20 @@ def remove_item(game):
 
 def drop_item(game):
     """Returns item to room from inventory
+
+    Player data is taken from the game state. Then print the items
+    from the player inventory so that the user can choose which one
+    to drop. If the player inventory is empty, then there is nothing
+    can be dropped. If the user type in an invalid item name, the
+    program will prompt "That isn't an item you have. If the item
+    name is valid, then the item will be move away from player
+    inventory and go into the room
+
+    Args:
+        game: contains the current game state
+
+    Returns:
+        Ture if successfully executed
     """
     player = game.player
     print(player.inventory)
@@ -440,6 +477,17 @@ def drop_item(game):
 
 def room_check(game, direction):
     """This will check if the room exists
+
+    Player data is taken from the game state. If the direction is
+    not empty, then locked door get unlock and return an empty
+    string
+
+    Args:
+        game: contains the current game state
+        direction: the direction to check if the room is locked
+
+    Returns:
+        An empty string
     """
     player = game.player
     if direction != '':
@@ -449,6 +497,17 @@ def room_check(game, direction):
 
 def next_room(game):
     """Will find the rooms next to the player
+
+    Player data is taken from the game state. Then the progame take the
+    direction where the player want to use the key to. If the direction
+    is invalid then the program will ask the user to input cardinal
+    direction. Once the direction is valid, then returns the direction
+
+    Args:
+        game: contains the current game state
+
+    Returns:
+        The valid direction input by the user
     """
     player = game.player
     player_directions = {'north': 'up', 'up': 'up',
@@ -534,12 +593,3 @@ def fight(game, enemy, damage):
             fighting = False
             flag = True
     return flag
-
-
-def check_score(game):
-    """Check current score
-    """
-    player = game.player
-    score = player.stats['point']
-    print(f"Your current score is: {score}")
-    return True
